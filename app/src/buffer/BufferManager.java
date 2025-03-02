@@ -1,12 +1,12 @@
 public abstract class BufferManager {
 
-     // configurable size of buffer cache.
-     final int bufferSize;
-     public BufferManager(int bufferSize){
+    // configurable size of buffer cache.
+    final int bufferSize; 
+    public BufferManager(int bufferSize){
         this.bufferSize = bufferSize;
-     }
+    }
 
-     /**
+    /**
      * Fetches a page from memory if available; otherwise, loads it from disk.
      * The page is immediately pinned.
      * @param pageId The ID of the page to fetch.
@@ -21,7 +21,7 @@ public abstract class BufferManager {
      */
     abstract Page createPage();
 
-     /**
+    /**
      * Marks a page as dirty, indicating it needs to be written to disk before eviction.
      * @param pageId The ID of the page to mark as dirty.
      */
