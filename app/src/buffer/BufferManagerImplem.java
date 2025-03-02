@@ -60,6 +60,8 @@ public class BufferManagerImplem extends BufferManager{
     // Page metadata
     HashMap<Integer, PageMetadata> pageInfo;
 
+    int totalPages;
+
     // initialize the buffer pool, page table, free frames list, lru cache, page metadata
     public BufferManagerImplem(int bufferSize){
         super(bufferSize);
@@ -68,6 +70,7 @@ public class BufferManagerImplem extends BufferManager{
         this.lruCache = new LinkedList<>();
         this.pageTable = new HashMap<>();
         this.pageInfo = new HashMap<>();
+        this.totalPages = 0;
 
         // all frames are free initially
         for(int i=0;i<bufferSize;i++)
@@ -78,7 +81,9 @@ public class BufferManagerImplem extends BufferManager{
     Page createAndAllocatePage(int frameIndex, Page page, boolean isPageCreated) {
 
         if(!isPageCreated){ // Create a new page if doesnt exist
-            page = new PageImplem(frameIndex);
+
+            page = new PageImplem(this.totalPages);
+            this.totalPages = this.totalPages + 1;
         }
 
         // Allocate the page in the buffer pool
@@ -173,6 +178,7 @@ public class BufferManagerImplem extends BufferManager{
 
     // ToDo
     Page getPageFromDisk(int pageId){
+
     }
         
     @Override
