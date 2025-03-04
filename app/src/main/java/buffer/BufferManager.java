@@ -15,24 +15,24 @@ public abstract class BufferManager {
      * @param pageId The ID of the page to fetch.
      * @return The Page object whose content is stored in a frame of the buffer pool manager.
      */
-    abstract Page getPage(int pageId);
+    public abstract Page getPage(int pageId);
 
     /**
      * Creates a new page.
      * The page is immediately pinned.
      * @return The Page object whose content is stored in a frame of the buffer pool manager.
      */
-    abstract Page createPage();
+    public abstract Page createPage();
 
     /**
      * Marks a page as dirty, indicating it needs to be written to disk before eviction.
      * @param pageId The ID of the page to mark as dirty.
      */
-    abstract void markDirty(int pageId);
+    public abstract void markDirty(int pageId);
 
     /**
      * Unpins a page in the buffer pool, allowing it to be evicted if necessary.
      * @param pageId The ID of the page to unpin.
      */
-    abstract void unpinPage(int pageId);
+    public abstract void unpinPage(int pageId);
 }

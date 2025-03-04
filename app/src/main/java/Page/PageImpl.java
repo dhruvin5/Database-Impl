@@ -1,11 +1,13 @@
 package Page;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Arrays;
 
-public class PageImpl extends Page{
-    private static final int PAGE_SIZE = 4096;
+import Row.Row;
+import configs.*;
+
+public class PageImpl implements Page {
+
     private static final int ROW_COUNT_SIZE = 4;
     private static final int ROW_SIZE = 39;
     private static final int MAX_ROW_COUNT = 104;
@@ -15,20 +17,20 @@ public class PageImpl extends Page{
 
     public PageImpl(int pageId) {
         this.pageId = pageId;
-        this.rows = new byte[PAGE_SIZE];
+        this.rows = new byte[Config.PAGE_SIZE];
         setRowCount(0);
     }
 
-    public PageImpl(int pageId, byte[] rows) {
-        if (existingRows.length != PAGE_SIZE) {
+    public PageImpl(int pageId, byte[] existingRows) {
+        if (existingRows.length != Config.PAGE_SIZE) {
             throw new IllegalArgumentException("Page size must be 4KB!");
         }
         this.pageId = pageId;
-        this.rows = rows;
+        this.rows = existingRows;
     }
 
-
-    Row getRow(int rowId)
+    @Override
+    public Row getRow(int rowId)
     {
         int rowCount = getRowCount();
         if (rowId < 0 || rowId >= rowCount) {
@@ -40,7 +42,8 @@ public class PageImpl extends Page{
         return new Row(movieId, title);
     }
 
-    int insertRow(Row row)
+    @Override
+    public int insertRow(Row row)
     {
         if (isFull()) {
             return -1;
@@ -60,7 +63,8 @@ public class PageImpl extends Page{
         return rowCount;
     }
 
-    boolean isFull()
+    @Override
+    public boolean isFull()
     {
         int rowCount = getRowCount();
         if(rowCount == MAX_ROW_COUNT)
@@ -70,17 +74,18 @@ public class PageImpl extends Page{
         return false;
     }
 
-    int getPid()
+    @Override
+    public int getPid()
     {
         return this.pageId;
     }
 
     private int getRowCount() {
-        return ByteBuffer.wrap(data, 0, ROW_COUNT_SIZE).getInt();
+        return ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).getInt();
     }
 
     private void setRowCount(int count) {
-        ByteBuffer.wrap(data, 0, ROW_COUNT_SIZE).putInt(count);
+        ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
     }
 
 }

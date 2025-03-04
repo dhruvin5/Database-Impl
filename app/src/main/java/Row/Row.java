@@ -1,4 +1,4 @@
-package Page;
+package Row;
 
 /**
  * Struct representing a database row, *containing primitive data types ONLY* to enable serialization.

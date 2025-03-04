@@ -1,5 +1,7 @@
 package Page;
 
+import Row.Row;
+
 public interface Page {
     /**
      * Fetches a row from the page by its row ID.

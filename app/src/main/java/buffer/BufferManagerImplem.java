@@ -1,14 +1,18 @@
 package buffer;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-
+import configs.*;
 import Page.*;
 
 
 
 
 public class BufferManagerImplem extends BufferManager{
+
+    public static final String DISK_FILE = "imdb.bin";
 
     // for mapping page id to frames
     HashMap<Integer, Integer> pageTable;
@@ -93,7 +97,7 @@ public class BufferManagerImplem extends BufferManager{
                 if (metadata.isDirty()) {
 
                     Page page = bufferPool[frameIndex];
-                    Utilities.writeToDisk(page);
+                    writeToDisk(page);
                 }
 
                 // Remove the evicted page from the buffer pool
@@ -138,7 +142,7 @@ public class BufferManagerImplem extends BufferManager{
 
 
     @Override
-    Page getPage(int pageId) {
+    public Page getPage(int pageId) {
         // Check if in the buffer pool
         if (pageTable.containsKey(pageId)) {
             int frameIndex = pageTable.get(pageId);
@@ -156,13 +160,13 @@ public class BufferManagerImplem extends BufferManager{
         }
         else { // load page from disk
             // Check if the page exists on disk
-            if (!Utilities.isPageOnDisk(pageId)) {
+            if (isPageOnDisk(pageId)) {
                 System.out.println("Error: Page " + pageId + " does not exist on disk.");
                 return null; // Page not found on disk
             }
 
             //get page from disk
-            Page page = Utilities.getPageFromDisk(pageId);
+            Page page = getPageFromDisk(pageId);
             if (page == null) {
                 System.out.println("Error: Failed to load page" + pageId + "from disk.");
                 return null; // failed to load page from disk
@@ -174,12 +178,12 @@ public class BufferManagerImplem extends BufferManager{
     }
 
     @Override
-    Page createPage() {
+    public Page createPage() {
         return createAndLoadPageHelper(null, false);
     }
 
     @Override
-    void markDirty(int pageId) {
+    public void markDirty(int pageId) {
         PageMetaData metadata = pageInfo.get(pageId);
 
         if (metadata != null) {
@@ -192,7 +196,7 @@ public class BufferManagerImplem extends BufferManager{
     }
 
     @Override
-    void unpinPage(int pageId) {
+    public void unpinPage(int pageId) {
         PageMetaData metadata = pageInfo.get(pageId);
 
         if (metadata != null) { // page exists in buffer pool
@@ -206,6 +210,32 @@ public class BufferManagerImplem extends BufferManager{
         else { // Page not in the buffer pool
             System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
+    }
+
+    private Page getPageFromDisk(int pageId){
+        try (RandomAccessFile raf = new RandomAccessFile(DISK_FILE, "r")) {
+            long offset = (long) pageId * Config.PAGE_SIZE;
+            if (offset >= raf.length()) {
+
+                return null;
+            }
+            raf.seek(offset);
+            byte[] buffer = new byte[Config.PAGE_SIZE];
+            raf.readFully(buffer);
+
+            Page page = new PageImpl(pageId, buffer);
+            return page;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    private void writeToDisk(Page page) {
+
+    }
+
+    private boolean isPageOnDisk(int pageId) {
+        return false;
     }
 
 }
