@@ -1,3 +1,5 @@
+package Page;
+
 public interface Page {
     /**
      * Fetches a row from the page by its row ID.

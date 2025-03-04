@@ -1,8 +1,10 @@
+package Page;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-public class PageImplem extends Page{
+public class PageImpl extends Page{
     private static final int PAGE_SIZE = 4096;
     private static final int ROW_COUNT_SIZE = 4;
     private static final int ROW_SIZE = 39;
@@ -13,16 +15,16 @@ public class PageImplem extends Page{
 
     public PageImpl(int pageId) {
         this.pageId = pageId;
-        this.data = new byte[PAGE_SIZE];
+        this.rows = new byte[PAGE_SIZE];
         setRowCount(0);
     }
 
-    public PageImpl(int pageId, byte[] data) {
-        if (existingData.length != PAGE_SIZE) {
+    public PageImpl(int pageId, byte[] rows) {
+        if (existingRows.length != PAGE_SIZE) {
             throw new IllegalArgumentException("Page size must be 4KB!");
         }
         this.pageId = pageId;
-        this.data = data;
+        this.rows = rows;
     }
 
 
@@ -33,8 +35,8 @@ public class PageImplem extends Page{
             return null;
         }
         int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
-        byte[] movieId = Arrays.copyOfRange(data, offset, offset + 9);
-        byte[] title = Arrays.copyOfRange(data, offset + 9, offset + 39);
+        byte[] movieId = Arrays.copyOfRange(rows, offset, offset + 9);
+        byte[] title = Arrays.copyOfRange(rows, offset + 9, offset + 39);
         return new Row(movieId, title);
     }
 
@@ -46,8 +48,13 @@ public class PageImplem extends Page{
         int rowCount = getRowCount();
         int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
-        System.arraycopy(row.movieId, 0, data, offset, 9);
-        System.arraycopy(row.title, 0, data, offset + 9, 30);
+        for (int i = 0; i < 9; i++) {
+            this.rows[offset + i] = row.movieId[i];
+        }
+
+        for (int i = 0; i < 30; i++) {
+            this.rows[offset + 9 + i] = row.title[i];
+        }
 
         setRowCount(rowCount + 1);
         return rowCount;
