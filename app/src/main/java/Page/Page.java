@@ -23,6 +23,8 @@ public interface Page {
      */
     boolean isFull();
 
+    public byte[] getRows();
+
     /**
      * Returns the page id
      * @return page id of this page

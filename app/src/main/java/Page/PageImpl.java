@@ -80,6 +80,12 @@ public class PageImpl implements Page {
         return this.pageId;
     }
 
+    @Override
+    public byte[] getRows()
+    {
+        return this.rows;
+    }
+
     private int getRowCount() {
         return ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).getInt();
     }
@@ -87,5 +93,7 @@ public class PageImpl implements Page {
     private void setRowCount(int count) {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
     }
+
+
 
 }

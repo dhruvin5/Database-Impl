@@ -7,12 +7,9 @@ import java.util.LinkedList;
 import configs.*;
 import Page.*;
 
-
-
-
 public class BufferManagerImplem extends BufferManager{
 
-    public static final String DISK_FILE = "imdb.bin";
+    private static final String DISK_FILE = "imdb.bin";
 
     // for mapping page id to frames
     HashMap<Integer, Integer> pageTable;
@@ -213,15 +210,14 @@ public class BufferManagerImplem extends BufferManager{
     }
 
     private Page getPageFromDisk(int pageId){
-        try (RandomAccessFile raf = new RandomAccessFile(DISK_FILE, "r")) {
+        try (RandomAccessFile fileReader = new RandomAccessFile(DISK_FILE, "r")) {
             long offset = (long) pageId * Config.PAGE_SIZE;
-            if (offset >= raf.length()) {
-
+            if (offset >= fileReader.length()) {
                 return null;
             }
-            raf.seek(offset);
+            fileReader.seek(offset);
             byte[] buffer = new byte[Config.PAGE_SIZE];
-            raf.readFully(buffer);
+            fileReader.readFully(buffer);
 
             Page page = new PageImpl(pageId, buffer);
             return page;
@@ -231,10 +227,22 @@ public class BufferManagerImplem extends BufferManager{
         }
     }
     private void writeToDisk(Page page) {
-
+        int pageId = page.getPid();
+        try (RandomAccessFile fileWriter = new RandomAccessFile(DISK_FILE, "rw")) {
+            long offset = (long) pageId * Config.PAGE_SIZE;
+            fileWriter.seek(offset);
+            fileWriter.write(page.getRows(), 0, Config.PAGE_SIZE);
+            System.out.println("Wrote page " + pageId + " to disk.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean isPageOnDisk(int pageId) {
+        if(pageId < this.totalPages)
+        {
+            return true;
+        }
         return false;
     }
 
