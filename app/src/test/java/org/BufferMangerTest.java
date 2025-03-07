@@ -168,12 +168,18 @@ class BufferManagerImplemTest {
         BufferManagerImplem test = new BufferManagerImplem(2);
         test.updateFile(PATH);
        
-        Page page = test.createPage();
-       
-        byte[] movieId = new byte[9];
-        byte[] title = new byte[30];
+        Page page1 = test.createPage();
+        Page page2 = test.createPage();
+        test.unpinPage(0);
+
+        Page page3 = test.createPage();
+        assertEquals(test.existsInCache(0), -1, "Page 0 is not in cache");
         
-        int pageId = page.getPid();
+        Page page1_again = test.getPage(0);
+        assertNotNull(page1_again);
+        assertFalse(test.getPageMetaData(0).isDirty(), "Page is not marked as dirty");
+        test.markDirty(0);
+        assertTrue(test.getPageMetaData(0).isDirty(), "Page is marked as dirty");
         
     }
 
