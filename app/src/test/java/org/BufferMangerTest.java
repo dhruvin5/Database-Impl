@@ -77,19 +77,23 @@ class BufferManagerImplemTest {
 
 
     @Test void testGetPage_2() throws IOException {
+        // Updates disk location and creates buffer manager
         String PATH = "src/test/java/org/bin/getPageTest_2.bin";
-        Files.deleteIfExists(Paths.get(PATH)); 
+        Files.deleteIfExists(Paths.get(PATH));
         BufferManagerImplem test = new BufferManagerImplem(3);
         test.updateFile(PATH);
 
+        // Store known movieIds and titles
         byte[][] movieIds = new byte[3][9];
         byte[][] titles = new byte[3][30];
+
+        // Create 3 pages and insert a row into each
         for(int i = 0; i < 3; i++) {
             Page page = test.createPage();
             
             assertNotNull(page, "Page is created and not null");
 
-            movieIds[i][0] = (byte) 1;
+            movieIds[i][0] = (byte) i;
             for (int j = 0; j < 6; j++) {
                 titles[i][j] = (byte) ("movie"+i).charAt(j);
             }
@@ -102,6 +106,7 @@ class BufferManagerImplemTest {
             assertEquals(3-i-1, test.getFreeFrames(), "Free frames is " + (3-i-1));
         }
 
+        // Get the pages that are stored in memory and reduce pin count to 0
         for(int i = 0; i < 3; i++) {
             Page page = test.getPage(i);
             assertNotNull(page, "Fetched page is not null");
@@ -116,6 +121,7 @@ class BufferManagerImplemTest {
             assertEquals(0, test.getPageMetaData(i).getPinCount(), "Pin count should be is 0");
         }
 
+        // Create 2 more pages and remove the page 0 and 1 from the buffer pool
         for(int i = 3; i < 5; i++) {
             Page page = test.getPage(i);
             assertNull(page, "Fetched page is null");
@@ -124,16 +130,17 @@ class BufferManagerImplemTest {
             assertTrue(test.existsInCache(i - 3) == -1, "page " + (i-3) + " should not be in cache");
         }
         
+        // Verifying that page 0 and 1 are not in the buffer pool
         assertTrue(test.existsInCache(0) ==-1, "page " + 0 + " should not be in cache");
         assertTrue(test.existsInCache(1) ==-1, "page " + 1 + " should not be in cache");
         assertTrue(test.existsInCache(2) == 0, "page " + 2 + " should be in cache");
-        assertTrue(test.existsInCache(3) == 1, "page " + 2 + " should be in cache");
-        assertTrue(test.existsInCache(4) == 2, "page " + 2 + " should be in cache");
+        assertTrue(test.existsInCache(3) == 1, "page " + 3 + " should be in cache");
+        assertTrue(test.existsInCache(4) == 2, "page " + 4 + " should be in cache");
         assertTrue(test.getPageMetaData(2).getPinCount() == 0, "Pin count should be is 0");
         assertTrue(test.getPageMetaData(3).getPinCount() == 1, "Pin count should be is 1");
         
-        
-        
+        // Should remove page 2 from the buffer pool
+        // Returns null for some reason ??? 
         Page page = test.getPage(0);
         
         assertNotNull(page, "Fetched page should not be null");
@@ -161,12 +168,19 @@ class BufferManagerImplemTest {
         BufferManagerImplem test = new BufferManagerImplem(2);
         test.updateFile(PATH);
        
-        Page page = test.createPage();
-       
-        byte[] movieId = new byte[9];
-        byte[] title = new byte[30];
+        Page page1 = test.createPage();
+        Page page2 = test.createPage();
+        test.unpinPage(0);
+        test.unpinPage(1);
+
+        Page page3 = test.createPage();
+        assertEquals(test.existsInCache(0), -1, "Page 0 is not in cache");
         
-        int pageId = page.getPid();
+        Page page1_again = test.getPage(0);
+        assertNotNull(page1_again);
+        assertFalse(test.getPageMetaData(0).isDirty(), "Page is not marked as dirty");
+        test.markDirty(0);
+        assertTrue(test.getPageMetaData(0).isDirty(), "Page is marked as dirty");
         
     }
 
