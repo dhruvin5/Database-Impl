@@ -157,7 +157,7 @@ public class BufferManagerImplem extends BufferManager{
         }
         else { // load page from disk
             // Check if the page exists on disk
-            if (isPageOnDisk(pageId)) {
+            if (!isPageOnDisk(pageId)) {
                 System.out.println("Error: Page " + pageId + " does not exist on disk.");
                 return null; // Page not found on disk
             }
@@ -239,6 +239,8 @@ public class BufferManagerImplem extends BufferManager{
     }
 
     private boolean isPageOnDisk(int pageId) {
+        //System.out.println(pageId);
+        //System.out.println(this.totalPages);
         if(pageId < this.totalPages)
         {
             return true;
