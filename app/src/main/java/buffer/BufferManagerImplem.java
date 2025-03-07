@@ -9,7 +9,7 @@ import Page.*;
 
 public class BufferManagerImplem extends BufferManager{
 
-    private static final String DISK_FILE = "imdb.bin";
+    private static String DISK_FILE = "imdb.bin";
 
     // for mapping page id to frames
     HashMap<Integer, Integer> pageTable;
@@ -157,7 +157,7 @@ public class BufferManagerImplem extends BufferManager{
         }
         else { // load page from disk
             // Check if the page exists on disk
-            if (isPageOnDisk(pageId)) {
+            if (!isPageOnDisk(pageId)) {
                 System.out.println("Error: Page " + pageId + " does not exist on disk.");
                 return null; // Page not found on disk
             }
@@ -239,6 +239,8 @@ public class BufferManagerImplem extends BufferManager{
     }
 
     private boolean isPageOnDisk(int pageId) {
+        //System.out.println(pageId);
+        //System.out.println(this.totalPages);
         if(pageId < this.totalPages)
         {
             return true;
@@ -246,4 +248,46 @@ public class BufferManagerImplem extends BufferManager{
         return false;
     }
 
+    
+    public int getBufferCapacity() {
+        return this.bufferPool.length;
+    }
+
+    public int getFreeFrames() {
+        return this.freeFrameList.size();
+    }
+
+    public int getLRUCacheSize() {
+        return this.lruCache.size();
+    }
+
+    public int getPagesInBuffer() {
+        return this.pageTable.size();
+    }
+
+    public int getTotalPages() {
+        return this.totalPages;
+    }
+
+    public boolean isBufferEmpty(){
+        for(int i=0;i<this.bufferPool.length;i++){
+            if(this.bufferPool[i] != null){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public int existsInCache(int pageId) {
+        return lruCache.indexOf(pageId);
+    }
+
+    public PageMetaData getPageMetaData(int pageId) {
+        return pageInfo.get(pageId);
+    }
+    
+    public void updateFile(String fileName) {
+        DISK_FILE = fileName;
+    }
+    
 }
