@@ -77,13 +77,17 @@ class BufferManagerImplemTest {
 
 
     @Test void testGetPage_2() throws IOException {
+        // Updates disk location and creates buffer manager
         String PATH = "src/test/java/org/bin/getPageTest_2.bin";
-        Files.deleteIfExists(Paths.get(PATH)); 
+        Files.deleteIfExists(Paths.get(PATH));
         BufferManagerImplem test = new BufferManagerImplem(3);
         test.updateFile(PATH);
 
+        // Store known movieIds and titles
         byte[][] movieIds = new byte[3][9];
         byte[][] titles = new byte[3][30];
+
+        // Create 3 pages and insert a row into each
         for(int i = 0; i < 3; i++) {
             Page page = test.createPage();
             
@@ -102,6 +106,7 @@ class BufferManagerImplemTest {
             assertEquals(3-i-1, test.getFreeFrames(), "Free frames is " + (3-i-1));
         }
 
+        // Get the pages that are stored in memory and reduce pin count to 0
         for(int i = 0; i < 3; i++) {
             Page page = test.getPage(i);
             assertNotNull(page, "Fetched page is not null");
@@ -116,6 +121,7 @@ class BufferManagerImplemTest {
             assertEquals(0, test.getPageMetaData(i).getPinCount(), "Pin count should be is 0");
         }
 
+        // Create 2 more pages and remove the page 0 and 1 from the buffer pool
         for(int i = 3; i < 5; i++) {
             Page page = test.getPage(i);
             assertNull(page, "Fetched page is null");
@@ -124,6 +130,7 @@ class BufferManagerImplemTest {
             assertTrue(test.existsInCache(i - 3) == -1, "page " + (i-3) + " should not be in cache");
         }
         
+        // Verifying that page 0 and 1 are not in the buffer pool
         assertTrue(test.existsInCache(0) ==-1, "page " + 0 + " should not be in cache");
         assertTrue(test.existsInCache(1) ==-1, "page " + 1 + " should not be in cache");
         assertTrue(test.existsInCache(2) == 0, "page " + 2 + " should be in cache");
@@ -132,7 +139,7 @@ class BufferManagerImplemTest {
         assertTrue(test.getPageMetaData(2).getPinCount() == 0, "Pin count should be is 0");
         assertTrue(test.getPageMetaData(3).getPinCount() == 1, "Pin count should be is 1");
         
-        
+        // Should remove page 2 from the buffer pool
         // Returns null for some reason ??? 
         Page page = test.getPage(0);
         
