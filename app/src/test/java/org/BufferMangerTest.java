@@ -171,6 +171,7 @@ class BufferManagerImplemTest {
         Page page1 = test.createPage();
         Page page2 = test.createPage();
         test.unpinPage(0);
+        test.unpinPage(1);
 
         Page page3 = test.createPage();
         assertEquals(test.existsInCache(0), -1, "Page 0 is not in cache");
