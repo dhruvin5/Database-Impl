@@ -4,8 +4,11 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import configs.*;
-import Page.*;
+
+import Page.Page;
+import Page.PageImpl;
+import Page.PageMetaData;
+import configs.Config;
 
 public class BufferManagerImplem extends BufferManager{
 
@@ -75,7 +78,7 @@ public class BufferManagerImplem extends BufferManager{
     // LRU page eviction if possible
     int evictPage() {
         if (lruCache.isEmpty()) {
-            System.out.println("Error: No pages available for eviction.");
+            //System.out.println("Error: No pages available for eviction.");
             return -1; // No pages to evict
         }
 
@@ -109,7 +112,7 @@ public class BufferManagerImplem extends BufferManager{
         }
 
         // No evictable pages with pin count = 0 is found
-        System.out.println("Error: No evictable page found (all pages are pinned).");
+        //System.out.println("Error: No evictable page found (all pages are pinned).");
         return -1;
     }
 
@@ -158,14 +161,14 @@ public class BufferManagerImplem extends BufferManager{
         else { // load page from disk
             // Check if the page exists on disk
             if (isPageOnDisk(pageId)) {
-                System.out.println("Error: Page " + pageId + " does not exist on disk.");
+                //System.out.println("Error: Page " + pageId + " does not exist on disk.");
                 return null; // Page not found on disk
             }
 
             //get page from disk
             Page page = getPageFromDisk(pageId);
             if (page == null) {
-                System.out.println("Error: Failed to load page" + pageId + "from disk.");
+                //System.out.println("Error: Failed to load page" + pageId + "from disk.");
                 return null; // failed to load page from disk
             }
 
@@ -186,9 +189,9 @@ public class BufferManagerImplem extends BufferManager{
         if (metadata != null) {
             // Page is in the buffer, marking it as dirty
             metadata.setDirtyBit(true);
-            System.out.println("Page " + pageId + " is marked as dirty.");
+            //System.out.println("Page " + pageId + " is marked as dirty.");
         } else {
-            System.out.println("Error: Page " + pageId + " not found in buffer.");
+            //System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
 
@@ -201,11 +204,11 @@ public class BufferManagerImplem extends BufferManager{
                 metadata.decrementPinCount();
             }
             else { // Pin count is already 0
-                System.out.println("Error: Page " + pageId + " already has pin count 0. Cannot unpin further.");
+                //System.out.println("Error: Page " + pageId + " already has pin count 0. Cannot unpin further.");
             }
         }
         else { // Page not in the buffer pool
-            System.out.println("Error: Page " + pageId + " not found in buffer.");
+            //System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
 
@@ -232,7 +235,7 @@ public class BufferManagerImplem extends BufferManager{
             long offset = (long) pageId * Config.PAGE_SIZE;
             fileWriter.seek(offset);
             fileWriter.write(page.getRows(), 0, Config.PAGE_SIZE);
-            System.out.println("Wrote page " + pageId + " to disk.");
+            //System.out.println("Wrote page " + pageId + " to disk.");
         } catch (IOException e) {
             e.printStackTrace();
         }

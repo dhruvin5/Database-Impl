@@ -1,0 +1,2 @@
+Error: Could not find or load main class buffer.QueryTest
+Caused by: java.lang.ClassNotFoundException: buffer.QueryTest
