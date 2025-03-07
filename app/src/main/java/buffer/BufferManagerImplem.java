@@ -186,7 +186,7 @@ public class BufferManagerImplem extends BufferManager{
         if (metadata != null) {
             // Page is in the buffer, marking it as dirty
             metadata.setDirtyBit(true);
-            System.out.println("Page " + pageId + " is marked as dirty.");
+           // System.out.println("Page " + pageId + " is marked as dirty.");
         } else {
             System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
@@ -232,7 +232,7 @@ public class BufferManagerImplem extends BufferManager{
             long offset = (long) pageId * Config.PAGE_SIZE;
             fileWriter.seek(offset);
             fileWriter.write(page.getRows(), 0, Config.PAGE_SIZE);
-            System.out.println("Wrote page " + pageId + " to disk.");
+           // System.out.println("Wrote page " + pageId + " to disk.");
         } catch (IOException e) {
             e.printStackTrace();
         }
