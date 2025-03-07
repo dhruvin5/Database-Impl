@@ -89,7 +89,7 @@ class BufferManagerImplemTest {
             
             assertNotNull(page, "Page is created and not null");
 
-            movieIds[i][0] = (byte) 1;
+            movieIds[i][0] = (byte) i;
             for (int j = 0; j < 6; j++) {
                 titles[i][j] = (byte) ("movie"+i).charAt(j);
             }
@@ -127,13 +127,13 @@ class BufferManagerImplemTest {
         assertTrue(test.existsInCache(0) ==-1, "page " + 0 + " should not be in cache");
         assertTrue(test.existsInCache(1) ==-1, "page " + 1 + " should not be in cache");
         assertTrue(test.existsInCache(2) == 0, "page " + 2 + " should be in cache");
-        assertTrue(test.existsInCache(3) == 1, "page " + 2 + " should be in cache");
-        assertTrue(test.existsInCache(4) == 2, "page " + 2 + " should be in cache");
+        assertTrue(test.existsInCache(3) == 1, "page " + 3 + " should be in cache");
+        assertTrue(test.existsInCache(4) == 2, "page " + 4 + " should be in cache");
         assertTrue(test.getPageMetaData(2).getPinCount() == 0, "Pin count should be is 0");
         assertTrue(test.getPageMetaData(3).getPinCount() == 1, "Pin count should be is 1");
         
         
-        
+        // Returns null for some reason ??? 
         Page page = test.getPage(0);
         
         assertNotNull(page, "Fetched page should not be null");
