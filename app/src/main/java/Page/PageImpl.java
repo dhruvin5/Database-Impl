@@ -45,6 +45,14 @@ public class PageImpl implements Page {
     @Override
     public int insertRow(Row row)
     {
+        if (row == null || row.movieId == null || row.title == null) {
+            return -1;
+        }
+
+        if (row.movieId.length != 9 || row.title.length != 30) {
+            return -1;
+        }
+
         if (isFull()) {
             return -1;
         }
