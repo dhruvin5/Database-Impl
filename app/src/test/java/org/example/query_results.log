@@ -1,2 +1,5 @@
-Error: Could not find or load main class buffer.QueryTest
-Caused by: java.lang.ClassNotFoundException: buffer.QueryTest
+✅ Creating a new page...
+✅ Created Page ID: 0
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 7 out of bounds for length 7
+	at Page.PageImpl.insertRow(PageImpl.java:59)
+	at buffer.QueryTest.main(QueryTest.java:26)

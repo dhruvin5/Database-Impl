@@ -3,7 +3,7 @@
 echo "===== Running Interleaved Query Test ====="
 
 # Ensure the JAR path is correct and the directory where you are executing the script has the correct JAR
-JAR_PATH="app/build/libs/app.jar"
+JAR_PATH="/Users/simranmalik/Desktop/645-Lab-32966720340112693401883534060222/app/build/libs/app.jar"
 echo "Running Query Test from $JAR_PATH"
 
 #  Run the Query Test and display output in real-time

@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import Row.Row;
-import configs.*;
+import configs.Config;
 
 public class PageImpl implements Page {
 
