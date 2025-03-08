@@ -54,7 +54,6 @@ public class PageImpl implements Page {
             return -1;
         }
 
-
         byte[] movieIdFixed = new byte[9];
         byte[] titleFixed = new byte[30];
         
@@ -66,11 +65,11 @@ public class PageImpl implements Page {
         int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
         for (int i = 0; i < 9; i++) {
-            this.rows[offset + i] = row.movieId[i];
+            this.rows[offset + i] = movieIdFixed[i];
         }
 
         for (int i = 0; i < 30; i++) {
-            this.rows[offset + 9 + i] = row.title[i];
+            this.rows[offset + 9 + i] = titleFixed[i];
         }
 
         setRowCount(rowCount + 1);
