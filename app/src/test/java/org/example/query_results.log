@@ -1,5 +1,42 @@
+✅ BufferManager initialized with buffer size: 5
+
 ✅ Creating a new page...
 ✅ Created Page ID: 0
-Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 7 out of bounds for length 7
-	at Page.PageImpl.insertRow(PageImpl.java:59)
-	at buffer.QueryTest.main(QueryTest.java:26)
+✅ Inserted row 0 (Movie ID: tt0000000)
+✅ Inserted row 1 (Movie ID: tt0000001)
+✅ Inserted row 2 (Movie ID: tt0000002)
+✅ Initial rows inserted and page unpinned.
+
+✅ Creating additional pages to trigger evictions...
+✅ Created and unpinned temp page 1
+✅ Created and unpinned temp page 2
+✅ Created and unpinned temp page 3
+✅ Created and unpinned temp page 4
+✅ Created and unpinned temp page 5
+✅ Created and unpinned temp page 6
+✅ Created and unpinned temp page 7
+
+✅ Fetching previously evicted page (ID: 0)...
+✅ Page successfully retrieved. Load Time: 80500 ns
+
+✅ Marking page as dirty and inserting more rows...
+✅ Inserted row 3 (Movie ID: tt0000003)
+✅ Inserted row 4 (Movie ID: tt0000004)
+✅ Inserted row 5 (Movie ID: tt0000005)
+
+✅ Validating all rows after eviction and dirty pages...
+✅ Pinned Page Load Time: 6958 ns
+
+✅ Comparing load times...
+✅ Pinned page loaded faster than evicted page.
+✅ Row 0 exists: tt0000000 - Movie 0
+✅ Row 1 exists: tt0000001 - Movie 1
+✅ Row 2 exists: tt0000002 - Movie 2
+✅ Row 3 exists: tt0000003 - Movie 3
+✅ Row 4 exists: tt0000004 - Movie 4
+✅ Row 5 exists: tt0000005 - Movie 5
+
+✅ Ensuring dirty pages are flushed to disk...
+✅ Eviction triggered to flush dirty pages.
+
+ Querying test completed successfully!!!

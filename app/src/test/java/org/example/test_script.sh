@@ -24,5 +24,5 @@ else
     echo "✅ Query Test Passed."
 fi
 
-echo "🎉 All tests completed successfully!"
+echo "All end to end tests have passed sucessfully!!!!!"
 exit 0
