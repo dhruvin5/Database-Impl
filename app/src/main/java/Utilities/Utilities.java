@@ -23,7 +23,12 @@ public class Utilities{
 
                 String movieIdStr = cols[0];
                 String titleStr   = cols[2];
-
+                
+                
+                if (movieIdStr.length() != 9) {
+                    continue;
+                }
+                
                 byte[] movieIdBytes = toFixedByteArray(movieIdStr, 9);
                 byte[] titleBytes   = toFixedByteArray(titleStr, 30);
 

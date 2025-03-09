@@ -1,6 +1,7 @@
 package Page;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import Row.Row;
@@ -45,18 +46,30 @@ public class PageImpl implements Page {
     @Override
     public int insertRow(Row row)
     {
+        if (row == null || row.movieId == null || row.title == null) {
+            return -1;
+        }
+
         if (isFull()) {
             return -1;
         }
+
+        byte[] movieIdFixed = new byte[9];
+        byte[] titleFixed = new byte[30];
+        
+        System.arraycopy(row.movieId, 0, movieIdFixed, 0, Math.min(row.movieId.length, 9));
+        System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length, 30));
+        
+
         int rowCount = getRowCount();
         int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
         for (int i = 0; i < 9; i++) {
-            this.rows[offset + i] = row.movieId[i];
+            this.rows[offset + i] = movieIdFixed[i];
         }
 
         for (int i = 0; i < 30; i++) {
-            this.rows[offset + 9 + i] = row.title[i];
+            this.rows[offset + 9 + i] = titleFixed[i];
         }
 
         setRowCount(rowCount + 1);
