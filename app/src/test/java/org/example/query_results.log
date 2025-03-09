@@ -17,7 +17,12 @@
 ✅ Created and unpinned temp page 7
 
 ✅ Fetching previously evicted page (ID: 0)...
-✅ Page successfully retrieved. Load Time: 80500 ns
+✅ Page successfully retrieved. Load Time: 362041 ns
+
+✅ Printing contents of the refetched page after eviction:
+✅ Row 0 exists: tt0000000 - Movie 0
+✅ Row 1 exists: tt0000001 - Movie 1
+✅ Row 2 exists: tt0000002 - Movie 2
 
 ✅ Marking page as dirty and inserting more rows...
 ✅ Inserted row 3 (Movie ID: tt0000003)
@@ -25,7 +30,7 @@
 ✅ Inserted row 5 (Movie ID: tt0000005)
 
 ✅ Validating all rows after eviction and dirty pages...
-✅ Pinned Page Load Time: 6958 ns
+✅ Pinned Page Load Time: 9375 ns
 
 ✅ Comparing load times...
 ✅ Pinned page loaded faster than evicted page.

@@ -53,7 +53,20 @@ public class QueryTest {
             return;
         } else {
             System.out.println("✅ Page successfully retrieved. Load Time: " + evictedLoadTime + " ns");
+            // Print contents of the page after it was re-fetched post initial eviction
+        System.out.println("\n✅ Printing contents of the refetched page after eviction:");
+        for (int i = 0; i < 3; i++) {
+            Row row = p.getRow(i);
+            if (row == null) {
+                System.out.println("❌ Missing row " + i + " after eviction.");
+                return;
+            } else {
+                System.out.println("✅ Row " + i + " exists: " +
+                        new String(row.movieId).trim() + " - " + new String(row.title).trim());
+            }
         }
+        }
+        
 
         //Mark page as dirty and insert more rows
         System.out.println("\n✅ Marking page as dirty and inserting more rows...");
