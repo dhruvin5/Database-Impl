@@ -73,17 +73,25 @@ public class Utilities{
         }
 
     }
-    private static byte[] toFixedByteArray(String input, int length) {
-        if (input == null) {
-            input = "";
+
+    // Utility to convert a string to a fixed byte array of a particular length
+    public static byte[] toFixedByteArray(String inputString, int length) {
+        if (inputString == null) {
+            inputString = "";
         }
-        if (input.length() > length) {
-            input = input.substring(0, length);  // truncate
+        if (inputString.length() > length) {
+            inputString = inputString.substring(0, length);  // truncate
         }
-        byte[] src = input.getBytes(StandardCharsets.UTF_8);
-        byte[] fixed = new byte[length];
-        System.arraycopy(src, 0, fixed, 0, Math.min(src.length, length));
-        return fixed;
+
+        // get the bytes from the string
+        byte[] originalString = inputString.getBytes(StandardCharsets.UTF_8);
+
+        byte[] fixedByteArray = new byte[length];
+
+        // min truncates if the size is greaterthan the specified length
+        System.arraycopy(originalString, 0, fixedByteArray, 0, Math.min(originalString.length, length));
+
+        return fixedByteArray;
     }
 
 }
