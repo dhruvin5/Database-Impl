@@ -17,40 +17,53 @@ public class Utilities{
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
 
+            // initially there is no page
             int currentPageId = -1;
             boolean pageExists = false;
 
             String dataLine;
 
             while ((dataLine = reader.readLine()) != null) {
+
+                // split by tab
                 String[] cols = dataLine.split("\t");
 
+                // get the idColumn and the title Column
                 String idStr = cols[0];
                 String titleStr   = cols[2];
                 
-                
+                // discard if the movieId is not of size 9
                 if (idStr.length() != 9) {
                     continue;
                 }
-                
+
+                // convert the string to fixed size byte arrays
                 byte[] idBytes = toFixedByteArray(idStr, 9);
                 byte[] titleBytes   = toFixedByteArray(titleStr, 30);
 
+                // create a new Row Object
                 Row row = new Row(idBytes, titleBytes);
+
+                // if no page currently, create a page first
                 if (!pageExists) {
                     Page newPage = bf.createPage();
                     currentPageId = newPage.getPid();
                     bf.unpinPage(currentPageId);
                     pageExists = true;
                 }
+
+                // get the page after creating using the currentPageId
                 Page p = bf.getPage(currentPageId);
 
+                // check if the page is already full
+                // if full unpin it and tell the buffer to create a new page
                 if (p.isFull()) {
                     bf.unpinPage(currentPageId);
                     p = bf.createPage();
                     currentPageId = p.getPid();
                 }
 
+                // insert the rows in the page
                 p.insertRow(row);
                 bf.markDirty(currentPageId);
                 bf.unpinPage(currentPageId);
