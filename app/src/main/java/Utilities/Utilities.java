@@ -11,28 +11,32 @@ import buffer.*;
 
 public class Utilities{
 
+    // loads the dataset into a disk file
+    // takes the bufferManagaer and the filePath as the input.
     public static void loadDataset(BufferManager bf, String filepath){
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
-            String dataLine;
+
             int currentPageId = -1;
             boolean pageExists = false;
+
+            String dataLine;
 
             while ((dataLine = reader.readLine()) != null) {
                 String[] cols = dataLine.split("\t");
 
-                String movieIdStr = cols[0];
+                String idStr = cols[0];
                 String titleStr   = cols[2];
                 
                 
-                if (movieIdStr.length() != 9) {
+                if (idStr.length() != 9) {
                     continue;
                 }
                 
-                byte[] movieIdBytes = toFixedByteArray(movieIdStr, 9);
+                byte[] idBytes = toFixedByteArray(idStr, 9);
                 byte[] titleBytes   = toFixedByteArray(titleStr, 30);
 
-                Row row = new Row(movieIdBytes, titleBytes);
+                Row row = new Row(idBytes, titleBytes);
                 if (!pageExists) {
                     Page newPage = bf.createPage();
                     currentPageId = newPage.getPid();

@@ -6,15 +6,12 @@ import buffer.*;
 import Utilities.*;
 
 public class Caller {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+
 
     public static void main(String[] args) {
         BufferManager bf = new BufferManagerImplem(10);
 
         // Call loadDataset to load the IMDB dataset from the TSV file into the buffer manager.
-        // Adjust the file path as needed.
         Utilities.loadDataset(bf, "/Users/Admin/Downloads/title.basics.tsv");
 
         System.out.println("Dataset loaded successfully.");
