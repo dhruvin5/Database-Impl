@@ -235,15 +235,15 @@ public class BufferManagerImplem extends BufferManager{
             long offset = (long) pageId * Config.PAGE_SIZE;
             fileWriter.seek(offset);
             fileWriter.write(page.getRows(), 0, Config.PAGE_SIZE);
-           // System.out.println("Wrote page " + pageId + " to disk.");
+            System.out.println("Wrote page " + pageId + " to disk.");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private boolean isPageOnDisk(int pageId) {
-        //System.out.println(pageId);
-        //System.out.println(this.totalPages);
+        System.out.println(pageId);
+        System.out.println(this.totalPages);
         if(pageId < this.totalPages)
         {
             return true;
