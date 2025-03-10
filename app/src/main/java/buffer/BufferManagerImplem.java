@@ -209,28 +209,47 @@ public class BufferManagerImplem extends BufferManager{
         }
     }
 
+    // get Page from the disk
     private Page getPageFromDisk(int pageId){
+
+        // using random access file to go to that location and read 4KB of data
         try (RandomAccessFile fileReader = new RandomAccessFile(DISK_FILE, "r")) {
             long offset = (long) pageId * Config.PAGE_SIZE;
             if (offset >= fileReader.length()) {
                 return null;
             }
+
+            // goes to the offset
             fileReader.seek(offset);
             byte[] buffer = new byte[Config.PAGE_SIZE];
+
+            // reads 4KB of data
             fileReader.readFully(buffer);
 
+            // load a page
             Page page = new PageImpl(pageId, buffer);
             return page;
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
+
+    // write to the disk
     private void writeToDisk(Page page) {
+
+        // get the page Id
         int pageId = page.getPid();
+
+        // open the disk file in read write mode
         try (RandomAccessFile fileWriter = new RandomAccessFile(DISK_FILE, "rw")) {
             long offset = (long) pageId * Config.PAGE_SIZE;
+
+            // go to the offset
             fileWriter.seek(offset);
+
+            // overwrite at that offset
             fileWriter.write(page.getRows(), 0, Config.PAGE_SIZE);
            // System.out.println("Wrote page " + pageId + " to disk.");
         } catch (IOException e) {
@@ -265,10 +284,13 @@ public class BufferManagerImplem extends BufferManager{
         return this.pageTable.size();
     }
 
+
+    // get the total pages uptil now
     public int getTotalPages() {
         return this.totalPages;
     }
 
+    // check if the buffer is empty
     public boolean isBufferEmpty(){
         for(int i=0;i<this.bufferPool.length;i++){
             if(this.bufferPool[i] != null){
