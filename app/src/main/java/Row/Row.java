@@ -9,6 +9,8 @@ public class Row {
     public byte[] movieId;
     public byte[] title;
 
+    // just take in the movie id and title
+    // length checks are done during insertRow()
     public Row(byte[] movieId, byte[] title) {
         this.movieId = movieId;
         this.title = title;
