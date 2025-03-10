@@ -1,0 +1,47 @@
+PASS: Buffer Manager initialized with buffer size: 5
+
+TEST: Creating a new page...
+PASS: Created Page ID: 0
+PASS: Inserted row 0 (Movie ID: tt0000000)
+PASS: Inserted row 1 (Movie ID: tt0000001)
+PASS: Inserted row 2 (Movie ID: tt0000002)
+PASS: Initial rows inserted page unpinned successfully.
+
+TEST: Creating additional pages to trigger evictions...
+PASS: Created and unpinned temp page 1
+PASS: Created and unpinned temp page 2
+PASS: Created and unpinned temp page 3
+PASS: Created and unpinned temp page 4
+PASS: Created and unpinned temp page 5
+PASS: Created and unpinned temp page 6
+PASS: Created and unpinned temp page 7
+
+Fetching previously evicted page (ID: 0)...
+PASS: Page is retrieved successfully . Loadtime: 85500 ns
+
+TEST: Printing contents of the re-fetched page after eviction:
+PASS: Row 0 exists: tt0000000 - Movie 0
+PASS: Row 1 exists: tt0000001 - Movie 1
+PASS: Row 2 exists: tt0000002 - Movie 2
+
+TEST: Marking page as dirty and inserting more rows...
+PASS: Successfully inserted row 3 (Movie ID: tt0000003)
+PASS: Successfully inserted row 4 (Movie ID: tt0000004)
+PASS: Successfully inserted row 5 (Movie ID: tt0000005)
+
+TEST: Validation of all rows after initial eviction and dirty pages
+PASS: Pinned Page Load Time: 8208 ns
+
+TEST: Load Time Comparison...
+PASS: Pinned page loaded FASTER than an evicted page.
+PASS: Row 0 exists: tt0000000 - Movie 0
+PASS: Row 1 exists: tt0000001 - Movie 1
+PASS: Row 2 exists: tt0000002 - Movie 2
+PASS: Row 3 exists: tt0000003 - Movie 3
+PASS: Row 4 exists: tt0000004 - Movie 4
+PASS: Row 5 exists: tt0000005 - Movie 5
+
+PASS: Ensuring dirty pages are flushed to disk...
+PASS: Eviction was triggered, flushed dirty pages successfully.
+
+ Query testing completed successfully!!!

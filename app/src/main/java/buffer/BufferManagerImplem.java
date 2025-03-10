@@ -4,8 +4,11 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import configs.*;
-import Page.*;
+
+import Page.Page;
+import Page.PageImpl;
+import Page.PageMetaData;
+import configs.Config;
 
 public class BufferManagerImplem extends BufferManager{
 
@@ -258,8 +261,6 @@ public class BufferManagerImplem extends BufferManager{
     }
 
     private boolean isPageOnDisk(int pageId) {
-        //System.out.println(pageId);
-        //System.out.println(this.totalPages);
         if(pageId < this.totalPages)
         {
             return true;

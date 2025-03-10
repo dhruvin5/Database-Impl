@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import Row.Row;
-import configs.*;
+import configs.Config;
 
 public class PageImpl implements Page {
 
