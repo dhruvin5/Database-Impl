@@ -8,7 +8,7 @@
 - Git Bash
 
 ## How To Run:
-- To Build and Unit Test the Project:
+- To Build and Run Unit Tests in the Project:
   - Go to the root directory
   - Enter the Command `gradle clean build` in git bash
     - It will create a jar file and run the unit test, in which the test results will be displayed.
