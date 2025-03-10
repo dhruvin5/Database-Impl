@@ -17,10 +17,12 @@
   - Enter the Command `gradle clean build` in git bash
     - It will create a jar file and run the unit test, in which the test results will be displayed.
   - To run the executable, go to `build\libs` and use the command `java -jar app.jar` which will run the end-to-end script
+    - Please note running the jar file may take time as it will load the IMDB dataset.
 - To Just Run Unit Test:
   - Go to the root directory
   - Use the command `gradle clean test` in git bash
     - It will show the results of the unit test
-- `app.jar` has already been created, but can be rebuilt as needed.
+    - A report will be also generated and visible in `index.html` in `app\build\report\tests\test`
+- Note: When running the unit test in the CLI, results that have `standard_out` are not unit test results. They are print statements in the buffermanager or page class that are invoked in the unit test. 
       
 
