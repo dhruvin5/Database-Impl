@@ -12,7 +12,14 @@ import Page.Page;
 import Row.Row;
 
 public class Caller {
+
+    public String getGreeting() {
+        return "Hello World!";
+    }
+
     public static void main(String[] args) {
+
+
         BufferManager bufferManager = new BufferManagerImplem(5);
 
         Utilities.loadDataset(bufferManager,"/Users/Admin/Downloads/title.basics.tsv");
