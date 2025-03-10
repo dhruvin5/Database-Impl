@@ -7,6 +7,10 @@
 - Gradle 8.13
 - Git Bash
 
+## Changes that Need to be Made
+- Download the IMDB dataset (unzipped)
+- In `app\src\org\java\example\Caller.java` please update the location of the dataset when calling `Utilities.loadDataset`
+
 ## How To Run:
 - To Build and Run Unit Tests in the Project:
   - Go to the root directory
