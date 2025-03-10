@@ -10,7 +10,6 @@ public class QueryTest {
     public static void main(String[] args) {
         //Initialize the BufferManager to a size of 5
         BufferManager bufferManager = new BufferManagerImplem(5); 
-        Random rand = new Random();
 
         System.out.println("PASS: Buffer Manager initialized with buffer size: 5");
 

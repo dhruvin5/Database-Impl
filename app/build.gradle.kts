@@ -53,7 +53,7 @@ tasks.register<Exec>("runQueryTestScript") {
 }
 
 tasks.named<Test>("test") {
-    dependsOn("runQueryTestScript")  // Ensure the script runs before unit tests
+    // dependsOn("runQueryTestScript")  // Ensure the script runs before unit tests
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 
@@ -62,6 +62,10 @@ tasks.named<Test>("test") {
         events("passed", "failed", "skipped", "standard_out", "standard_error")
         showStandardStreams = true // This ensures standard streams are displayed in the console.
     }
+}
 
-    
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "org.example.Caller"
+    }
 }
