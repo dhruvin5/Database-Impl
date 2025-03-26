@@ -21,6 +21,7 @@ public class Row {
         this.data = new ArrayList<byte[]>();
     }
 
+    // Use for generalized rows where we don't know the schema
     public Row(ArrayList<byte[]> data) {
         this.data = data;
         this.movieId = null;

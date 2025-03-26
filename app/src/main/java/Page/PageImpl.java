@@ -1,7 +1,6 @@
 package Page;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import Row.Row;
@@ -43,10 +42,10 @@ public class PageImpl implements Page {
         setRowCount(0);
 
         this.catalog = systemCatalog.getInstance();
-        this.tableName = catalog.getTableNameFromPid(pageId);
-        tableMetaData table = catalog.getTable(this.tableName);
+        this.tableName = catalog.getTableNameFromPid(pageId); // Gets the table name associated with the pageId
+        tableMetaData table = catalog.getTable(this.tableName); // Retrieves the table metadata using the table name
 
-        this.ROW_SIZE = table.getRowSize();
+        this.ROW_SIZE = table.getRowSize(); // Gets the size of a single row from the table metadata
         this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE) / ROW_SIZE; // max rows that can fit in a page
 
     }
@@ -59,12 +58,12 @@ public class PageImpl implements Page {
         this.pageId = pageId;
         this.rows = existingRows;
         this.catalog = systemCatalog.getInstance();
-        this.tableName = catalog.getTableNameFromPid(pageId);
+        this.tableName = catalog.getTableNameFromPid(pageId); // Gets the table name associated with the pageId
 
-        tableMetaData table = catalog.getTable(this.tableName);
+        tableMetaData table = catalog.getTable(this.tableName); // Retrieves the table metadata using the table name
 
-        this.ROW_SIZE = table.getRowSize();
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE) / ROW_SIZE;
+        this.ROW_SIZE = table.getRowSize(); // Gets the size of a single row from the table metadata
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE) / ROW_SIZE; // max rows that can fit in a page
     }
 
     // gets the row using the rowId
@@ -77,8 +76,12 @@ public class PageImpl implements Page {
             return null;
         }
 
-        tableMetaData table = catalog.getTable(this.tableName);
-        ArrayList<String> columnNames = table.getColumnNames();
+        tableMetaData table = catalog.getTable(this.tableName); // Retrieves the table metadata using the table that the
+                                                                // page belongs to
+        ArrayList<String> columnNames = table.getColumnNames(); // Gets the column names from the table metadata
+
+        // return new Row(Arrays.copyOfRange(rows, offset, offset + ROW_SIZE));
+        return getRowHelper(rowId, columnNames, table);
 
         // int column_1_size = table.getColumnSize(columnNames.get(0));
         // int column_2_size = table.getColumnSize(columnNames.get(1));
@@ -91,7 +94,6 @@ public class PageImpl implements Page {
 
         // // create a row with the data
         // return new Row(column1, column2);
-        return getRowHelper(rowId, columnNames, table);
     }
 
     @Override
@@ -105,10 +107,12 @@ public class PageImpl implements Page {
             return -1;
         }
 
-        tableMetaData table = catalog.getTable(this.tableName);
-        ArrayList<String> columnNames = table.getColumnNames();
+        tableMetaData table = catalog.getTable(this.tableName); // Retrieves the table metadata using the table that the
+                                                                // page belongs to
+        ArrayList<String> columnNames = table.getColumnNames(); // Gets the column names from the table metadata
 
-        insertRowHelper(row, columnNames, table);
+        insertRowHelper(row, columnNames, table); // Inserts the row into the page using the helper method
+
         int rowCount = getRowCount();
         setRowCount(rowCount + 1);
         return rowCount;
@@ -172,12 +176,15 @@ public class PageImpl implements Page {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
     }
 
+    // helper methods to get rows
     private Row getRowHelper(int rowId, ArrayList<String> columnNames, tableMetaData table) {
-        if (columnNames.size() == 2) {
-            int column_1_size = table.getColumnSize(columnNames.get(0));
-            int column_2_size = table.getColumnSize(columnNames.get(1));
 
-            // go to the offset
+        // If you want to use the previous hard coded version of Row from lab 1
+        if (columnNames.size() == 0) {
+            int column_1_size = table.getColumnSize(columnNames.get(0)); // size of first column
+            int column_2_size = table.getColumnSize(columnNames.get(1)); // size of second column
+
+            // go to the offset and copy the data for the row
             int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
             byte[] column1 = Arrays.copyOfRange(rows, offset, offset + column_1_size);
             byte[] column2 = Arrays.copyOfRange(rows, offset + column_1_size, offset + column_1_size + column_2_size);
@@ -186,17 +193,24 @@ public class PageImpl implements Page {
             return new Row(column1, column2);
 
         }
+
+        // If you want to use the generalized Row, allowing for more than 2 columns with
+        // different schemas
         ArrayList<byte[]> data = new ArrayList<>();
+        int curr = 0;
         for (String columnName : columnNames) {
-            int columnSize = table.getColumnSize(columnName);
-            int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE + data.size() * columnSize;
-            byte[] columnData = Arrays.copyOfRange(rows, offset, offset + columnSize);
-            data.add(columnData);
+            int columnSize = table.getColumnSize(columnName); // get the size of the current column
+            int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE + curr; // calculate the offset for the current column
+            byte[] columnData = Arrays.copyOfRange(rows, offset, offset + columnSize); // copy the data for the current
+                                                                                       // column
+            data.add(columnData); // add the column data to the row data
+            curr += columnSize; // update the current offset for the next column
         }
         return new Row(data);
     }
 
     private void insertRowHelper(Row row, ArrayList<String> columnNames, tableMetaData table) {
+        // If you want to use the previous hard coded version of Row from lab 1
         if (row.data.size() == 0) {
             int column_1_size = table.getColumnSize(columnNames.get(0));
             int column_2_size = table.getColumnSize(columnNames.get(1));
@@ -219,15 +233,22 @@ public class PageImpl implements Page {
             }
 
         } else {
-            int curr = 0;
-            ArrayList<byte[]> data = row.data;
-            for (int i = 0; i < data.size(); i++) {
-                int columnSize = table.getColumnSize(columnNames.get(i));
-                int offset = ROW_COUNT_SIZE + getRowCount() * ROW_SIZE + curr;
-                byte[] columnData = Arrays.copyOfRange(data.get(i), 0, columnSize);
-                System.arraycopy(columnData, 0, rows, offset, columnSize);
-                curr += columnSize;
+            // If you want to use the generalized Row, allowing for more than 2 columns with
+            // different schemas
 
+            int curr = 0;
+            ArrayList<byte[]> data = row.data; // get the data from the row object
+
+            for (int i = 0; i < data.size(); i++) {
+                int columnSize = table.getColumnSize(columnNames.get(i)); // get the size of the current column
+                int offset = ROW_COUNT_SIZE + getRowCount() * ROW_SIZE + curr; // calculate the offset for the current
+                                                                               // column
+                byte[] columnData = Arrays.copyOfRange(data.get(i), 0, columnSize); // copy the data for the current
+                                                                                    // column
+                System.arraycopy(columnData, 0, rows, offset, columnSize); // copy the column data into the page
+                curr += columnSize; // update the current offset for the next column
+
+                // copy the column data into the rows array
                 for (int j = 0; j < columnSize; j++) {
                     this.rows[offset + j] = columnData[j];
                 }

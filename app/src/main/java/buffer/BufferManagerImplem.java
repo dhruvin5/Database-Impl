@@ -220,7 +220,8 @@ public class BufferManagerImplem extends BufferManager {
     private Page getPageFromDisk(int pageId) {
 
         // using random access file to go to that location and read 4KB of data
-        try (RandomAccessFile fileReader = new RandomAccessFile(catalog.getCurrentFile(), "r")) {
+        String DISK_FILE = catalog.getFileNameFromPid(pageId); // get the file name from the pid id
+        try (RandomAccessFile fileReader = new RandomAccessFile(DISK_FILE, "r")) {
             long offset = (long) pageId * Config.PAGE_SIZE;
             if (offset >= fileReader.length()) {
                 return null;
@@ -249,8 +250,11 @@ public class BufferManagerImplem extends BufferManager {
         // get the page Id
         int pageId = page.getPid();
 
+        // Disk FILE from the pageId
+        String DISK_FILE = catalog.getFileNameFromPid(pageId);
+
         // open the disk file in read write mode
-        try (RandomAccessFile fileWriter = new RandomAccessFile(catalog.getCurrentFile(), "rw")) {
+        try (RandomAccessFile fileWriter = new RandomAccessFile(DISK_FILE, "rw")) {
             long offset = (long) pageId * Config.PAGE_SIZE;
 
             // go to the offset
