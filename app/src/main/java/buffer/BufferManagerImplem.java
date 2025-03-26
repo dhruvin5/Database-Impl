@@ -1,4 +1,5 @@
 package buffer;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -9,8 +10,9 @@ import Page.Page;
 import Page.PageImpl;
 import Page.PageMetaData;
 import configs.Config;
+import SystemCatalog.systemCatalog;
 
-public class BufferManagerImplem extends BufferManager{
+public class BufferManagerImplem extends BufferManager {
 
     private static String DISK_FILE = "imdb.bin";
 
@@ -29,10 +31,14 @@ public class BufferManagerImplem extends BufferManager{
     // Page metadata
     HashMap<Integer, PageMetaData> pageInfo;
 
+    // Shared catalog instance
+    private final systemCatalog catalog;
+
     int totalPages;
 
-    // initialize the buffer pool, page table, free frames list, lru cache, page metadata
-    public BufferManagerImplem(int bufferSize){
+    // initialize the buffer pool, page table, free frames list, lru cache, page
+    // metadata
+    public BufferManagerImplem(int bufferSize) {
         super(bufferSize);
         this.bufferPool = new Page[bufferSize];
         this.freeFrameList = new ArrayList<>();
@@ -41,15 +47,19 @@ public class BufferManagerImplem extends BufferManager{
         this.pageInfo = new HashMap<>();
         this.totalPages = 0;
 
+        this.catalog = systemCatalog.getInstance(); // get the shared catalog instance
+
         // all frames are free initially
-        for(int i=0;i<bufferSize;i++)
+        for (int i = 0; i < bufferSize; i++)
             freeFrameList.add(i);
     }
 
     // Create new Page
     Page createAndAllocatePage(int frameIndex, Page page, boolean isPageCreated) {
 
-        if(!isPageCreated){ // Create a new page if doesnt exist
+        if (!isPageCreated) { // Create a new page if doesnt exist
+            String tableName = catalog.getTableNameFromFile(DISK_FILE);
+            catalog.addPidToTable(this.totalPages, tableName);
 
             page = new PageImpl(this.totalPages);
             this.totalPages = this.totalPages + 1;
@@ -61,7 +71,8 @@ public class BufferManagerImplem extends BufferManager{
         // Store the metadata
         PageMetaData metadata = new PageMetaData();
         metadata.incrementPinCount(); // pinning
-        if(!isPageCreated){ // set the page dirty only while creating the new page and not while loading it from the disk
+        if (!isPageCreated) { // set the page dirty only while creating the new page and not while loading it
+                              // from the disk
             metadata.setDirtyBit(true); // marking it dirty
         }
         pageInfo.put(page.getPid(), metadata);
@@ -116,7 +127,7 @@ public class BufferManagerImplem extends BufferManager{
         return -1;
     }
 
-    Page createAndLoadPageHelper(Page page, boolean isPageCreated){
+    Page createAndLoadPageHelper(Page page, boolean isPageCreated) {
         // Check for free frames
         if (!freeFrameList.isEmpty()) {
             // remove free frame for allocation
@@ -124,12 +135,11 @@ public class BufferManagerImplem extends BufferManager{
 
             // Create and allocate new page in the buffer pool
             return createAndAllocatePage(frameIndex, page, isPageCreated);
-        }
-        else {
+        } else {
             // Evict using LRU if possible
             int lruFrameIndex = evictPage();
 
-            if(lruFrameIndex == -1){
+            if (lruFrameIndex == -1) {
                 return null; // all pages are pinned, nothing removed from LRU cache, page creation failed
             }
 
@@ -137,9 +147,6 @@ public class BufferManagerImplem extends BufferManager{
             return createAndAllocatePage(lruFrameIndex, page, isPageCreated);
         }
     }
-
-
-
 
     @Override
     public Page getPage(int pageId) {
@@ -157,22 +164,21 @@ public class BufferManagerImplem extends BufferManager{
             lruCache.addLast(pageId);
 
             return page;
-        }
-        else { // load page from disk
-            // Check if the page exists on disk
+        } else { // load page from disk
+                 // Check if the page exists on disk
             if (!isPageOnDisk(pageId)) {
                 System.out.println("Error: Page " + pageId + " does not exist on disk.");
                 return null; // Page not found on disk
             }
 
-            //get page from disk
+            // get page from disk
             Page page = getPageFromDisk(pageId);
             if (page == null) {
                 System.out.println("Error: Failed to load page" + pageId + "from disk.");
                 return null; // failed to load page from disk
             }
 
-            //load to buffer
+            // load to buffer
             return createAndLoadPageHelper(page, true);
         }
     }
@@ -189,7 +195,7 @@ public class BufferManagerImplem extends BufferManager{
         if (metadata != null) {
             // Page is in the buffer, marking it as dirty
             metadata.setDirtyBit(true);
-           // System.out.println("Page " + pageId + " is marked as dirty.");
+            // System.out.println("Page " + pageId + " is marked as dirty.");
         } else {
             System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
@@ -202,18 +208,16 @@ public class BufferManagerImplem extends BufferManager{
         if (metadata != null) { // page exists in buffer pool
             if (metadata.getPinCount() > 0) {
                 metadata.decrementPinCount();
-            }
-            else { // Pin count is already 0
+            } else { // Pin count is already 0
                 System.out.println("Error: Page " + pageId + " already has pin count 0. Cannot unpin further.");
             }
-        }
-        else { // Page not in the buffer pool
+        } else { // Page not in the buffer pool
             System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
 
     // get Page from the disk
-    private Page getPageFromDisk(int pageId){
+    private Page getPageFromDisk(int pageId) {
 
         // using random access file to go to that location and read 4KB of data
         try (RandomAccessFile fileReader = new RandomAccessFile(DISK_FILE, "r")) {
@@ -254,21 +258,19 @@ public class BufferManagerImplem extends BufferManager{
 
             // overwrite at that offset
             fileWriter.write(page.getRows(), 0, Config.PAGE_SIZE);
-           // System.out.println("Wrote page " + pageId + " to disk.");
+            // System.out.println("Wrote page " + pageId + " to disk.");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private boolean isPageOnDisk(int pageId) {
-        if(pageId < this.totalPages)
-        {
+        if (pageId < this.totalPages) {
             return true;
         }
         return false;
     }
 
-    
     public int getBufferCapacity() {
         return this.bufferPool.length;
     }
@@ -285,22 +287,21 @@ public class BufferManagerImplem extends BufferManager{
         return this.pageTable.size();
     }
 
-
     // get the total pages uptil now
     public int getTotalPages() {
         return this.totalPages;
     }
 
     // check if the buffer is empty
-    public boolean isBufferEmpty(){
-        for(int i=0;i<this.bufferPool.length;i++){
-            if(this.bufferPool[i] != null){
+    public boolean isBufferEmpty() {
+        for (int i = 0; i < this.bufferPool.length; i++) {
+            if (this.bufferPool[i] != null) {
                 return false;
             }
         }
         return true;
     }
-    
+
     public int existsInCache(int pageId) {
         return lruCache.indexOf(pageId);
     }
@@ -308,9 +309,9 @@ public class BufferManagerImplem extends BufferManager{
     public PageMetaData getPageMetaData(int pageId) {
         return pageInfo.get(pageId);
     }
-    
+
     public void updateFile(String fileName) {
         DISK_FILE = fileName;
     }
-    
+
 }

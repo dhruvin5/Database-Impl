@@ -9,11 +9,11 @@ import Page.Page;
 import Row.Row;
 import buffer.*;
 
-public class Utilities{
+public class Utilities {
 
     // loads the dataset into a disk file
     // takes the bufferManagaer and the filePath as the input.
-    public static void loadDataset(BufferManager bf, String filepath){
+    public static void loadDataset(BufferManager bf, String filepath) {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
 
@@ -30,8 +30,8 @@ public class Utilities{
 
                 // get the idColumn and the title Column
                 String idStr = cols[0];
-                String titleStr   = cols[2];
-                
+                String titleStr = cols[2];
+
                 // discard if the movieId is not of size 9
                 if (idStr.length() != 9) {
                     continue;
@@ -39,7 +39,7 @@ public class Utilities{
 
                 // convert the string to fixed size byte arrays
                 byte[] idBytes = toFixedByteArray(idStr, 9);
-                byte[] titleBytes   = toFixedByteArray(titleStr, 30);
+                byte[] titleBytes = toFixedByteArray(titleStr, 30);
 
                 // create a new Row Object
                 Row row = new Row(idBytes, titleBytes);
@@ -80,7 +80,7 @@ public class Utilities{
             inputString = "";
         }
         if (inputString.length() > length) {
-            inputString = inputString.substring(0, length);  // truncate
+            inputString = inputString.substring(0, length); // truncate
         }
 
         // get the bytes from the string
