@@ -14,7 +14,7 @@ import SystemCatalog.systemCatalog;
 
 public class BufferManagerImplem extends BufferManager {
 
-    private static String DISK_FILE = "imdb.bin";
+    // private static String DISK_FILE = "imdb.bin";
 
     // for mapping page id to frames
     HashMap<Integer, Integer> pageTable;
@@ -58,7 +58,7 @@ public class BufferManagerImplem extends BufferManager {
     Page createAndAllocatePage(int frameIndex, Page page, boolean isPageCreated) {
 
         if (!isPageCreated) { // Create a new page if doesnt exist
-            String tableName = catalog.getTableNameFromFile(DISK_FILE);
+            String tableName = catalog.getTableNameFromFile(catalog.getCurrentFile());
             catalog.addPidToTable(this.totalPages, tableName);
 
             page = new PageImpl(this.totalPages);
@@ -220,7 +220,7 @@ public class BufferManagerImplem extends BufferManager {
     private Page getPageFromDisk(int pageId) {
 
         // using random access file to go to that location and read 4KB of data
-        try (RandomAccessFile fileReader = new RandomAccessFile(DISK_FILE, "r")) {
+        try (RandomAccessFile fileReader = new RandomAccessFile(catalog.getCurrentFile(), "r")) {
             long offset = (long) pageId * Config.PAGE_SIZE;
             if (offset >= fileReader.length()) {
                 return null;
@@ -250,7 +250,7 @@ public class BufferManagerImplem extends BufferManager {
         int pageId = page.getPid();
 
         // open the disk file in read write mode
-        try (RandomAccessFile fileWriter = new RandomAccessFile(DISK_FILE, "rw")) {
+        try (RandomAccessFile fileWriter = new RandomAccessFile(catalog.getCurrentFile(), "rw")) {
             long offset = (long) pageId * Config.PAGE_SIZE;
 
             // go to the offset
@@ -310,8 +310,16 @@ public class BufferManagerImplem extends BufferManager {
         return pageInfo.get(pageId);
     }
 
-    public void updateFile(String fileName) {
-        DISK_FILE = fileName;
+    // public void updateFile(String fileName) {
+    // DISK_FILE = fileName;
+    // }
+
+    public void force() {
+        for (int i = 0; i < bufferPool.length; i++) {
+            if (bufferPool[i] != null) {
+                writeToDisk(bufferPool[i]);
+            }
+        }
     }
 
 }
