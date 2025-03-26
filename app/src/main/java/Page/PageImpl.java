@@ -180,7 +180,7 @@ public class PageImpl implements Page {
     private Row getRowHelper(int rowId, ArrayList<String> columnNames, tableMetaData table) {
 
         // If you want to use the previous hard coded version of Row from lab 1
-        if (columnNames.size() == 0) {
+        if (columnNames.size() == 2) {
             int column_1_size = table.getColumnSize(columnNames.get(0)); // size of first column
             int column_2_size = table.getColumnSize(columnNames.get(1)); // size of second column
 
