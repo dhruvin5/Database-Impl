@@ -79,16 +79,19 @@ public class PageImpl implements Page {
 
         tableMetaData table = catalog.getTable(this.tableName);
         ArrayList<String> columnNames = table.getColumnNames();
-        int column_1_size = table.getColumnSize(columnNames.get(0));
-        int column_2_size = table.getColumnSize(columnNames.get(1));
 
-        // go to the offset
-        int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
-        byte[] column1 = Arrays.copyOfRange(rows, offset, offset + column_1_size);
-        byte[] column2 = Arrays.copyOfRange(rows, offset + column_1_size, offset + column_1_size + column_2_size);
+        // int column_1_size = table.getColumnSize(columnNames.get(0));
+        // int column_2_size = table.getColumnSize(columnNames.get(1));
 
-        // create a row with the data
-        return new Row(column1, column2);
+        // // go to the offset
+        // int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
+        // byte[] column1 = Arrays.copyOfRange(rows, offset, offset + column_1_size);
+        // byte[] column2 = Arrays.copyOfRange(rows, offset + column_1_size, offset +
+        // column_1_size + column_2_size);
+
+        // // create a row with the data
+        // return new Row(column1, column2);
+        return getRowHelper(rowId, columnNames, table);
     }
 
     @Override
@@ -104,31 +107,37 @@ public class PageImpl implements Page {
 
         tableMetaData table = catalog.getTable(this.tableName);
         ArrayList<String> columnNames = table.getColumnNames();
-        int column_1_Size = table.getColumnSize(columnNames.get(0));
-        int column_2_Size = table.getColumnSize(columnNames.get(1));
 
-        byte[] movieIdFixed = new byte[column_1_Size];
-        byte[] titleFixed = new byte[column_2_Size];
-
-        // movieId should be of size 9
-        // truncate longer title to 30. pad if less
-        System.arraycopy(row.movieId, 0, movieIdFixed, 0, Math.min(row.movieId.length, column_1_Size));
-        System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length, column_2_Size));
-
+        insertRowHelper(row, columnNames, table);
         int rowCount = getRowCount();
-        int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
-
-        // copy the row into the page data
-        for (int i = 0; i < column_1_Size; i++) {
-            this.rows[offset + i] = movieIdFixed[i];
-        }
-
-        for (int i = 0; i < column_2_Size; i++) {
-            this.rows[offset + column_1_Size + i] = titleFixed[i];
-        }
-
         setRowCount(rowCount + 1);
         return rowCount;
+
+        // int column_1_Size = table.getColumnSize(columnNames.get(0));
+        // int column_2_Size = table.getColumnSize(columnNames.get(1));
+
+        // byte[] movieIdFixed = new byte[column_1_Size];
+        // byte[] titleFixed = new byte[column_2_Size];
+
+        // // movieId should be of size 9
+        // // truncate longer title to 30. pad if less
+        // System.arraycopy(row.movieId, 0, movieIdFixed, 0,
+        // Math.min(row.movieId.length, column_1_Size));
+        // System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length,
+        // column_2_Size));
+
+        // int rowCount = getRowCount();
+        // int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
+
+        // // copy the row into the page data
+        // for (int i = 0; i < column_1_Size; i++) {
+        // this.rows[offset + i] = movieIdFixed[i];
+        // }
+
+        // for (int i = 0; i < column_2_Size; i++) {
+        // this.rows[offset + column_1_Size + i] = titleFixed[i];
+        // }
+
     }
 
     // if row count >= max row count than page is full
@@ -161,6 +170,70 @@ public class PageImpl implements Page {
     // set the row count in first 4 bytes
     private void setRowCount(int count) {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
+    }
+
+    private Row getRowHelper(int rowId, ArrayList<String> columnNames, tableMetaData table) {
+        if (columnNames.size() == 2) {
+            int column_1_size = table.getColumnSize(columnNames.get(0));
+            int column_2_size = table.getColumnSize(columnNames.get(1));
+
+            // go to the offset
+            int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
+            byte[] column1 = Arrays.copyOfRange(rows, offset, offset + column_1_size);
+            byte[] column2 = Arrays.copyOfRange(rows, offset + column_1_size, offset + column_1_size + column_2_size);
+
+            // create a row with the data
+            return new Row(column1, column2);
+
+        }
+        ArrayList<byte[]> data = new ArrayList<>();
+        for (String columnName : columnNames) {
+            int columnSize = table.getColumnSize(columnName);
+            int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE + data.size() * columnSize;
+            byte[] columnData = Arrays.copyOfRange(rows, offset, offset + columnSize);
+            data.add(columnData);
+        }
+        return new Row(data);
+    }
+
+    private void insertRowHelper(Row row, ArrayList<String> columnNames, tableMetaData table) {
+        if (row.data.size() == 0) {
+            int column_1_size = table.getColumnSize(columnNames.get(0));
+            int column_2_size = table.getColumnSize(columnNames.get(1));
+
+            // go to the offset
+            int offset = ROW_COUNT_SIZE + getRowCount() * ROW_SIZE;
+            byte[] column1 = Arrays.copyOfRange(row.movieId, 0, column_1_size);
+            byte[] column2 = Arrays.copyOfRange(row.title, 0, column_2_size);
+
+            // copy the row into the page data
+            System.arraycopy(column1, 0, rows, offset, column_1_size);
+            System.arraycopy(column2, 0, rows, offset + column_1_size, column_2_size);
+
+            for (int i = 0; i < column_1_size; i++) {
+                this.rows[offset + i] = column1[i];
+            }
+
+            for (int i = 0; i < column_2_size; i++) {
+                this.rows[offset + column_1_size + i] = column2[i];
+            }
+
+        } else {
+            int curr = 0;
+            ArrayList<byte[]> data = row.data;
+            for (int i = 0; i < data.size(); i++) {
+                int columnSize = table.getColumnSize(columnNames.get(i));
+                int offset = ROW_COUNT_SIZE + getRowCount() * ROW_SIZE + curr;
+                byte[] columnData = Arrays.copyOfRange(data.get(i), 0, columnSize);
+                System.arraycopy(columnData, 0, rows, offset, columnSize);
+                curr += columnSize;
+
+                for (int j = 0; j < columnSize; j++) {
+                    this.rows[offset + j] = columnData[j];
+                }
+            }
+
+        }
     }
 
 }

@@ -310,10 +310,6 @@ public class BufferManagerImplem extends BufferManager {
         return pageInfo.get(pageId);
     }
 
-    // public void updateFile(String fileName) {
-    // DISK_FILE = fileName;
-    // }
-
     public void force() {
         for (int i = 0; i < bufferPool.length; i++) {
             if (bufferPool[i] != null) {
