@@ -20,8 +20,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
     private int rootPageId;
     private BufferManager bm;
 
-
-     //Initializes the index file and creates the root node if it does not exist.
+    // Initializes the index file and creates the root node if it does not exist.
     public BplusTreeImplem(String indexFile, BufferManager bm) throws IOException {
         this.indexFile = indexFile;
         this.bm = bm;
@@ -29,36 +28,31 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         
         if (!file.exists()) {
             // Create root page if it doesn't exist
-            this.rootPageId = bm.createPage().getPid();
+            this.rootPageId = bm.createPage(indexFile).getPid();
             writeNode(new BplusTreeNode<>(true), rootPageId); // Write an empty leaf node
         }
     }
 
-
-    
-     // Serializes and writes a B+ Tree node to the index file, ensures that any updates to the node are persisted.
-    
+    // Serializes and writes a B+ Tree node to the index file
     private void writeNode(BplusTreeNode<K> node, int pageId) throws IOException {
         byte[] keysData = serializeNode(node.keys);
         byte[] valuesData = serializeNode(node.values);
         Row row = new Row(keysData, valuesData);
         
-        Page page = bm.getPage(indexFile,pageId);
+        Page page = bm.getPage(pageId, indexFile);
         page.insertRow(row);
-        bm.markDirty(indexFile,pageId);  // Mark the page as modified
-        bm.flushPage(indexFile,pageId);   // Ensure it is written to disk
+        bm.markDirty(pageId, indexFile);  // Mark the page as modified
+        // No flushPage here to avoid any additional functionality
     }
 
-    //Reads a B+ Tree node from disk.
-    
+    // Reads a B+ Tree node from disk
     private BplusTreeNode<K> readNode(int pageId) throws IOException, ClassNotFoundException {
-        Page page = bm.getPage(indexFile,pageId);
+        Page page = bm.getPage(pageId, indexFile);
         byte[] data = page.getRows();
         return deserializeNode(data);
     }
 
-    
-     //Serializes an object into a byte array for storage.
+    // Serializes an object into a byte array for storage
     private byte[] serializeNode(Object obj) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(bos);
@@ -66,26 +60,21 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         return bos.toByteArray();
     }
 
-    
-    //Deserializes a byte array into a B+ Tree node.
-     
+    // Deserializes a byte array into a B+ Tree node
     private BplusTreeNode<K> deserializeNode(byte[] data) throws IOException, ClassNotFoundException {
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
         ObjectInputStream in = new ObjectInputStream(bis);
         return (BplusTreeNode<K>) in.readObject();
     }
 
-    
-     //Inserts a key-value pair into the B+ tree.
-     //If the root node is full, a split occurs, and a new root is created.
-     
+    // Inserts a key-value pair into the B+ tree
     @Override
     public void insert(K key, Rid rid) {
         try {
             BplusTreeNode<K> root = readNode(rootPageId);
             if (root.keys.size() >= 3) { // Max keys per node before split
                 BplusTreeNode<K> newRoot = new BplusTreeNode<>(false);
-                int newPageId = bm.createPage().getPid();
+                int newPageId = bm.createPage(indexFile).getPid();
                 newRoot.children.add(rootPageId);
                 splitChild(newRoot, 0, root);
                 rootPageId = newPageId;
@@ -97,10 +86,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         }
     }
 
-    
-     //Handles insertion in a non-full node.
-     //If a leaf node is reached, inserts the key in sorted order. If a child node is full, it is split before inserting the key.
-     
+    // Handles insertion in a non-full node
     private void insertNonFull(int pageId, K key, Rid rid) throws IOException, ClassNotFoundException {
         BplusTreeNode<K> node = readNode(pageId);
         if (node.is_leaf) {
@@ -123,13 +109,10 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         }
     }
 
-    
-     //Splits a child node into two when it overflows.
-     //Updates the parent node accordingly.
-     
+    // Splits a child node into two when it overflows
     private void splitChild(BplusTreeNode<K> parent, int index, BplusTreeNode<K> child) throws IOException {
         BplusTreeNode<K> sibling = new BplusTreeNode<>(child.is_leaf);
-        int newPageId = bm.createPage().getPid();
+        int newPageId = bm.createPage(indexFile).getPid();
         int mid = child.keys.size() / 2;
 
         sibling.keys.addAll(child.keys.subList(mid + 1, child.keys.size()));
@@ -152,16 +135,9 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         writeNode(child, parent.children.get(index));
         writeNode(sibling, newPageId);
         writeNode(parent, rootPageId);  // Write the parent node
-
-        // Ensure the changes are flushed to disk
-        bm.flushPage(parent.children.get(index));
-        bm.flushPage(newPageId);
-        bm.flushPage(rootPageId);
     }
 
-    
-     //Searches for a key in the B+ tree and returns an iterator over the matching records.
-     
+    // Searches for a key in the B+ tree and returns an iterator over the matching records
     @Override
     public Iterator<Rid> search(K key) {
         List<Rid> matchingRids = new ArrayList<>();
@@ -186,10 +162,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         return matchingRids.iterator();  // Return all matching RIDs
     }
 
-    
-     //Performs a range search between two keys.
-     //Returns all matching records within the range.
-     
+    // Performs a range search between two keys
     @Override
     public Iterator<Rid> rangeSearch(K startKey, K endKey) {
         List<Rid> results = new ArrayList<>();
@@ -206,7 +179,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                         results.add(node.values.get(i));
                     }
                 }
-                node = node.children.isEmpty() ? null : readNode(node.children.get(0));
+                node = node.next == null ? null : readNode(node.next);
             }
         } catch (Exception e) {
             e.printStackTrace();
