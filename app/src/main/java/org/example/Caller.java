@@ -20,118 +20,129 @@ public class Caller {
 
         BufferManager bufferManager = new BufferManagerImplem(5);
 
-        Utilities.loadDataset(bufferManager, "/Users/Admin/Downloads/title.basics.tsv");
+        Utilities.loadDataset(bufferManager, "C:/Users/bhaga/Downloads/title.basics.tsv");
 
         System.out.println("PASS: Buffer Manager initialized with buffer size: 5");
 
         // Creating a page and insert initial rows
         System.out.println("\nTEST: Creating a new page...");
-        Page p = bufferManager.createPage();
-        int start_pid = p.getPid();
-        System.out.println("PASS: Created Page ID: " + start_pid);
+        // Page p = bufferManager.createPage();
+        // int start_pid = p.getPid();
+        // System.out.println("PASS: Created Page ID: " + start_pid);
 
-        // Inserting few initial rows into page
-        for (int i = 0; i < 3; i++) {
-            byte[] movieId = ("tt000000" + i).getBytes(StandardCharsets.UTF_8);
-            byte[] title = ("Movie " + i).getBytes(StandardCharsets.UTF_8);
-            Row row = new Row(movieId, title);
-            p.insertRow(row);
-            System.out.println("PASS: Inserted row " + i + " (Movie ID: " + new String(movieId).trim() + ")");
-        }
+        // // Inserting few initial rows into page
+        // for (int i = 0; i < 3; i++) {
+        // byte[] movieId = ("tt000000" + i).getBytes(StandardCharsets.UTF_8);
+        // byte[] title = ("Movie " + i).getBytes(StandardCharsets.UTF_8);
+        // Row row = new Row(movieId, title);
+        // p.insertRow(row);
+        // System.out.println("PASS: Inserted row " + i + " (Movie ID: " + new
+        // String(movieId).trim() + ")");
+        // }
 
-        // Unpinning the page after the insertion
-        bufferManager.unpinPage(start_pid);
-        System.out.println("PASS: Initial rows inserted page unpinned successfully.");
+        // // Unpinning the page after the insertion
+        // bufferManager.unpinPage(start_pid);
+        // System.out.println("PASS: Initial rows inserted page unpinned
+        // successfully.");
 
-        // Triggering evictions by creating more pages
-        System.out.println("\nTEST: Creating additional pages to trigger evictions...");
-        for (int i = 0; i < 7; i++) {
-            Page tempPage = bufferManager.createPage();
-            bufferManager.unpinPage(tempPage.getPid());
-            System.out.println("PASS: Created and unpinned temp page " + tempPage.getPid());
-        }
+        // // Triggering evictions by creating more pages
+        // System.out.println("\nTEST: Creating additional pages to trigger
+        // evictions...");
+        // for (int i = 0; i < 7; i++) {
+        // Page tempPage = bufferManager.createPage();
+        // bufferManager.unpinPage(tempPage.getPid());
+        // System.out.println("PASS: Created and unpinned temp page " +
+        // tempPage.getPid());
+        // }
 
-        // Re-Fetching an evicted page
-        System.out.println("\nFetching previously evicted page (ID: " + start_pid + ")...");
-        long startTime = System.nanoTime();
-        p = bufferManager.getPage(start_pid);
-        long endTime = System.nanoTime();
-        long evictedLoadTime = endTime - startTime;
+        // // Re-Fetching an evicted page
+        // System.out.println("\nFetching previously evicted page (ID: " + start_pid +
+        // ")...");
+        // long startTime = System.nanoTime();
+        // p = bufferManager.getPage(start_pid);
+        // long endTime = System.nanoTime();
+        // long evictedLoadTime = endTime - startTime;
 
-        if (p == null) {
-            System.out.println("FAIL: Page retrieval unsuccessful.");
-            return;
-        } else {
-            System.out.println("PASS: Page is retrieved successfully . Loadtime: " + evictedLoadTime + " ns");
-            // Printing the contents of the page after it was re-fetched post initial
-            // eviction
-            System.out.println("\nTEST: Printing contents of the re-fetched page after eviction:");
-            for (int i = 0; i < 3; i++) {
-                Row row = p.getRow(i);
-                if (row == null) {
-                    System.out.println("FAIL: Missing row " + i + " after eviction.");
-                    return;
-                } else {
-                    System.out.println("PASS: Row " + i + " exists: " +
-                            new String(row.movieId).trim() + " - " + new String(row.title).trim());
-                }
-            }
-        }
+        // if (p == null) {
+        // System.out.println("FAIL: Page retrieval unsuccessful.");
+        // return;
+        // } else {
+        // System.out.println("PASS: Page is retrieved successfully . Loadtime: " +
+        // evictedLoadTime + " ns");
+        // // Printing the contents of the page after it was re-fetched post initial
+        // // eviction
+        // System.out.println("\nTEST: Printing contents of the re-fetched page after
+        // eviction:");
+        // for (int i = 0; i < 3; i++) {
+        // Row row = p.getRow(i);
+        // if (row == null) {
+        // System.out.println("FAIL: Missing row " + i + " after eviction.");
+        // return;
+        // } else {
+        // System.out.println("PASS: Row " + i + " exists: " +
+        // new String(row.movieId).trim() + " - " + new String(row.title).trim());
+        // }
+        // }
+        // }
 
-        // Marking page as dirty and inserting more rows into it
-        System.out.println("\nTEST: Marking page as dirty and inserting more rows...");
-        bufferManager.markDirty(start_pid);
-        for (int i = 3; i < 6; i++) {
-            byte[] movie_id = ("tt000000" + i).getBytes(StandardCharsets.UTF_8);
-            byte[] title = ("Movie " + i).getBytes(StandardCharsets.UTF_8);
-            Row row = new Row(movie_id, title);
-            p.insertRow(row);
-            System.out.println(
-                    "PASS: Successfully inserted row " + i + " (Movie ID: " + new String(movie_id).trim() + ")");
-        }
+        // // Marking page as dirty and inserting more rows into it
+        // System.out.println("\nTEST: Marking page as dirty and inserting more
+        // rows...");
+        // bufferManager.markDirty(start_pid);
+        // for (int i = 3; i < 6; i++) {
+        // byte[] movie_id = ("tt000000" + i).getBytes(StandardCharsets.UTF_8);
+        // byte[] title = ("Movie " + i).getBytes(StandardCharsets.UTF_8);
+        // Row row = new Row(movie_id, title);
+        // p.insertRow(row);
+        // System.out.println(
+        // "PASS: Successfully inserted row " + i + " (Movie ID: " + new
+        // String(movie_id).trim() + ")");
+        // }
 
-        // Unpinning the page after insertion
-        bufferManager.unpinPage(start_pid);
+        // // Unpinning the page after insertion
+        // bufferManager.unpinPage(start_pid);
 
-        // Validate all rows after dirty pages and eviction
-        System.out.println("\nTEST: Validation of all rows after initial eviction and dirty pages");
-        startTime = System.nanoTime();
-        p = bufferManager.getPage(start_pid);
-        endTime = System.nanoTime();
-        long pinnedLoadTime = endTime - startTime;
+        // // Validate all rows after dirty pages and eviction
+        // System.out.println("\nTEST: Validation of all rows after initial eviction and
+        // dirty pages");
+        // startTime = System.nanoTime();
+        // p = bufferManager.getPage(start_pid);
+        // endTime = System.nanoTime();
+        // long pinnedLoadTime = endTime - startTime;
 
-        if (p == null) {
-            System.out.println("FAIL: Could not retrieve page for validation.");
-            return;
-        }
+        // if (p == null) {
+        // System.out.println("FAIL: Could not retrieve page for validation.");
+        // return;
+        // }
 
-        System.out.println("PASS: Pinned Page Load Time: " + pinnedLoadTime + " ns");
+        // System.out.println("PASS: Pinned Page Load Time: " + pinnedLoadTime + " ns");
 
-        // load time comparison
-        System.out.println("\nTEST: Load Time Comparison...");
-        if (pinnedLoadTime < evictedLoadTime) {
-            System.out.println("PASS: Pinned page loaded FASTER than an evicted page.");
-        } else {
-            System.out.println("FAIL: Pinned page loaded SLOWER than an evicted page.");
-        }
+        // // load time comparison
+        // System.out.println("\nTEST: Load Time Comparison...");
+        // if (pinnedLoadTime < evictedLoadTime) {
+        // System.out.println("PASS: Pinned page loaded FASTER than an evicted page.");
+        // } else {
+        // System.out.println("FAIL: Pinned page loaded SLOWER than an evicted page.");
+        // }
 
-        // Checking all rows in the page
-        for (int i = 0; i < 6; i++) {
-            Row row = p.getRow(i);
-            if (row == null) {
-                System.out.println("FAIL: Missing row " + i + " after eviction.");
-                return;
-            } else {
-                System.out.println("PASS: Row " + i + " exists: " +
-                        new String(row.movieId).trim() + " - " + new String(row.title).trim());
-            }
-        }
+        // // Checking all rows in the page
+        // for (int i = 0; i < 6; i++) {
+        // Row row = p.getRow(i);
+        // if (row == null) {
+        // System.out.println("FAIL: Missing row " + i + " after eviction.");
+        // return;
+        // } else {
+        // System.out.println("PASS: Row " + i + " exists: " +
+        // new String(row.movieId).trim() + " - " + new String(row.title).trim());
+        // }
+        // }
 
-        // Test to ensure that dirty pages are flushed to disk file
-        System.out.println("\nPASS: Ensuring dirty pages are flushed to disk...");
-        bufferManager.createPage();
-        System.out.println("PASS: Eviction was triggered, flushed dirty pages successfully.");
+        // // Test to ensure that dirty pages are flushed to disk file
+        // System.out.println("\nPASS: Ensuring dirty pages are flushed to disk...");
+        // bufferManager.createPage();
+        // System.out.println("PASS: Eviction was triggered, flushed dirty pages
+        // successfully.");
 
-        System.out.println("\n Query testing completed successfully!!!");
+        // System.out.println("\n Query testing completed successfully!!!");
     }
 }

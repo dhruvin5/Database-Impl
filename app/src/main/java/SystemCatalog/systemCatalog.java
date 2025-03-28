@@ -16,7 +16,7 @@ public class systemCatalog {
 
         // Defines the Movie Table
         ArrayList<columnMetaData> columns = new ArrayList<>();
-        columns.add(new columnMetaData("movieId", "INTEGER", 4));
+        columns.add(new columnMetaData("movieId", "INTEGER", 9));
         columns.add(new columnMetaData("title", "STRING", 30));
         addTable("Movies", "movies.bin", columns); // Adds the Movie table to the catalog
 

@@ -70,6 +70,7 @@ public class BufferManagerImplem extends BufferManager {
             int MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE; // Calculate the max row count for the page
             int offSet1 = table.getColumnSize(columnNames.get(0)); // Get the size of the first column
             int offSet2 = table.getColumnSize(columnNames.get(1)); // Get the size of the second column
+
             page = new PageImpl(newID, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2);
 
             this.totalPages = this.totalPages + 1;
@@ -92,18 +93,15 @@ public class BufferManagerImplem extends BufferManager {
             return null; // Page already exists, cannot create again
         }
 
-        if (!pageInfo.containsKey(FILE_NAME)) {
-            pageInfo.put(FILE_NAME, new HashMap<>()); // add the new page to the pageInfo map
-        }
-
         // Map the page id and fileName to its metadata
         HashMap<Integer, PageMetaData> file_pageMetaData = pageInfo.getOrDefault(FILE_NAME, new HashMap<>());
         file_pageMetaData.put(page.getPid(), metadata); // map the page id to its metadata
         pageInfo.put(FILE_NAME, file_pageMetaData); // update the pageInfo map
 
-        // Map page id to frame index
-
-        // pageTable.put(page.getPid(), frameIndex);
+        // Map the page id to its frame index in the buffer pool
+        HashMap<Integer, Integer> file_pageTable = pageTable.getOrDefault(FILE_NAME, new HashMap<>());
+        file_pageTable.put(page.getPid(), frameIndex); // map the page id to its frame index
+        pageTable.put(FILE_NAME, file_pageTable); // update the pageTable map
 
         // Add the new page to the LRU cache
         lruCache.addLast(new AbstractMap.SimpleEntry<>(FILE_NAME, page.getPid())); // store the file name and page id in
