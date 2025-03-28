@@ -5,19 +5,19 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.AbstractMap;
 
 import Page.Page;
 import Page.PageImpl;
 import Page.PageMetaData;
 import configs.Config;
 import SystemCatalog.systemCatalog;
+import SystemCatalog.tableMetaData;
 
 public class BufferManagerImplem extends BufferManager {
 
-    // private static String DISK_FILE = "imdb.bin";
-
     // for mapping page id to frames
-    HashMap<Integer, Integer> pageTable;
+    HashMap<String, HashMap<Integer, Integer>> pageTable;
 
     // Buffer pool
     Page[] bufferPool;
@@ -26,13 +26,16 @@ public class BufferManagerImplem extends BufferManager {
     ArrayList<Integer> freeFrameList;
 
     // LRU Cache
-    LinkedList<Integer> lruCache;
+    // LinkedList<Integer> lruCache;
+    LinkedList<AbstractMap.SimpleEntry<String, Integer>> lruCache;
 
     // Page metadata
-    HashMap<Integer, PageMetaData> pageInfo;
+    HashMap<String, HashMap<Integer, PageMetaData>> pageInfo;
 
     // Shared catalog instance
     private final systemCatalog catalog;
+
+    private HashMap<String, Integer> FileToPID; // Used to maintain the mapping of the current Page Id to the file name
 
     int totalPages;
 
@@ -45,9 +48,10 @@ public class BufferManagerImplem extends BufferManager {
         this.lruCache = new LinkedList<>();
         this.pageTable = new HashMap<>();
         this.pageInfo = new HashMap<>();
+        this.FileToPID = new HashMap<>(); // Initialize the file to PID mapping
         this.totalPages = 0;
 
-        this.catalog = systemCatalog.getInstance(); // get the shared catalog instance
+        this.catalog = new systemCatalog(); // Initialize the catalog instance
 
         // all frames are free initially
         for (int i = 0; i < bufferSize; i++)
@@ -55,14 +59,21 @@ public class BufferManagerImplem extends BufferManager {
     }
 
     // Create new Page
-    Page createAndAllocatePage(int frameIndex, Page page, boolean isPageCreated) {
+    Page createAndAllocatePage(int frameIndex, Page page, boolean isPageCreated, String FILE_NAME) {
 
         if (!isPageCreated) { // Create a new page if doesnt exist
-            String tableName = catalog.getTableNameFromFile(catalog.getCurrentFile());
-            catalog.addPidToTable(this.totalPages, tableName);
 
-            page = new PageImpl(this.totalPages);
+            int newID = this.FileToPID.getOrDefault(FILE_NAME, 0); // Get the current page id for the file
+            tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata from the catalog
+            ArrayList<String> columnNames = table.getColumnNames(); // Get the column names from the table metadata
+            int ROW_SIZE = table.getRowSize(); // Get the row size from the table metadata
+            int MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE; // Calculate the max row count for the page
+            int offSet1 = table.getColumnSize(columnNames.get(0)); // Get the size of the first column
+            int offSet2 = table.getColumnSize(columnNames.get(1)); // Get the size of the second column
+            page = new PageImpl(newID, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2);
+
             this.totalPages = this.totalPages + 1;
+            this.FileToPID.put(FILE_NAME, newID + 1); // Update the mapping of file name to page id
         }
 
         // Allocate the page in the buffer pool
@@ -75,13 +86,28 @@ public class BufferManagerImplem extends BufferManager {
                               // from the disk
             metadata.setDirtyBit(true); // marking it dirty
         }
-        pageInfo.put(page.getPid(), metadata);
+        // Store the metadata in the pageInfo map
+        if (pageInfo.containsKey(FILE_NAME) && pageInfo.get(FILE_NAME).containsKey(page.getPid())) {
+            System.out.println("Error: Page " + page.getPid() + " already exists in the buffer.");
+            return null; // Page already exists, cannot create again
+        }
+
+        if (!pageInfo.containsKey(FILE_NAME)) {
+            pageInfo.put(FILE_NAME, new HashMap<>()); // add the new page to the pageInfo map
+        }
+
+        // Map the page id and fileName to its metadata
+        HashMap<Integer, PageMetaData> file_pageMetaData = pageInfo.getOrDefault(FILE_NAME, new HashMap<>());
+        file_pageMetaData.put(page.getPid(), metadata); // map the page id to its metadata
+        pageInfo.put(FILE_NAME, file_pageMetaData); // update the pageInfo map
 
         // Map page id to frame index
-        pageTable.put(page.getPid(), frameIndex);
+
+        // pageTable.put(page.getPid(), frameIndex);
 
         // Add the new page to the LRU cache
-        lruCache.addLast(page.getPid());
+        lruCache.addLast(new AbstractMap.SimpleEntry<>(FILE_NAME, page.getPid())); // store the file name and page id in
+                                                                                   // the LRU cache
 
         return page;
     }
@@ -95,12 +121,13 @@ public class BufferManagerImplem extends BufferManager {
 
         // Iterating over the LRU cache to find a page with pin count = 0
         for (int i = 0; i < lruCache.size(); i++) {
-            int pageId = lruCache.get(i);
-            PageMetaData metadata = pageInfo.get(pageId);
+            String FILE_NAME = lruCache.get(i).getKey(); // get the file name from the LRU cache
+            int pageId = lruCache.get(i).getValue(); // get the page id from the LRU cache
+            PageMetaData metadata = pageInfo.get(FILE_NAME).get(pageId); // get the metadata for the page
 
             // Check eviction eligibility
             if (metadata.getPinCount() == 0) {
-                int frameIndex = pageTable.get(pageId);
+                int frameIndex = pageTable.get(FILE_NAME).get(pageId); // get the frame index from the page table
 
                 lruCache.remove(i); // Remove it from LRU cache
 
@@ -108,15 +135,15 @@ public class BufferManagerImplem extends BufferManager {
                 if (metadata.isDirty()) {
 
                     Page page = bufferPool[frameIndex];
-                    writeToDisk(page);
+                    writeToDisk(page, FILE_NAME);
                 }
 
                 // Remove the evicted page from the buffer pool
                 bufferPool[frameIndex] = null;
 
                 // Remove the evicted page's metadata and mapping
-                pageInfo.remove(pageId);
-                pageTable.remove(pageId);
+                pageInfo.get(FILE_NAME).remove(pageId); // remove the page metadata
+                pageTable.get(FILE_NAME).remove(pageId); // remove the page mapping from the page table
 
                 return frameIndex;
             }
@@ -127,14 +154,14 @@ public class BufferManagerImplem extends BufferManager {
         return -1;
     }
 
-    Page createAndLoadPageHelper(Page page, boolean isPageCreated) {
+    Page createAndLoadPageHelper(Page page, boolean isPageCreated, String FILE_NAME) {
         // Check for free frames
         if (!freeFrameList.isEmpty()) {
             // remove free frame for allocation
             int frameIndex = freeFrameList.remove(freeFrameList.size() - 1);
 
             // Create and allocate new page in the buffer pool
-            return createAndAllocatePage(frameIndex, page, isPageCreated);
+            return createAndAllocatePage(frameIndex, page, isPageCreated, FILE_NAME);
         } else {
             // Evict using LRU if possible
             int lruFrameIndex = evictPage();
@@ -144,53 +171,54 @@ public class BufferManagerImplem extends BufferManager {
             }
 
             // Proceed with creating and allocating new page in the buffer pool
-            return createAndAllocatePage(lruFrameIndex, page, isPageCreated);
+            return createAndAllocatePage(lruFrameIndex, page, isPageCreated, FILE_NAME);
         }
     }
 
     @Override
-    public Page getPage(int pageId) {
+    public Page getPage(int pageId, String FILE_NAME) {
         // Check if in the buffer pool
-        if (pageTable.containsKey(pageId)) {
-            int frameIndex = pageTable.get(pageId);
+        if (pageTable.containsKey(FILE_NAME) && pageTable.get(FILE_NAME).containsKey(pageId)) {
+            int frameIndex = pageTable.get(FILE_NAME).get(pageId);
             Page page = bufferPool[frameIndex];
 
             // increment the pin count
-            PageMetaData metadata = pageInfo.get(pageId);
+            PageMetaData metadata = pageInfo.get(FILE_NAME).get(pageId);
             metadata.incrementPinCount();
 
             // Move the page to the end of the LRU cache (most recently used)
-            lruCache.remove((Integer) pageId);
-            lruCache.addLast(pageId);
+            AbstractMap.SimpleEntry<String, Integer> entry = new AbstractMap.SimpleEntry<>(FILE_NAME, pageId);
+            lruCache.remove(entry); // remove from current position
+            lruCache.addLast(entry); // add to the end
 
             return page;
         } else { // load page from disk
                  // Check if the page exists on disk
-            if (!isPageOnDisk(pageId)) {
+            if (!isPageOnDisk(pageId, FILE_NAME)) {
                 System.out.println("Error: Page " + pageId + " does not exist on disk.");
                 return null; // Page not found on disk
             }
 
             // get page from disk
-            Page page = getPageFromDisk(pageId);
+            Page page = getPageFromDisk(pageId, FILE_NAME);
             if (page == null) {
                 System.out.println("Error: Failed to load page" + pageId + "from disk.");
                 return null; // failed to load page from disk
             }
 
             // load to buffer
-            return createAndLoadPageHelper(page, true);
+            return createAndLoadPageHelper(page, true, FILE_NAME);
         }
     }
 
     @Override
-    public Page createPage() {
-        return createAndLoadPageHelper(null, false);
+    public Page createPage(String FILE_NAME) {
+        return createAndLoadPageHelper(null, false, FILE_NAME);
     }
 
     @Override
-    public void markDirty(int pageId) {
-        PageMetaData metadata = pageInfo.get(pageId);
+    public void markDirty(int pageId, String FILE_NAME) {
+        PageMetaData metadata = pageInfo.getOrDefault(FILE_NAME, new HashMap<>()).get(pageId);
 
         if (metadata != null) {
             // Page is in the buffer, marking it as dirty
@@ -202,8 +230,8 @@ public class BufferManagerImplem extends BufferManager {
     }
 
     @Override
-    public void unpinPage(int pageId) {
-        PageMetaData metadata = pageInfo.get(pageId);
+    public void unpinPage(int pageId, String FILE_NAME) {
+        PageMetaData metadata = pageInfo.getOrDefault(FILE_NAME, new HashMap<>()).get(pageId);
 
         if (metadata != null) { // page exists in buffer pool
             if (metadata.getPinCount() > 0) {
@@ -217,11 +245,11 @@ public class BufferManagerImplem extends BufferManager {
     }
 
     // get Page from the disk
-    private Page getPageFromDisk(int pageId) {
+    private Page getPageFromDisk(int pageId, String FILE_NAME) {
 
         // using random access file to go to that location and read 4KB of data
-        String DISK_FILE = catalog.getFileNameFromPid(pageId); // get the file name from the pid id
-        try (RandomAccessFile fileReader = new RandomAccessFile(DISK_FILE, "r")) {
+        // get the file name from the pid id
+        try (RandomAccessFile fileReader = new RandomAccessFile(FILE_NAME, "r")) {
             long offset = (long) pageId * Config.PAGE_SIZE;
             if (offset >= fileReader.length()) {
                 return null;
@@ -235,7 +263,15 @@ public class BufferManagerImplem extends BufferManager {
             fileReader.readFully(buffer);
 
             // load a page
-            Page page = new PageImpl(pageId, buffer);
+            tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata from the catalog
+            ArrayList<String> columnNames = table.getColumnNames(); // Get the column names from the table metadata
+            int ROW_SIZE = table.getRowSize(); // Get the row size from the table metadata
+            int MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE; // Calculate the max row count for the page
+            int offSet1 = table.getColumnSize(columnNames.get(0)); // Get the size of the first column
+            int offSet2 = table.getColumnSize(columnNames.get(1)); // Get the size of the second column
+            Page page = new PageImpl(pageId, buffer, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2); // create a new page
+                                                                                                 // with the data read
+                                                                                                 // from the disk
             return page;
 
         } catch (IOException e) {
@@ -245,16 +281,13 @@ public class BufferManagerImplem extends BufferManager {
     }
 
     // write to the disk
-    private void writeToDisk(Page page) {
+    private void writeToDisk(Page page, String FILE_NAME) {
 
         // get the page Id
         int pageId = page.getPid();
 
-        // Disk FILE from the pageId
-        String DISK_FILE = catalog.getFileNameFromPid(pageId);
-
         // open the disk file in read write mode
-        try (RandomAccessFile fileWriter = new RandomAccessFile(DISK_FILE, "rw")) {
+        try (RandomAccessFile fileWriter = new RandomAccessFile(FILE_NAME, "rw")) {
             long offset = (long) pageId * Config.PAGE_SIZE;
 
             // go to the offset
@@ -268,8 +301,8 @@ public class BufferManagerImplem extends BufferManager {
         }
     }
 
-    private boolean isPageOnDisk(int pageId) {
-        if (pageId < this.totalPages) {
+    private boolean isPageOnDisk(int pageId, String FILE_NAME) {
+        if (pageId < this.FileToPID.getOrDefault(FILE_NAME, -1)) {
             return true;
         }
         return false;
@@ -287,15 +320,6 @@ public class BufferManagerImplem extends BufferManager {
         return this.lruCache.size();
     }
 
-    public int getPagesInBuffer() {
-        return this.pageTable.size();
-    }
-
-    // get the total pages uptil now
-    public int getTotalPages() {
-        return this.totalPages;
-    }
-
     // check if the buffer is empty
     public boolean isBufferEmpty() {
         for (int i = 0; i < this.bufferPool.length; i++) {
@@ -306,20 +330,26 @@ public class BufferManagerImplem extends BufferManager {
         return true;
     }
 
-    public int existsInCache(int pageId) {
-        return lruCache.indexOf(pageId);
-    }
+    // public int getPagesInBuffer() {
+    // return this.pageTable.size();
+    // }
 
-    public PageMetaData getPageMetaData(int pageId) {
-        return pageInfo.get(pageId);
-    }
+    // // get the total pages uptil now
+    // public int getTotalPages() {
+    // return this.totalPages;
+    // }
+
+    // public int existsInCache(int pageId) {
+    // return lruCache.indexOf(pageId);
+    // }
 
     public void force() {
-        for (int i = 0; i < bufferPool.length; i++) {
-            if (bufferPool[i] != null) {
-                writeToDisk(bufferPool[i]);
-            }
-        }
+        return;
+        // for (int i = 0; i < bufferPool.length; i++) {
+        // if (bufferPool[i] != null) {
+        // writeToDisk(bufferPool[i]);
+        // }
+        // }
     }
 
 }

@@ -19,7 +19,7 @@ public abstract class BufferManager {
      * @return The Page object whose content is stored in a frame of the buffer pool
      *         manager.
      */
-    public abstract Page getPage(int pageId);
+    public abstract Page getPage(int pageId, String fileName);
 
     /**
      * Creates a new page.
@@ -28,7 +28,7 @@ public abstract class BufferManager {
      * @return The Page object whose content is stored in a frame of the buffer pool
      *         manager.
      */
-    public abstract Page createPage();
+    public abstract Page createPage(String fileName);
 
     /**
      * Marks a page as dirty, indicating it needs to be written to disk before
@@ -36,14 +36,14 @@ public abstract class BufferManager {
      * 
      * @param pageId The ID of the page to mark as dirty.
      */
-    public abstract void markDirty(int pageId);
+    public abstract void markDirty(int pageId, String fileName);
 
     /**
      * Unpins a page in the buffer pool, allowing it to be evicted if necessary.
      * 
      * @param pageId The ID of the page to unpin.
      */
-    public abstract void unpinPage(int pageId);
+    public abstract void unpinPage(int pageId, String fileName);
 
     /**
      * Flushes all dirty pages from the buffer pool to disk.

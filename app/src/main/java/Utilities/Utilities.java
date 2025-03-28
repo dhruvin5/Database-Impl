@@ -46,27 +46,27 @@ public class Utilities {
 
                 // if no page currently, create a page first
                 if (!pageExists) {
-                    Page newPage = bf.createPage();
+                    Page newPage = bf.createPage("movies.bin");
                     currentPageId = newPage.getPid();
-                    bf.unpinPage(currentPageId);
+                    bf.unpinPage(currentPageId, "movies.bin");
                     pageExists = true;
                 }
 
                 // get the page after creating using the currentPageId
-                Page p = bf.getPage(currentPageId);
+                Page p = bf.getPage(currentPageId, "movies.bin");
 
                 // check if the page is already full
                 // if full unpin it and tell the buffer to create a new page
                 if (p.isFull()) {
-                    bf.unpinPage(currentPageId);
-                    p = bf.createPage();
+                    bf.unpinPage(currentPageId, "movies.bin");
+                    p = bf.createPage("movies.bin");
                     currentPageId = p.getPid();
                 }
 
                 // insert the rows in the page
                 p.insertRow(row);
-                bf.markDirty(currentPageId);
-                bf.unpinPage(currentPageId);
+                bf.markDirty(currentPageId, "movies.bin");
+                bf.unpinPage(currentPageId, "movies.bin");
             }
         } catch (IOException e) {
             e.printStackTrace();

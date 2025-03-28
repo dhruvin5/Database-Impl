@@ -5,33 +5,28 @@ import java.util.ArrayList;
 
 public class systemCatalog {
 
-    private static systemCatalog instance; // Singleton instance of systemCatalog
     private final HashMap<String, tableMetaData> tables; // HashMap to store table metadata with table name as the key
-    private final HashMap<Integer, String> pidToTable; // HashMap to map page IDs to table names
-    private final HashMap<Integer, String> pidToFile; // HashMap to map page IDs to file names
-    private final HashMap<String, String> FileToTable; // HashMap to map file names to table names
-    private String currentFile; // Current table being accessed
+    private final HashMap<String, indexMetaData> indexes; // HashMap to store index metadata with index file name as the
+                                                          // key
 
-    // Private constructor to initialize the systemCatalog instance
-    private systemCatalog() {
+    public systemCatalog() {
 
         this.tables = new HashMap<>();
-        this.pidToTable = new HashMap<>();
-        this.FileToTable = new HashMap<>();
-        this.pidToFile = new HashMap<>();
-        this.currentFile = null;
-    }
+        this.indexes = new HashMap<>();
 
-    // Creates a singleton instance of systemCatalog
-    public static systemCatalog getInstance() {
-        if (instance == null) {
-            instance = new systemCatalog();
-        }
-        return instance;
+        // Defines the Movie Table
+        ArrayList<columnMetaData> columns = new ArrayList<>();
+        columns.add(new columnMetaData("movieId", "INTEGER", 4));
+        columns.add(new columnMetaData("title", "STRING", 30));
+        addTable("Movies", "movies.bin", columns); // Adds the Movie table to the catalog
+
+        // Adds an index on the movieId and title column of the Movies table
+        addIndex("Movie_Index", "Movies", "movieId", "movieId.bin"); // Adds an index on the movieId column
+        addIndex("Movies_title", "Movies", "title", "title.bin"); // Adds an index on the title column
     }
 
     // Returns a boolean if the table was added successfully to catalog
-    public boolean addTable(String tableName, String fileName, ArrayList<columnMetaData> columns) {
+    private boolean addTable(String tableName, String fileName, ArrayList<columnMetaData> columns) {
         // Check if the table already exists in the catalog
         if (tables.containsKey(tableName)) {
             return false;
@@ -39,43 +34,33 @@ public class systemCatalog {
 
         // Creates and stores the new table metadata in the catalog
         tableMetaData table = new tableMetaData(tableName, fileName, columns);
-        tables.put(tableName, table); // creates a mapping of table name to table metadata
-        this.FileToTable.put(fileName, tableName); // Map file name to table name
+        tables.put(fileName, table);
 
         return true;
-    }
-
-    // Returns a boolean if the current file was set successfully
-    public boolean setCurrentFile(String File) {
-        // Only set the current file if it exists in the catalog
-        if (FileToTable.containsKey(File)) {
-            this.currentFile = FileToTable.get(File);
-            return true;
-        }
-        return false;
-    }
-
-    // Returns the current file name being accessed
-    public String getCurrentFile() {
-        return this.currentFile;
     }
 
     // Returns a boolean if a index was added successfully to the table
-    public boolean addIndex(String tableName, String columnName, String indexFile) {
-        // Check if the table exists in the catalog and adds the index to a column if it
-        // exist
+    private boolean addIndex(String indexName, String tableName, String key, String indexFile) {
         tableMetaData table = tables.get(tableName);
-        if (table == null || !table.addIndex(columnName, indexFile)) {
+        if (table == null || !table.getColumnNames().contains(key) || indexes.containsKey(indexName)) {
             return false;
         }
-        // Map the index file to the table name for easy access
-        this.FileToTable.put(indexFile, tableName);
+        indexes.put(indexName, new indexMetaData(table, key, indexFile));
         return true;
     }
 
-    // Returns tablemeta data if the table exists, null otherwise
-    public tableMetaData getTable(String tableName) {
-        return tables.get(tableName);
+    public String getTableFile(String tableName) {
+        if (!tables.containsKey(tableName)) {
+            return null;
+        }
+        return tables.get(tableName).getFile();
+    }
+
+    public String getIndexFile(String indexName) {
+        if (!indexes.containsKey(indexName)) {
+            return null;
+        }
+        return indexes.get(indexName).getFile();
     }
 
     // Returns the all the file names of the tables in the catalog
@@ -83,38 +68,12 @@ public class systemCatalog {
         return tables.keySet().toArray(new String[0]);
     }
 
-    // Returns the index file name for a given table and column name if it exists,
-    // null otherwise
-    public String getIndexFile(String tableName, String columnName) {
-        tableMetaData table = tables.get(tableName);
-        if (table == null) {
-            return null;
-        }
-        return table.getIndexFile(columnName);
+    // Returns the all the index file names in the catalog
+    public String[] getAllIndexFiles() {
+        return indexes.keySet().toArray(new String[0]);
     }
 
-    // Maps page IDs to table names for easy access
-    // Useful for identifying which table a page belongs to when working with the
-    // buffer manager
-    public void addPidToTable(int pid, String tableName) {
-        pidToTable.put(pid, tableName);
-    }
-
-    // Returns the table name associated with a given page ID, if it exists
-    public String getTableNameFromPid(int pid) {
-        return pidToTable.get(pid);
-    }
-
-    // Returns the table name associated with a given file name, if it exists
-    public String getTableNameFromFile(String tableName) {
-        return FileToTable.get(tableName);
-    }
-
-    public void addPidToFile(int pid, String fileName) {
-        pidToFile.put(pid, fileName);
-    }
-
-    public String getFileNameFromPid(int pid) {
-        return pidToFile.get(pid);
+    public tableMetaData getTableMetaData(String tableName) {
+        return tables.get(tableName);
     }
 }
