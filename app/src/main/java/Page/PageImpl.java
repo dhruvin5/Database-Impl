@@ -1,7 +1,6 @@
 package Page;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import Row.Row;
@@ -13,10 +12,10 @@ public class PageImpl implements Page {
     private static final int ROW_COUNT_SIZE = 4;
 
     // fixed row size
-    private static final int ROW_SIZE = 39;
+    private final int ROW_SIZE;
 
-    // this is calculated by pagesize - 4 / 39
-    private static final int MAX_ROW_COUNT = 104;
+    // this is calculated by pagesize - 4 / rowSize
+    private final int MAX_ROW_COUNT;
 
     // the pageId should be final. Once assigned cannot be changed
     private final int pageId;
@@ -24,29 +23,41 @@ public class PageImpl implements Page {
     // the actual data
     private final byte[] rows;
 
+    private int offSet1;
+
+    private int offSet2;
 
     // if the page is being created
     // initialize with page size
     // set row count as 0
-    public PageImpl(int pageId) {
+    public PageImpl(int pageId, int ROW_SIZE, int MAX_ROW_COUNT, int offSet1, int offSet2) {
         this.pageId = pageId;
         this.rows = new byte[Config.PAGE_SIZE];
         setRowCount(0);
+
+        this.ROW_SIZE = ROW_SIZE;
+        this.MAX_ROW_COUNT = MAX_ROW_COUNT;
+        this.offSet1 = offSet1;
+        this.offSet2 = offSet2;
     }
 
     // if loading an existing page in Buffer
-    public PageImpl(int pageId, byte[] existingRows) {
+    public PageImpl(int pageId, byte[] existingRows, int ROW_SIZE, int MAX_ROW_COUNT, int offSet1, int offSet2) {
         if (existingRows.length != Config.PAGE_SIZE) {
             throw new IllegalArgumentException("Page size must be 4KB!");
         }
         this.pageId = pageId;
         this.rows = existingRows;
+
+        this.ROW_SIZE = ROW_SIZE;
+        this.MAX_ROW_COUNT = MAX_ROW_COUNT;
+        this.offSet1 = offSet1;
+        this.offSet2 = offSet2;
     }
 
     // gets the row using the rowId
     @Override
-    public Row getRow(int rowId)
-    {
+    public Row getRow(int rowId) {
         int rowCount = getRowCount();
 
         // if less than 0 or greater than rowCount. Invalid rowId
@@ -54,18 +65,20 @@ public class PageImpl implements Page {
             return null;
         }
 
+        // return new Row(Arrays.copyOfRange(rows, offset, offset + ROW_SIZE));
+        // return getRowHelper(rowId, columnNames, table);
+
         // go to the offset
         int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
-        byte[] movieId = Arrays.copyOfRange(rows, offset, offset + 9);
-        byte[] title = Arrays.copyOfRange(rows, offset + 9, offset + 39);
+        byte[] column1 = Arrays.copyOfRange(rows, offset, offset + this.offSet1);
+        byte[] column2 = Arrays.copyOfRange(rows, offset + this.offSet1, offset + this.offSet1 + this.offSet2);
 
         // create a row with the data
-        return new Row(movieId, title);
+        return new Row(column1, column2);
     }
 
     @Override
-    public int insertRow(Row row)
-    {
+    public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
         if (row == null || row.movieId == null || row.title == null) {
             return -1;
@@ -75,25 +88,26 @@ public class PageImpl implements Page {
             return -1;
         }
 
-        byte[] movieIdFixed = new byte[9];
-        byte[] titleFixed = new byte[30];
+        byte[] movieIdFixed = new byte[this.offSet1];
+        byte[] titleFixed = new byte[this.offSet2];
 
         // movieId should be of size 9
         // truncate longer title to 30. pad if less
-        System.arraycopy(row.movieId, 0, movieIdFixed, 0, Math.min(row.movieId.length, 9));
-        System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length, 30));
-        
+        System.arraycopy(row.movieId, 0, movieIdFixed, 0,
+                Math.min(row.movieId.length, this.offSet1));
+        System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length,
+                this.offSet2));
 
         int rowCount = getRowCount();
         int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
         // copy the row into the page data
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < this.offSet1; i++) {
             this.rows[offset + i] = movieIdFixed[i];
         }
 
-        for (int i = 0; i < 30; i++) {
-            this.rows[offset + 9 + i] = titleFixed[i];
+        for (int i = 0; i < this.offSet2; i++) {
+            this.rows[offset + this.offSet2 + i] = titleFixed[i];
         }
 
         setRowCount(rowCount + 1);
@@ -102,30 +116,26 @@ public class PageImpl implements Page {
 
     // if row count >= max row count than page is full
     @Override
-    public boolean isFull()
-    {
+    public boolean isFull() {
         int rowCount = getRowCount();
-        if(rowCount >= MAX_ROW_COUNT)
-        {
+        if (rowCount >= MAX_ROW_COUNT) {
             return true;
         }
         return false;
     }
 
     @Override
-    public int getPid()
-    {
+    public int getPid() {
         return this.pageId;
     }
 
     // get the data of the rows
     @Override
-    public byte[] getRows()
-    {
+    public byte[] getRows() {
         return this.rows;
     }
 
-    //get the rowcount by accessing the first 4 bytes
+    // get the rowcount by accessing the first 4 bytes
 
     private int getRowCount() {
         return ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).getInt();
@@ -136,6 +146,99 @@ public class PageImpl implements Page {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
     }
 
+    // // helper methods to get rows
+    // private Row getRowHelper(int rowId, ArrayList<String> columnNames,
+    // tableMetaData table) {
 
+    // // If you want to use the previous hard coded version of Row from lab 1
+    // if (columnNames.size() == 2) {
+    // int column_1_size = table.getColumnSize(columnNames.get(0)); // size of first
+    // column
+    // int column_2_size = table.getColumnSize(columnNames.get(1)); // size of
+    // second column
+
+    // // go to the offset and copy the data for the row
+    // int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
+    // byte[] column1 = Arrays.copyOfRange(rows, offset, offset + column_1_size);
+    // byte[] column2 = Arrays.copyOfRange(rows, offset + column_1_size, offset +
+    // column_1_size + column_2_size);
+
+    // // create a row with the data
+    // return new Row(column1, column2);
+
+    // }
+
+    // // If you want to use the generalized Row, allowing for more than 2 columns
+    // with
+    // // different schemas
+    // ArrayList<byte[]> data = new ArrayList<>();
+    // int curr = 0;
+    // for (String columnName : columnNames) {
+    // int columnSize = table.getColumnSize(columnName); // get the size of the
+    // current column
+    // int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE + curr; // calculate the
+    // offset for the current column
+    // byte[] columnData = Arrays.copyOfRange(rows, offset, offset + columnSize); //
+    // copy the data for the current
+    // // column
+    // data.add(columnData); // add the column data to the row data
+    // curr += columnSize; // update the current offset for the next column
+    // }
+    // return new Row(data);
+    // }
+
+    // private void insertRowHelper(Row row, ArrayList<String> columnNames,
+    // tableMetaData table) {
+    // // If you want to use the previous hard coded version of Row from lab 1
+    // if (row.data.size() == 0) {
+    // int column_1_size = table.getColumnSize(columnNames.get(0));
+    // int column_2_size = table.getColumnSize(columnNames.get(1));
+
+    // // go to the offset
+    // int offset = ROW_COUNT_SIZE + getRowCount() * ROW_SIZE;
+    // byte[] column1 = Arrays.copyOfRange(row.movieId, 0, column_1_size);
+    // byte[] column2 = Arrays.copyOfRange(row.title, 0, column_2_size);
+
+    // // copy the row into the page data
+    // System.arraycopy(column1, 0, rows, offset, column_1_size);
+    // System.arraycopy(column2, 0, rows, offset + column_1_size, column_2_size);
+
+    // for (int i = 0; i < column_1_size; i++) {
+    // this.rows[offset + i] = column1[i];
+    // }
+
+    // for (int i = 0; i < column_2_size; i++) {
+    // this.rows[offset + column_1_size + i] = column2[i];
+    // }
+
+    // } else {
+    // // If you want to use the generalized Row, allowing for more than 2 columns
+    // with
+    // // different schemas
+
+    // int curr = 0;
+    // ArrayList<byte[]> data = row.data; // get the data from the row object
+
+    // for (int i = 0; i < data.size(); i++) {
+    // int columnSize = table.getColumnSize(columnNames.get(i)); // get the size of
+    // the current column
+    // int offset = ROW_COUNT_SIZE + getRowCount() * ROW_SIZE + curr; // calculate
+    // the offset for the current
+    // // column
+    // byte[] columnData = Arrays.copyOfRange(data.get(i), 0, columnSize); // copy
+    // the data for the current
+    // // column
+    // System.arraycopy(columnData, 0, rows, offset, columnSize); // copy the column
+    // data into the page
+    // curr += columnSize; // update the current offset for the next column
+
+    // // copy the column data into the rows array
+    // for (int j = 0; j < columnSize; j++) {
+    // this.rows[offset + j] = columnData[j];
+    // }
+    // }
+
+    // }
+    // }
 
 }
