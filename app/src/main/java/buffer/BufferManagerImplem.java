@@ -1,19 +1,3 @@
-// package buffer;
-
-// import java.io.IOException;
-// import java.io.RandomAccessFile;
-// import java.util.ArrayList;
-// import java.util.HashMap;
-// import java.util.LinkedList;
-// import java.util.AbstractMap;
-
-// import Page.Page;
-// import Page.PageImpl;
-// import Page.PageMetaData;
-// import configs.Config;
-// import SystemCatalog.systemCatalog;
-// import SystemCatalog.tableMetaData;
-
 package buffer;
 
 import java.io.IOException;
@@ -23,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.AbstractMap;
 
+import Page.IndexPageImpl;
 import Page.Page;
 import Page.PageImpl;
 import Page.PageMetaData;
@@ -82,18 +67,17 @@ public class BufferManagerImplem extends BufferManager {
             int newID = this.FileToPID.getOrDefault(FILE_NAME, 0); // Get the current page id for the file
             tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata from the catalog
             ArrayList<String> columnNames = table.getColumnNames(); // Get the column names from the table metadata
+
             int ROW_SIZE = table.getRowSize(); // Get the row size from the table metadata
-            int MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE; // Calculate the max row count for the page
             int offSet1 = table.getColumnSize(columnNames.get(0)); // Get the size of the first column
             int offSet2 = table.getColumnSize(columnNames.get(1)); // Get the size of the second column
 
             if (this.catalog.isIndexFile(FILE_NAME)) {
                 int offSet3 = table.getColumnSize(columnNames.get(2));
-                page = new PageImpl(newID, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2, offSet3);
+                int offSet4 = table.getColumnSize(columnNames.get(3));
+                page = new IndexPageImpl(newID, ROW_SIZE, offSet1, offSet2, offSet3, offSet4);
             } else {
-                page = new PageImpl(newID, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2, -1); // Create a new page
-                                                                                           // with the
-                                                                                           // given parameters
+                page = new PageImpl(newID, ROW_SIZE, offSet1, offSet2);
             }
 
             this.totalPages = this.totalPages + 1;
@@ -286,15 +270,17 @@ public class BufferManagerImplem extends BufferManager {
             // load a page
             tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata from the catalog
             ArrayList<String> columnNames = table.getColumnNames(); // Get the column names from the table metadata
+
             int ROW_SIZE = table.getRowSize(); // Get the row size from the table metadata
-            int MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE; // Calculate the max row count for the page
             int offSet1 = table.getColumnSize(columnNames.get(0)); // Get the size of the first column
             int offSet2 = table.getColumnSize(columnNames.get(1)); // Get the size of the second column
+
             if (this.catalog.isIndexFile(FILE_NAME)) {
                 int offSet3 = table.getColumnSize(columnNames.get(2)); // Get the size of the third column
-                return new PageImpl(pageId, buffer, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2, offSet3);
+                int offSet4 = table.getColumnSize(columnNames.get(3)); // Get the size of the fourth column
+                return new IndexPageImpl(pageId, buffer, ROW_SIZE, offSet1, offSet2, offSet3, offSet4);
             } else {
-                return new PageImpl(pageId, buffer, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2, -1);
+                return new PageImpl(pageId, buffer, ROW_SIZE, offSet1, offSet2);
             }
 
         } catch (IOException e) {

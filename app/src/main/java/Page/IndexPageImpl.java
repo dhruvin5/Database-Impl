@@ -6,9 +6,8 @@ import java.util.Arrays;
 import Row.Row;
 import configs.Config;
 
-public class PageImpl implements Page {
+public class IndexPageImpl implements Page {
 
-    // has the row count
     private static final int ROW_COUNT_SIZE = 4;
 
     // fixed row size
@@ -23,23 +22,31 @@ public class PageImpl implements Page {
     // the actual data
     private final byte[] rows;
 
-    private int offSet1;
+    private int boolValueSize = 0;
 
-    private int offSet2;
+    private int keySize = 0;
 
-    public PageImpl(int pageId, int ROW_SIZE, int offSet1, int offSet2) {
+    private int pidSize = 0;
+
+    private int slotIdSize = 0;
+
+    public IndexPageImpl(int pageId, int ROW_SIZE, int boolValueSize, int keySize, int pidSize,
+            int slotIdSize) {
         this.pageId = pageId;
         this.rows = new byte[Config.PAGE_SIZE];
         setRowCount(0);
 
         this.ROW_SIZE = ROW_SIZE;
         this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
-        this.offSet1 = offSet1;
-        this.offSet2 = offSet2;
+        this.boolValueSize = boolValueSize;
+        this.keySize = keySize;
+        this.pidSize = pidSize;
+        this.slotIdSize = slotIdSize;
     }
 
     // if loading an existing page in Buffer
-    public PageImpl(int pageId, byte[] existingRows, int ROW_SIZE, int offSet1, int offSet2) {
+    public IndexPageImpl(int pageId, byte[] existingRows, int ROW_SIZE, int booleanValue, int key,
+            int pid, int slotId) {
         if (existingRows.length != Config.PAGE_SIZE) {
             throw new IllegalArgumentException("Page size must be 4KB!");
         }
@@ -48,12 +55,12 @@ public class PageImpl implements Page {
 
         this.ROW_SIZE = ROW_SIZE;
         this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
-        this.offSet1 = offSet1;
-        this.offSet2 = offSet2;
+        this.boolValueSize = booleanValue;
+        this.keySize = key;
+        this.pidSize = pid;
+        this.slotIdSize = slotId;
     }
 
-    // gets the row using the rowId
-    @Override
     public Row getRow(int rowId) {
         int rowCount = getRowCount();
 
@@ -64,17 +71,19 @@ public class PageImpl implements Page {
 
         // go to the offset
         int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
-        byte[] column1 = Arrays.copyOfRange(rows, offset, offset + this.offSet1);
-        byte[] column2 = Arrays.copyOfRange(rows, offset + this.offSet1, offset + this.offSet1 + this.offSet2);
+        byte[] column1 = Arrays.copyOfRange(rows, offset, (offset += this.boolValueSize));
+        byte[] column2 = Arrays.copyOfRange(rows, offset, (offset += this.keySize));
+        byte[] column3 = Arrays.copyOfRange(rows, offset, (offset += this.pidSize));
+        byte[] column4 = Arrays.copyOfRange(rows, offset, (offset += this.slotIdSize));
 
         // create a row with the data
-        return new Row(column1, column2);
+        return new Row(column1[0], column2, column3, column4);
     }
 
     @Override
     public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
-        if (row == null || row.movieId == null || row.title == null) {
+        if (row == null || row.key == null || row.pid == null || row.slotid == null) {
             return -1;
         }
 
@@ -82,32 +91,28 @@ public class PageImpl implements Page {
             return -1;
         }
 
-        byte[] movieIdFixed = new byte[this.offSet1];
-        byte[] titleFixed = new byte[this.offSet2];
-
-        System.arraycopy(row.movieId, 0, movieIdFixed, 0,
-                Math.min(row.movieId.length, this.offSet1));
-        System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length,
-                this.offSet2));
-
         int rowCount = getRowCount();
         int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
-        // copy the row into the page data
-        for (int i = 0; i < this.offSet1; i++) {
-            this.rows[offset + i] = movieIdFixed[i];
-        }
-
-        for (int i = 0; i < this.offSet2; i++) {
-            this.rows[offset + this.offSet2 + i] = titleFixed[i];
-        }
+        // copy the data to the page
+        copyAndPaste(new byte[] { row.booleanValue }, this.boolValueSize, offset);
+        copyAndPaste(row.key, this.keySize, (offset += this.boolValueSize));
+        copyAndPaste(row.pid, this.pidSize, (offset += this.keySize));
+        copyAndPaste(row.slotid, this.slotIdSize, (offset += this.pidSize));
 
         setRowCount(rowCount + 1);
         return rowCount;
     }
 
-    // if row count >= max row count than page is full
-    @Override
+    private void copyAndPaste(byte[] data, int size, int offset) {
+        byte[] fixed_copy = new byte[size];
+        System.arraycopy(data, 0, fixed_copy, 0, Math.min(data.length, size));
+
+        for (int i = 0; i < size; i++) {
+            this.rows[offset + i] = fixed_copy[i];
+        }
+    }
+
     public boolean isFull() {
         int rowCount = getRowCount();
         if (rowCount >= MAX_ROW_COUNT) {
@@ -137,4 +142,5 @@ public class PageImpl implements Page {
     private void setRowCount(int count) {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
     }
+
 }
