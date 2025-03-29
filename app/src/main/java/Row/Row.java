@@ -16,16 +16,15 @@ public class Row {
         this.movieId = movieId;
         this.title = title;
     }
-    
-    public byte booleanValue;
+
     public byte[] key;
     public byte[] pid;
     public byte[] slotid;
 
-    public Row(byte booleanValue, byte[] key, byte[] pid, byte[] slotid) {
-        this.booleanValue = booleanValue;
+    public Row(byte[] key, byte[] pid, byte[] slotid) {
         this.key = key;
         this.pid = pid;
         this.slotid = slotid;
     }
+
 }

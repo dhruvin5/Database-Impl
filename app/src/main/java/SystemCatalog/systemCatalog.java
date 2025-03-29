@@ -21,7 +21,6 @@ public class systemCatalog {
         columnMetaData title_column = new columnMetaData("title", "STRING", 30);
 
         // Creates the column metadata for the Movie ID and title index table
-        columnMetaData isLeaf_column = new columnMetaData("isLeaf", "BOOLEAN", 1); // pageId for the B+ tree
         columnMetaData pid_column = new columnMetaData("pid", "INTEGER", 4);
         columnMetaData slotID_column = new columnMetaData("slotID", "INTEGER", 4);
 
@@ -32,14 +31,12 @@ public class systemCatalog {
 
         // creates page schema for the Movie ID index table
         ArrayList<columnMetaData> movie_index_columns = new ArrayList<>();
-        movie_index_columns.add(isLeaf_column); // pageId for the B+ tree
         movie_index_columns.add(movieID_column);
         movie_index_columns.add(pid_column);
         movie_index_columns.add(slotID_column);
 
         // creates page schema for the title ID table
         ArrayList<columnMetaData> title_index_columns = new ArrayList<>();
-        title_index_columns.add(isLeaf_column); // pageId for the B+ tree
         title_index_columns.add(title_column);
         title_index_columns.add(pid_column);
         title_index_columns.add(slotID_column);
@@ -75,7 +72,7 @@ public class systemCatalog {
         if (table == null || !table.getColumnNames().contains(key) || indexes.containsKey(indexName)) {
             return false;
         }
-        indexes.put(indexName, new indexMetaData(table, key, indexFile));
+        indexes.put(indexFile, new indexMetaData(table, key, indexFile));
         isIndex.put(indexFile, true); // Mark the file as an index
         return true;
     }
@@ -87,11 +84,11 @@ public class systemCatalog {
         return tables.get(tableName).getFile();
     }
 
-    public String getIndexFile(String indexName) {
+    public indexMetaData getIndex(String indexName) {
         if (!indexes.containsKey(indexName)) {
             return null;
         }
-        return indexes.get(indexName).getFile();
+        return indexes.get(indexName);
     }
 
     // Returns the all the file names of the tables in the catalog

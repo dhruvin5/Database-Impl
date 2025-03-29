@@ -30,6 +30,8 @@ public abstract class BufferManager {
      */
     public abstract Page createPage(String fileName);
 
+    public abstract Page createIndexPage(String fileName, boolean isLeaf);
+
     /**
      * Marks a page as dirty, indicating it needs to be written to disk before
      * eviction.
@@ -49,4 +51,5 @@ public abstract class BufferManager {
      * Flushes all dirty pages from the buffer pool to disk.
      */
     public abstract void force();
+
 }

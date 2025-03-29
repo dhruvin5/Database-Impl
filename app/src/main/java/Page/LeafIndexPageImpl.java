@@ -6,9 +6,13 @@ import java.util.Arrays;
 import Row.Row;
 import configs.Config;
 
-public class IndexPageImpl implements Page {
+public class LeafIndexPageImpl implements Page {
 
     private static final int ROW_COUNT_SIZE = 4;
+
+    private static final int BOOL_SIZE = 1;
+
+    private static final int NEXT_LEAF_POINTER = 4;
 
     // fixed row size
     private final int ROW_SIZE;
@@ -17,46 +21,48 @@ public class IndexPageImpl implements Page {
     private final int MAX_ROW_COUNT;
 
     // the pageId should be final. Once assigned cannot be changed
-    private final int pageId;
+    private final int currentPageId;
 
     // the actual data
     private final byte[] rows;
 
-    private int boolValueSize = 0;
+    private byte boolValue;
 
-    private int keySize = 0;
+    private int keySize;
 
-    private int pidSize = 0;
+    private int pidSize;
 
-    private int slotIdSize = 0;
+    private int slotIdSize;
 
-    public IndexPageImpl(int pageId, int boolValueSize, int keySize, int pidSize, int slotIdSize) {
-        this.pageId = pageId;
+    public LeafIndexPageImpl(int currentPageId, byte boolValue, int keySize, int pidSize, int slotIdSize) {
+        this.currentPageId = currentPageId;
+        this.boolValue = boolValue;
+
         this.rows = new byte[Config.PAGE_SIZE];
         setRowCount(0);
+        setBoolValue(boolValue);
 
-        this.boolValueSize = boolValueSize;
         this.keySize = keySize;
         this.pidSize = pidSize;
         this.slotIdSize = slotIdSize;
-        this.ROW_SIZE = boolValueSize + keySize + pidSize + slotIdSize;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
+        this.ROW_SIZE = keySize + pidSize + slotIdSize;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER) / ROW_SIZE;
     }
 
     // if loading an existing page in Buffer
-    public IndexPageImpl(int pageId, byte[] existingRows, int booleanValue, int key, int pid, int slotId) {
+    public LeafIndexPageImpl(int currentPageId, byte[] existingRows, int keySize, int pidSize, int slotIdSize) {
         if (existingRows.length != Config.PAGE_SIZE) {
             throw new IllegalArgumentException("Page size must be 4KB!");
         }
-        this.pageId = pageId;
+        this.currentPageId = currentPageId;
         this.rows = existingRows;
 
-        this.boolValueSize = booleanValue;
-        this.keySize = key;
-        this.pidSize = pid;
-        this.slotIdSize = slotId;
-        this.ROW_SIZE = boolValueSize + keySize + pidSize + slotIdSize;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
+        this.boolValue = rows[0];
+        this.keySize = keySize;
+        this.pidSize = pidSize;
+        this.slotIdSize = slotIdSize;
+        this.ROW_SIZE = keySize + pidSize + slotIdSize;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER) / ROW_SIZE;
     }
 
     public Row getRow(int rowId) {
@@ -68,14 +74,13 @@ public class IndexPageImpl implements Page {
         }
 
         // go to the offset
-        int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
-        byte[] column1 = Arrays.copyOfRange(rows, offset, (offset += this.boolValueSize));
-        byte[] column2 = Arrays.copyOfRange(rows, offset, (offset += this.keySize));
-        byte[] column3 = Arrays.copyOfRange(rows, offset, (offset += this.pidSize));
-        byte[] column4 = Arrays.copyOfRange(rows, offset, (offset += this.slotIdSize));
+        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER + rowId * ROW_SIZE;
+        byte[] column1 = Arrays.copyOfRange(rows, offset, (offset += this.keySize));
+        byte[] column2 = Arrays.copyOfRange(rows, offset, (offset += this.pidSize));
+        byte[] column3 = Arrays.copyOfRange(rows, offset, (offset += this.slotIdSize));
 
         // create a row with the data
-        return new Row(column1[0], column2, column3, column4);
+        return new Row(column1, column2, column3);
     }
 
     @Override
@@ -90,11 +95,10 @@ public class IndexPageImpl implements Page {
         }
 
         int rowCount = getRowCount();
-        int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
+        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER + rowCount * ROW_SIZE;
 
         // copy the data to the page
-        copyAndPaste(new byte[] { row.booleanValue }, this.boolValueSize, offset);
-        copyAndPaste(row.key, this.keySize, (offset += this.boolValueSize));
+        copyAndPaste(row.key, this.keySize, offset);
         copyAndPaste(row.pid, this.pidSize, (offset += this.keySize));
         copyAndPaste(row.slotid, this.slotIdSize, (offset += this.pidSize));
 
@@ -121,7 +125,7 @@ public class IndexPageImpl implements Page {
 
     @Override
     public int getPid() {
-        return this.pageId;
+        return this.currentPageId;
     }
 
     // get the data of the rows
@@ -133,12 +137,21 @@ public class IndexPageImpl implements Page {
     // get the rowcount by accessing the first 4 bytes
 
     private int getRowCount() {
-        return ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).getInt();
+        return ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).getInt();
     }
 
     // set the row count in first 4 bytes
     private void setRowCount(int count) {
-        ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
+        ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).putInt(count);
+    }
+
+    // Set the page isLeaf status in the first byte of the page
+    private void setBoolValue(byte boolValue) {
+        this.rows[0] = boolValue;
+    }
+
+    public void setNextPointer(int nextPageId) {
+        ByteBuffer.wrap(rows, 5, 4).putInt(nextPageId);
     }
 
 }
