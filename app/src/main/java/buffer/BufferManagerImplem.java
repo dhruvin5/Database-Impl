@@ -1,3 +1,19 @@
+// package buffer;
+
+// import java.io.IOException;
+// import java.io.RandomAccessFile;
+// import java.util.ArrayList;
+// import java.util.HashMap;
+// import java.util.LinkedList;
+// import java.util.AbstractMap;
+
+// import Page.Page;
+// import Page.PageImpl;
+// import Page.PageMetaData;
+// import configs.Config;
+// import SystemCatalog.systemCatalog;
+// import SystemCatalog.tableMetaData;
+
 package buffer;
 
 import java.io.IOException;
@@ -70,7 +86,15 @@ public class BufferManagerImplem extends BufferManager {
             int MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE; // Calculate the max row count for the page
             int offSet1 = table.getColumnSize(columnNames.get(0)); // Get the size of the first column
             int offSet2 = table.getColumnSize(columnNames.get(1)); // Get the size of the second column
-            page = new PageImpl(newID, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2);
+
+            if (this.catalog.isIndexFile(FILE_NAME)) {
+                int offSet3 = table.getColumnSize(columnNames.get(2));
+                page = new PageImpl(newID, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2, offSet3);
+            } else {
+                page = new PageImpl(newID, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2, -1); // Create a new page
+                                                                                           // with the
+                                                                                           // given parameters
+            }
 
             this.totalPages = this.totalPages + 1;
             this.FileToPID.put(FILE_NAME, newID + 1); // Update the mapping of file name to page id
@@ -92,18 +116,15 @@ public class BufferManagerImplem extends BufferManager {
             return null; // Page already exists, cannot create again
         }
 
-        if (!pageInfo.containsKey(FILE_NAME)) {
-            pageInfo.put(FILE_NAME, new HashMap<>()); // add the new page to the pageInfo map
-        }
-
         // Map the page id and fileName to its metadata
         HashMap<Integer, PageMetaData> file_pageMetaData = pageInfo.getOrDefault(FILE_NAME, new HashMap<>());
         file_pageMetaData.put(page.getPid(), metadata); // map the page id to its metadata
         pageInfo.put(FILE_NAME, file_pageMetaData); // update the pageInfo map
 
-        // Map page id to frame index
-
-        // pageTable.put(page.getPid(), frameIndex);
+        // Map the page id to its frame index in the page table
+        HashMap<Integer, Integer> file_pageTable = pageTable.getOrDefault(FILE_NAME, new HashMap<>());
+        file_pageTable.put(page.getPid(), frameIndex); // map the page id to its frame index
+        pageTable.put(FILE_NAME, file_pageTable); // update the page table
 
         // Add the new page to the LRU cache
         lruCache.addLast(new AbstractMap.SimpleEntry<>(FILE_NAME, page.getPid())); // store the file name and page id in
@@ -269,10 +290,12 @@ public class BufferManagerImplem extends BufferManager {
             int MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE; // Calculate the max row count for the page
             int offSet1 = table.getColumnSize(columnNames.get(0)); // Get the size of the first column
             int offSet2 = table.getColumnSize(columnNames.get(1)); // Get the size of the second column
-            Page page = new PageImpl(pageId, buffer, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2); // create a new page
-                                                                                                 // with the data read
-                                                                                                 // from the disk
-            return page;
+            if (this.catalog.isIndexFile(FILE_NAME)) {
+                int offSet3 = table.getColumnSize(columnNames.get(2)); // Get the size of the third column
+                return new PageImpl(pageId, buffer, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2, offSet3);
+            } else {
+                return new PageImpl(pageId, buffer, ROW_SIZE, MAX_ROW_COUNT, offSet1, offSet2, -1);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

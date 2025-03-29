@@ -14,25 +14,26 @@ public class Caller {
     public static void main(String[] args) {
         try {
             // Initialize BufferManager with size 10
-            BufferManager bufferManager = new BufferManagerImplem(10);
+            BufferManager bufferManager = new BufferManagerImplem(1);
 
             // Load dataset into the buffer
-            Utilities.loadDataset(bufferManager, "/Users/simranmalik/Desktop/title.basics.tsv");
+            Utilities.loadDataset(bufferManager, "C:/Users/bhaga/Downloads/title.basics.tsv");
             System.out.println("PASS: Buffer Manager initialized with buffer size: 10");
 
             // Create two different B+ Trees for movieId and title
-            BplusTreeImplem<Integer> movieIdIndex = new BplusTreeImplem<>("movieIdIndexFile", bufferManager);
-            BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("titleIndexFile", bufferManager);
+            BplusTreeImplem<Integer> movieIdIndex = new BplusTreeImplem<>("movieId.bin", bufferManager);
+            BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title.bin", bufferManager);
 
             // Load data from the movie table and populate the B+ tree indexes
-            int currentPageId = 0;  // Initialize page ID (loading rows from the pages)
-            
+            int currentPageId = 0; // Initialize page ID (loading rows from the pages)
+
             while (true) {
                 // Get the current page from the buffer manager
                 // Assuming the second argument is the page type or file name
-                Page p = bufferManager.getPage(currentPageId, "movieDataFile");  // Replace with actual file/page type
+                Page p = bufferManager.getPage(currentPageId, "movies.bin"); // Replace with
+                // actual file/page type
                 if (p == null) {
-                    break;  // No more pages to read
+                    break; // No more pages to read
                 }
 
                 // Iterate through rows in the page
@@ -60,14 +61,14 @@ public class Caller {
             }
 
             // Sample tests
-            int searchMovieId = 1;  // Example movieId for search
+            int searchMovieId = 1; // Example movieId for search
             System.out.println("Searching for movieId: " + searchMovieId);
             Iterator<Rid> movieIdResults = movieIdIndex.search(searchMovieId);
             while (movieIdResults.hasNext()) {
                 System.out.println("MovieId Search Result: " + movieIdResults.next());
             }
 
-            String searchTitle = "Inception";  // Example title for search
+            String searchTitle = "Inception"; // Example title for search
             System.out.println("Searching for title: " + searchTitle);
             Iterator<Rid> titleResults = titleIndex.search(searchTitle);
             while (titleResults.hasNext()) {

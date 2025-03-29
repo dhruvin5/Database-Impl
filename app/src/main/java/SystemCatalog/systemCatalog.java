@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class systemCatalog {
 
+    private final HashMap<String, Boolean> isIndex;
     private final HashMap<String, tableMetaData> tables; // HashMap to store table metadata with table name as the key
     private final HashMap<String, indexMetaData> indexes; // HashMap to store index metadata with index file name as the
                                                           // key
@@ -13,16 +14,32 @@ public class systemCatalog {
 
         this.tables = new HashMap<>();
         this.indexes = new HashMap<>();
+        this.isIndex = new HashMap<>();
 
         // Defines the Movie Table
         ArrayList<columnMetaData> columns = new ArrayList<>();
-        columns.add(new columnMetaData("movieId", "INTEGER", 4));
+        columns.add(new columnMetaData("movieId", "INTEGER", 9));
         columns.add(new columnMetaData("title", "STRING", 30));
         addTable("Movies", "movies.bin", columns); // Adds the Movie table to the catalog
 
-        // Adds an index on the movieId and title column of the Movies table
+        // creates page schema for the Movie table
+        ArrayList<columnMetaData> movie_index_columns = new ArrayList<>();
+        movie_index_columns.add(new columnMetaData("isLeaf", "BOOLEAN", 1)); // pageId for the B+ tree
+        movie_index_columns.add(new columnMetaData("pid", "INTEGER", 4));
+        movie_index_columns.add(new columnMetaData("movieId", "INTEGER", 9));
+
+        // creates page schema for the Movie table
+        ArrayList<columnMetaData> title_index_columns = new ArrayList<>();
+        title_index_columns.add(new columnMetaData("isLeaf", "BOOLEAN", 1)); // pageId for the B+ tree
+        title_index_columns.add(new columnMetaData("pid", "INTEGER", 4));
+        title_index_columns.add(new columnMetaData("title", "STRING", 30));
+
         addIndex("Movie_Index", "Movies", "movieId", "movieId.bin"); // Adds an index on the movieId column
         addIndex("Movies_title", "Movies", "title", "title.bin"); // Adds an index on the title column
+
+        addTable("", "movieId.bin", movie_index_columns);
+        addTable(" ", "title.bin", title_index_columns);
+
     }
 
     // Returns a boolean if the table was added successfully to catalog
@@ -35,6 +52,7 @@ public class systemCatalog {
         // Creates and stores the new table metadata in the catalog
         tableMetaData table = new tableMetaData(tableName, fileName, columns);
         tables.put(fileName, table);
+        isIndex.put(fileName, isIndex.getOrDefault(fileName, false)); // Mark the file as a table (not an index)
 
         return true;
     }
@@ -46,6 +64,7 @@ public class systemCatalog {
             return false;
         }
         indexes.put(indexName, new indexMetaData(table, key, indexFile));
+        isIndex.put(indexFile, true); // Mark the file as an index
         return true;
     }
 
@@ -75,5 +94,9 @@ public class systemCatalog {
 
     public tableMetaData getTableMetaData(String tableName) {
         return tables.get(tableName);
+    }
+
+    public boolean isIndexFile(String fileName) {
+        return isIndex.getOrDefault(fileName, false);
     }
 }

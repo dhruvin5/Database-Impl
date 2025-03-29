@@ -25,10 +25,11 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         this.indexFile = indexFile;
         this.bm = bm;
         File file = new File(indexFile);
-        
+
         if (!file.exists()) {
             // Create root page if it doesn't exist
             this.rootPageId = bm.createPage(indexFile).getPid();
+            bm.unpinPage(rootPageId, indexFile);
             writeNode(new BplusTreeNode<>(true), rootPageId); // Write an empty leaf node
         }
     }
@@ -38,10 +39,11 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         byte[] keysData = serializeNode(node.keys);
         byte[] valuesData = serializeNode(node.values);
         Row row = new Row(keysData, valuesData);
-        
+
         Page page = bm.getPage(pageId, indexFile);
+        bm.unpinPage(pageId, indexFile);
         page.insertRow(row);
-        bm.markDirty(pageId, indexFile);  // Mark the page as modified
+        bm.markDirty(pageId, indexFile); // Mark the page as modified
         // No flushPage here to avoid any additional functionality
     }
 
@@ -91,13 +93,15 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         BplusTreeNode<K> node = readNode(pageId);
         if (node.is_leaf) {
             int i = Collections.binarySearch(node.keys, key);
-            if (i < 0) i = -(i + 1);
+            if (i < 0)
+                i = -(i + 1);
             node.keys.add(i, key);
             node.values.add(i, rid);
             writeNode(node, pageId);
         } else {
             int i = Collections.binarySearch(node.keys, key);
-            if (i < 0) i = -(i + 1);
+            if (i < 0)
+                i = -(i + 1);
             BplusTreeNode<K> child = readNode(node.children.get(i));
             if (child.keys.size() >= 3) {
                 splitChild(node, i, child);
@@ -134,10 +138,11 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         // Write child and sibling nodes and the parent node to disk
         writeNode(child, parent.children.get(index));
         writeNode(sibling, newPageId);
-        writeNode(parent, rootPageId);  // Write the parent node
+        writeNode(parent, rootPageId); // Write the parent node
     }
 
-    // Searches for a key in the B+ tree and returns an iterator over the matching records
+    // Searches for a key in the B+ tree and returns an iterator over the matching
+    // records
     @Override
     public Iterator<Rid> search(K key) {
         List<Rid> matchingRids = new ArrayList<>();
@@ -145,7 +150,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             BplusTreeNode<K> node = readNode(rootPageId);
             while (!node.is_leaf) {
                 int i = Collections.binarySearch(node.keys, key);
-                if (i < 0) i = -(i + 1);
+                if (i < 0)
+                    i = -(i + 1);
                 node = readNode(node.children.get(i));
             }
             int i = Collections.binarySearch(node.keys, key);
@@ -159,7 +165,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return matchingRids.iterator();  // Return all matching RIDs
+        return matchingRids.iterator(); // Return all matching RIDs
     }
 
     // Performs a range search between two keys
@@ -170,7 +176,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             BplusTreeNode<K> node = readNode(rootPageId);
             while (!node.is_leaf) {
                 int i = Collections.binarySearch(node.keys, startKey);
-                if (i < 0) i = -(i + 1);
+                if (i < 0)
+                    i = -(i + 1);
                 node = readNode(node.children.get(i));
             }
             while (node != null) {

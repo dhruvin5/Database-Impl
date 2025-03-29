@@ -18,6 +18,7 @@ public class Utilities {
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
 
             // initially there is no page
+            int count = 0;
             int currentPageId = -1;
             boolean pageExists = false;
 
@@ -67,6 +68,12 @@ public class Utilities {
                 p.insertRow(row);
                 bf.markDirty(currentPageId, "movies.bin");
                 bf.unpinPage(currentPageId, "movies.bin");
+
+                count++;
+                if (count % 20000 == 0) {
+                    System.out.println("Inserted " + count + " rows into the page with ID: " + currentPageId);
+                    break; // For testing, break after 5000 rows
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
