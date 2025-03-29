@@ -50,7 +50,7 @@ public class Caller {
             Page moviePage = bufferManager.getPage(4, "movies.bin");
             Row movie_row = moviePage.getRow(0);
             System.out.println(
-                    "Movie Row: " + (movie_row.movieId) + " " + new String(movie_row.title) + movie_row.title.length);
+                    "Movie Row: " + (movie_row.movieId) + " " + new String(movie_row.title));
 
             System.out.print("Success");
 

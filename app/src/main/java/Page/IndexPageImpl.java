@@ -30,35 +30,33 @@ public class IndexPageImpl implements Page {
 
     private int slotIdSize = 0;
 
-    public IndexPageImpl(int pageId, int ROW_SIZE, int boolValueSize, int keySize, int pidSize,
-            int slotIdSize) {
+    public IndexPageImpl(int pageId, int boolValueSize, int keySize, int pidSize, int slotIdSize) {
         this.pageId = pageId;
         this.rows = new byte[Config.PAGE_SIZE];
         setRowCount(0);
 
-        this.ROW_SIZE = ROW_SIZE;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
         this.boolValueSize = boolValueSize;
         this.keySize = keySize;
         this.pidSize = pidSize;
         this.slotIdSize = slotIdSize;
+        this.ROW_SIZE = boolValueSize + keySize + pidSize + slotIdSize;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
     }
 
     // if loading an existing page in Buffer
-    public IndexPageImpl(int pageId, byte[] existingRows, int ROW_SIZE, int booleanValue, int key,
-            int pid, int slotId) {
+    public IndexPageImpl(int pageId, byte[] existingRows, int booleanValue, int key, int pid, int slotId) {
         if (existingRows.length != Config.PAGE_SIZE) {
             throw new IllegalArgumentException("Page size must be 4KB!");
         }
         this.pageId = pageId;
         this.rows = existingRows;
 
-        this.ROW_SIZE = ROW_SIZE;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
         this.boolValueSize = booleanValue;
         this.keySize = key;
         this.pidSize = pid;
         this.slotIdSize = slotId;
+        this.ROW_SIZE = boolValueSize + keySize + pidSize + slotIdSize;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
     }
 
     public Row getRow(int rowId) {

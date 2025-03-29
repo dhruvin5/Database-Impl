@@ -59,25 +59,28 @@ public class BufferManagerImplem extends BufferManager {
             freeFrameList.add(i);
     }
 
+    private int[] getColumnSizes(String FILE_NAME) {
+        tableMetaData table = this.catalog.getTableMetaData(FILE_NAME);
+        ArrayList<String> columnNames = table.getColumnNames();
+        int[] columnSizes = new int[columnNames.size()];
+        for (int i = 0; i < columnNames.size(); i++) {
+            columnSizes[i] = table.getColumnSize(columnNames.get(i));
+        }
+        return columnSizes;
+    }
+
     // Create new Page
     Page createAndAllocatePage(int frameIndex, Page page, boolean isPageCreated, String FILE_NAME) {
 
         if (!isPageCreated) { // Create a new page if doesnt exist
 
             int newID = this.FileToPID.getOrDefault(FILE_NAME, 0); // Get the current page id for the file
-            tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata from the catalog
-            ArrayList<String> columnNames = table.getColumnNames(); // Get the column names from the table metadata
-
-            int ROW_SIZE = table.getRowSize(); // Get the row size from the table metadata
-            int offSet1 = table.getColumnSize(columnNames.get(0)); // Get the size of the first column
-            int offSet2 = table.getColumnSize(columnNames.get(1)); // Get the size of the second column
+            int[] columnSize = getColumnSizes(FILE_NAME); // Get the column sizes for the file
 
             if (this.catalog.isIndexFile(FILE_NAME)) {
-                int offSet3 = table.getColumnSize(columnNames.get(2));
-                int offSet4 = table.getColumnSize(columnNames.get(3));
-                page = new IndexPageImpl(newID, ROW_SIZE, offSet1, offSet2, offSet3, offSet4);
+                page = new IndexPageImpl(newID, columnSize[0], columnSize[1], columnSize[2], columnSize[3]);
             } else {
-                page = new PageImpl(newID, ROW_SIZE, offSet1, offSet2);
+                page = new PageImpl(newID, columnSize[0], columnSize[1]);
             }
 
             this.totalPages = this.totalPages + 1;
@@ -268,19 +271,13 @@ public class BufferManagerImplem extends BufferManager {
             fileReader.readFully(buffer);
 
             // load a page
-            tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata from the catalog
-            ArrayList<String> columnNames = table.getColumnNames(); // Get the column names from the table metadata
-
-            int ROW_SIZE = table.getRowSize(); // Get the row size from the table metadata
-            int offSet1 = table.getColumnSize(columnNames.get(0)); // Get the size of the first column
-            int offSet2 = table.getColumnSize(columnNames.get(1)); // Get the size of the second column
+            int[] columnSize = getColumnSizes(FILE_NAME); // Get the column sizes for the file
 
             if (this.catalog.isIndexFile(FILE_NAME)) {
-                int offSet3 = table.getColumnSize(columnNames.get(2)); // Get the size of the third column
-                int offSet4 = table.getColumnSize(columnNames.get(3)); // Get the size of the fourth column
-                return new IndexPageImpl(pageId, buffer, ROW_SIZE, offSet1, offSet2, offSet3, offSet4);
+
+                return new IndexPageImpl(pageId, buffer, columnSize[0], columnSize[1], columnSize[2], columnSize[3]);
             } else {
-                return new PageImpl(pageId, buffer, ROW_SIZE, offSet1, offSet2);
+                return new PageImpl(pageId, buffer, columnSize[0], columnSize[1]);
             }
 
         } catch (IOException e) {
@@ -339,26 +336,23 @@ public class BufferManagerImplem extends BufferManager {
         return true;
     }
 
-    // public int getPagesInBuffer() {
-    // return this.pageTable.size();
-    // }
-
-    // // get the total pages uptil now
-    // public int getTotalPages() {
-    // return this.totalPages;
-    // }
-
-    // public int existsInCache(int pageId) {
-    // return lruCache.indexOf(pageId);
-    // }
-
     public void force() {
-        return;
-        // for (int i = 0; i < bufferPool.length; i++) {
-        // if (bufferPool[i] != null) {
-        // writeToDisk(bufferPool[i]);
-        // }
-        // }
+        for (int i = 0; i < this.bufferPool.length; i++) {
+            if (this.bufferPool[i] != null) {
+                Page page = this.bufferPool[i];
+                String FILE_NAME = null;
+                for (String fileName : this.pageTable.keySet()) {
+                    if (this.pageTable.get(fileName).containsKey(page.getPid())) {
+                        FILE_NAME = fileName;
+                        break;
+                    }
+                }
+                if (FILE_NAME != null) {
+                    writeToDisk(page, FILE_NAME);
+                }
+            }
+        }
+
     }
 
 }

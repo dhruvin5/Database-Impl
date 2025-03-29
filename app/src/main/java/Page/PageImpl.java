@@ -27,29 +27,29 @@ public class PageImpl implements Page {
 
     private int offSet2;
 
-    public PageImpl(int pageId, int ROW_SIZE, int offSet1, int offSet2) {
+    public PageImpl(int pageId, int offSet1, int offSet2) {
         this.pageId = pageId;
         this.rows = new byte[Config.PAGE_SIZE];
         setRowCount(0);
 
-        this.ROW_SIZE = ROW_SIZE;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
         this.offSet1 = offSet1;
         this.offSet2 = offSet2;
+        this.ROW_SIZE = offSet1 + offSet2;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
     }
 
     // if loading an existing page in Buffer
-    public PageImpl(int pageId, byte[] existingRows, int ROW_SIZE, int offSet1, int offSet2) {
+    public PageImpl(int pageId, byte[] existingRows, int offSet1, int offSet2) {
         if (existingRows.length != Config.PAGE_SIZE) {
             throw new IllegalArgumentException("Page size must be 4KB!");
         }
         this.pageId = pageId;
         this.rows = existingRows;
 
-        this.ROW_SIZE = ROW_SIZE;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
         this.offSet1 = offSet1;
         this.offSet2 = offSet2;
+        this.ROW_SIZE = offSet1 + offSet2;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
     }
 
     // gets the row using the rowId
@@ -99,7 +99,7 @@ public class PageImpl implements Page {
         }
 
         for (int i = 0; i < this.offSet2; i++) {
-            this.rows[offset + this.offSet2 + i] = titleFixed[i];
+            this.rows[offset + this.offSet1 + i] = titleFixed[i];
         }
 
         setRowCount(rowCount + 1);
