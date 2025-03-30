@@ -7,12 +7,14 @@ import Row.*;
 import configs.Config;
 
 public class LeafIndexPageImpl implements Page {
-
-    private static final int ROW_COUNT_SIZE = 4;
-
+    // 1 byte for isLeaf boolean
     private static final int BOOL_SIZE = 1;
 
-    private static final int NEXT_LEAF_POINTER = 4;
+    // has the row count
+    private static final int ROW_COUNT_SIZE = 4;
+
+    // 4 bytes for next leaf page pointer
+    private static final int NEXT_LEAF_POINTER_SIZE = 4;
 
     // fixed row size
     private final int ROW_SIZE;
@@ -26,10 +28,13 @@ public class LeafIndexPageImpl implements Page {
     // the actual data
     private final byte[] rows;
 
+    // size of the key
     private int keySize;
 
+    // size of the pid
     private int pidSize;
 
+    // size of the slotId
     private int slotIdSize;
 
     public LeafIndexPageImpl(int currentPageId, byte boolValue, int keySize, int pidSize, int slotIdSize) {
@@ -43,7 +48,7 @@ public class LeafIndexPageImpl implements Page {
         this.pidSize = pidSize;
         this.slotIdSize = slotIdSize;
         this.ROW_SIZE = keySize + pidSize + slotIdSize;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER) / ROW_SIZE;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER_SIZE) / ROW_SIZE;
     }
 
     // if loading an existing page in Buffer
@@ -58,7 +63,7 @@ public class LeafIndexPageImpl implements Page {
         this.pidSize = pidSize;
         this.slotIdSize = slotIdSize;
         this.ROW_SIZE = keySize + pidSize + slotIdSize;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER) / ROW_SIZE;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER_SIZE) / ROW_SIZE;
     }
 
     // get the row by rowId
@@ -70,8 +75,8 @@ public class LeafIndexPageImpl implements Page {
             return null;
         }
 
-        // go to the offset
-        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER + rowId * ROW_SIZE;
+        // go to the offset and reads the data from the page
+        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER_SIZE + rowId * ROW_SIZE;
         byte[] column1 = Arrays.copyOfRange(rows, offset, (offset += this.keySize));
         byte[] column2 = Arrays.copyOfRange(rows, offset, (offset += this.pidSize));
         byte[] column3 = Arrays.copyOfRange(rows, offset, (offset += this.slotIdSize));
@@ -92,10 +97,11 @@ public class LeafIndexPageImpl implements Page {
             return -1;
         }
 
+        // get the correct offset to insert the data
         int rowCount = getRowCount();
-        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER + rowCount * ROW_SIZE;
+        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER_SIZE + rowCount * ROW_SIZE;
 
-        // copy the data to the page
+        // copies key, pid and slotid to the page
         copyAndPaste(row.key, this.keySize, offset);
         copyAndPaste(row.pid, this.pidSize, (offset += this.keySize));
         copyAndPaste(row.slotid, this.slotIdSize, (offset += this.pidSize));
@@ -134,8 +140,7 @@ public class LeafIndexPageImpl implements Page {
         return this.rows;
     }
 
-    // get the rowcount by accessing the first 4 bytes
-
+    // get the rowcount by accessing bytes 1-4 bytes
     private int getRowCount() {
         return ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).getInt();
     }
@@ -152,11 +157,16 @@ public class LeafIndexPageImpl implements Page {
 
     // gets the pointer to the next leaf page
     public void setNextPointer(int nextPageId) {
-        ByteBuffer.wrap(rows, 5, 4).putInt(nextPageId);
+        ByteBuffer.wrap(rows, BOOL_SIZE + ROW_COUNT_SIZE, NEXT_LEAF_POINTER_SIZE).putInt(nextPageId);
     }
 
     // gets the pointer to the next leaf page
     public int getNextPointer() {
-        return ByteBuffer.wrap(rows, 5, 4).getInt();
+        return ByteBuffer.wrap(rows, BOOL_SIZE + ROW_COUNT_SIZE, NEXT_LEAF_POINTER_SIZE).getInt();
+    }
+
+    // check if the page is leaf or not
+    public byte isLeaf() {
+        return this.rows[0];
     }
 }

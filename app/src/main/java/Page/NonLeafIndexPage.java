@@ -99,6 +99,7 @@ public class NonLeafIndexPage implements Page {
         return rowCount;
     }
 
+    // copy the data to the page
     private void copyAndPaste(byte[] data, int size, int offset) {
         byte[] fixed_copy = new byte[size];
         System.arraycopy(data, 0, fixed_copy, 0, Math.min(data.length, size));
@@ -108,6 +109,7 @@ public class NonLeafIndexPage implements Page {
         }
     }
 
+    // check if the page is full
     public boolean isFull() {
         int rowCount = getRowCount();
         if (rowCount >= MAX_ROW_COUNT) {
@@ -121,7 +123,6 @@ public class NonLeafIndexPage implements Page {
     }
 
     // get the data of the rows
-
     public byte[] getRows() {
         return this.rows;
     }
@@ -137,16 +138,25 @@ public class NonLeafIndexPage implements Page {
         ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).putInt(count);
     }
 
+    // set the bool value (isLeaf) of the page
     private void setBoolValue(byte boolValue) {
         this.rows[0] = boolValue;
     }
 
+    // get the next pointer of the page
     public void setNextPointer(int nextPointer) {
+        // Since this page is not a leaf page it is not required to set the next pointer
         return;
     }
 
+    // get the next pointer of the page
     public int getNextPointer() {
+        // Since this page is not a leaf page, return -1
         return -1;
     }
 
+    // get the page type
+    public byte isLeaf() {
+        return this.rows[0];
+    }
 }

@@ -49,4 +49,10 @@ public interface Page {
      */
     public int getNextPointer();
 
+    /**
+     * Returns the isLeaf status of the page.
+     * 
+     * @return 1 if the page is a leaf page, 0 otherwise
+     */
+    public byte isLeaf();
 }

@@ -43,7 +43,7 @@ public class Caller {
         // Create a leaf movie id index file
         Page movieid_index_page = bufferManager.createIndexPage("movie_Id_index.bin", true);
         bufferManager.unpinPage(0, "movie_Id_index.bin");
-        movieid_index_page.insertRow(new leafRow("123456789".getBytes(), "4".getBytes(), "5".getBytes()));
+        movieid_index_page.insertRow(new leafRow("123456784".getBytes(), "4".getBytes(), "5".getBytes()));
         movieid_index_page.insertRow(new leafRow("145456788".getBytes(), "64".getBytes(), "2".getBytes()));
         // Get the first row from the movie index page
         Row row = movieid_index_page.getRow(0);
@@ -63,7 +63,7 @@ public class Caller {
         Page title_index_page = bufferManager.getPage(0, "title_index.bin");
         bufferManager.unpinPage(0, "title_index.bin");
         int val = title_index_page.insertRow(new leafRow("123456789".getBytes(), "4".getBytes(), "5".getBytes()));
-        title_index_page.insertRow(new nonLeafRow("145467883".getBytes(), "14".getBytes()));
+        title_index_page.insertRow(new nonLeafRow("James Bond II".getBytes(), "14".getBytes()));
         Row title_row = title_index_page.getRow(0);
         System.out.println("Title Row: " + new String(title_row.key) + " " + new String(title_row.pid));
     }
@@ -86,12 +86,14 @@ public class Caller {
     private static void test5(BufferManager bufferManager) {
         Page page = bufferManager.getPage(0, "movie_Id_index.bin");
         bufferManager.unpinPage(0, "movie_Id_index.bin");
-        // page.setNextPointer(5);
+        page.setNextPointer(5);
         System.out.println("Next Pointer: " + page.getNextPointer());
+        System.out.println("IS LEAF: " + page.isLeaf());
 
         Page page1 = bufferManager.getPage(0, "title_index.bin");
         page1.setNextPointer(6);
         System.out.println("Next Pointer: " + page1.getNextPointer());
+        System.out.println("IS LEAF: " + page1.isLeaf());
 
     }
 }

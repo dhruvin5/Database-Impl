@@ -14,7 +14,7 @@ import SystemCatalog.tableMetaData;
 
 public class BufferManagerImplem extends BufferManager {
 
-    // for mapping page id to frames
+    // for mapping file name and page id to frames
     HashMap<String, HashMap<Integer, Integer>> pageTable;
 
     // Buffer pool
@@ -26,13 +26,15 @@ public class BufferManagerImplem extends BufferManager {
     // LRU Cache
     LinkedList<AbstractMap.SimpleEntry<String, Integer>> lruCache;
 
-    // Page metadata
+    // maps File name and Page id to metadata
     HashMap<String, HashMap<Integer, PageMetaData>> pageInfo;
 
-    // Shared catalog instance
+    // sytem catalog instance
     private final systemCatalog catalog;
 
-    private HashMap<String, Integer> FileToPID; // Used to maintain the mapping of the current Page Id to the file name
+    // Used to maintain the mapping of the current Page Id to the file name - the
+    // total number of pages created for each file
+    private HashMap<String, Integer> FileToPID;
 
     int totalPages; // total number of pages created
 
@@ -194,12 +196,11 @@ public class BufferManagerImplem extends BufferManager {
     public Page getPage(int pageId, String FILE_NAME) {
         // Check if in the buffer pool
         if (pageTable.containsKey(FILE_NAME) && pageTable.get(FILE_NAME).containsKey(pageId)) {
-            int frameIndex = pageTable.get(FILE_NAME).get(pageId);
-            Page page = bufferPool[frameIndex];
+            int frameIndex = pageTable.get(FILE_NAME).get(pageId); // page frame index
+            Page page = bufferPool[frameIndex]; // get the page from the buffer pool
 
-            // increment the pin count
-            PageMetaData metadata = pageInfo.get(FILE_NAME).get(pageId);
-            metadata.incrementPinCount();
+            PageMetaData metadata = pageInfo.get(FILE_NAME).get(pageId); // get the page metadata
+            metadata.incrementPinCount(); // increment the pin count
 
             // Move the page to the end of the LRU cache (most recently used)
             AbstractMap.SimpleEntry<String, Integer> entry = new AbstractMap.SimpleEntry<>(FILE_NAME, pageId);
@@ -283,19 +284,21 @@ public class BufferManagerImplem extends BufferManager {
             // reads 4KB of data
             fileReader.readFully(buffer);
 
+            // gets the columns needed for the page
             HashMap<String, Integer> columnSize = getColumnSizes(FILE_NAME);
 
+            // check if the page is an index page or a data page
             if (this.catalog.isIndexFile(FILE_NAME)) {
-                boolean isLeaf = ispageLeaf(FILE_NAME, buffer);
+                boolean isLeaf = ispageLeaf(FILE_NAME, buffer); // check if the page is a leaf page
                 if (isLeaf) {
-
                     return new LeafIndexPageImpl(pageId, buffer, columnSize.get("key"), columnSize.get("pid"),
                             columnSize.get("slotID"));
                 } else {
+                    // a non-leaf page
                     return new NonLeafIndexPage(pageId, buffer, columnSize.get("key"), columnSize.get("pid"));
-
                 }
             } else {
+                // a regular data page
                 return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title"));
             }
 
@@ -326,6 +329,7 @@ public class BufferManagerImplem extends BufferManager {
         }
     }
 
+    // check if the page exist in a file
     private boolean isPageOnDisk(int pageId, String FILE_NAME) {
         if (pageId < this.FileToPID.getOrDefault(FILE_NAME, -1)) {
             return true;
@@ -333,14 +337,17 @@ public class BufferManagerImplem extends BufferManager {
         return false;
     }
 
+    // get the buffer capacity
     public int getBufferCapacity() {
         return this.bufferPool.length;
     }
 
+    // get the number of free frames in the buffer pool
     public int getFreeFrames() {
         return this.freeFrameList.size();
     }
 
+    // get the size of the LRU cache
     public int getLRUCacheSize() {
         return this.lruCache.size();
     }
@@ -355,24 +362,22 @@ public class BufferManagerImplem extends BufferManager {
         return true;
     }
 
+    // flush all dirty pages to disk
     public void force() {
-        for (int i = 0; i < this.bufferPool.length; i++) {
-            if (this.bufferPool[i] != null) {
-                Page page = this.bufferPool[i];
-                String FILE_NAME = null;
-                for (String fileName : this.pageTable.keySet()) {
-                    if (this.pageTable.get(fileName).containsKey(page.getPid())) {
-                        FILE_NAME = fileName;
-                        break;
-                    }
-                }
-                if (FILE_NAME != null) {
+        // Iterate through all pages in the buffer pool using pageTable
+        for (String FILE_NAME : pageTable.keySet()) {
+            for (int pageId : pageTable.get(FILE_NAME).keySet()) {
+                PageMetaData metadata = pageInfo.get(FILE_NAME).get(pageId);
+                if (metadata.isDirty()) {
+                    Page page = bufferPool[pageTable.get(FILE_NAME).get(pageId)];
                     writeToDisk(page, FILE_NAME);
+                    metadata.setDirtyBit(false); // reset the dirty bit after writing to disk
                 }
             }
         }
     }
 
+    // check if the index page is a leaf page
     private boolean ispageLeaf(String FILE_NAME, byte[] buffer) {
         int is_Leaf_Offset = 0;
         return this.catalog.isIndexFile(FILE_NAME) && (buffer[is_Leaf_Offset] == 1);

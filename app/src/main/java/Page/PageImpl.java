@@ -35,7 +35,7 @@ public class PageImpl implements Page {
         this.offSet1 = offSet1;
         this.offSet2 = offSet2;
         this.ROW_SIZE = offSet1 + offSet2;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_SIZE) / ROW_SIZE;
     }
 
     // if loading an existing page in Buffer
@@ -49,7 +49,7 @@ public class PageImpl implements Page {
         this.offSet1 = offSet1;
         this.offSet2 = offSet2;
         this.ROW_SIZE = offSet1 + offSet2;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_SIZE) / ROW_SIZE;
     }
 
     // gets the row using the rowId
@@ -62,7 +62,7 @@ public class PageImpl implements Page {
             return null;
         }
 
-        // go to the offset
+        // go to the offset and reads data
         int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
         byte[] column1 = Arrays.copyOfRange(rows, offset, offset + this.offSet1);
         byte[] column2 = Arrays.copyOfRange(rows, offset + this.offSet1, offset + this.offSet1 + this.offSet2);
@@ -86,19 +86,22 @@ public class PageImpl implements Page {
         byte[] movieIdFixed = new byte[this.offSet1];
         byte[] titleFixed = new byte[this.offSet2];
 
+        // copy the data to the fixed size arrays - padding
         System.arraycopy(row.movieId, 0, movieIdFixed, 0,
                 Math.min(row.movieId.length, this.offSet1));
         System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length,
                 this.offSet2));
 
+        // Gets the correct page offset to insert the data
         int rowCount = getRowCount();
         int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
-        // copy the row into the page data
+        // copy the movieId to the page
         for (int i = 0; i < this.offSet1; i++) {
             this.rows[offset + i] = movieIdFixed[i];
         }
 
+        // copy the title to the page
         for (int i = 0; i < this.offSet2; i++) {
             this.rows[offset + this.offSet1 + i] = titleFixed[i];
         }
@@ -138,11 +141,21 @@ public class PageImpl implements Page {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
     }
 
+    // sets the next pointer of the page
     public void setNextPointer(int nextPointer) {
+        // Since this is not a leaf page, it does not require to set the next pointer
         return;
     }
 
+    // returns the next pointer of the page
     public int getNextPointer() {
+        // Since this is not a leaf page, return -1
         return -1;
+    }
+
+    // returns if it is a leaf page or not
+    public byte isLeaf() {
+        // Since data page is not a leaf page, return 0
+        return 0;
     }
 }
