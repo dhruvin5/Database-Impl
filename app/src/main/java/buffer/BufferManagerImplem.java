@@ -57,7 +57,7 @@ public class BufferManagerImplem extends BufferManager {
             freeFrameList.add(i);
     }
 
-    // get the column sizes for the file
+    // get the column sizes for the file by contacting the system catalog
     private HashMap<String, Integer> getColumnSizes(String FILE_NAME) {
 
         tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata
@@ -81,8 +81,9 @@ public class BufferManagerImplem extends BufferManager {
 
             int newID = this.FileToPID.getOrDefault(FILE_NAME, 0); // Get the current page id for the file
             HashMap<String, Integer> columnSize = getColumnSizes(FILE_NAME); // Get the column sizes for the file
-            byte boolValue = (byte) (isLeaf ? 1 : 0);
+            byte boolValue = (byte) (isLeaf ? 1 : 0); // Convert boolean to byte
 
+            // Create a new page based on the file type
             if (this.catalog.isIndexFile(FILE_NAME) && isLeaf) {
                 page = new LeafIndexPageImpl(newID, boolValue, columnSize.get("key"), columnSize.get("pid"),
                         columnSize.get("slotID"));
@@ -93,7 +94,7 @@ public class BufferManagerImplem extends BufferManager {
             }
 
             this.totalPages = this.totalPages + 1;
-            this.FileToPID.put(FILE_NAME, newID + 1); // Update the mapping of file name to page id
+            this.FileToPID.put(FILE_NAME, newID + 1); // Update the total number of pages created for the file
         }
 
         // Allocate the page in the buffer pool
