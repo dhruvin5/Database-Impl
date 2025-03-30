@@ -3,7 +3,7 @@ package Page;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import Row.Row;
+import Row.*;
 import configs.Config;
 
 public class PageImpl implements Page {
@@ -68,13 +68,14 @@ public class PageImpl implements Page {
         byte[] column2 = Arrays.copyOfRange(rows, offset + this.offSet1, offset + this.offSet1 + this.offSet2);
 
         // create a row with the data
-        return new Row(column1, column2);
+        return new movieRow(column1, column2);
     }
 
     @Override
     public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
-        if (row == null || row.movieId == null || row.title == null) {
+        if (row == null || row.movieId == null || row.title == null || row.key != null
+                || row.pid != null || row.slotid != null) {
             return -1;
         }
 
@@ -128,7 +129,6 @@ public class PageImpl implements Page {
     }
 
     // get the rowcount by accessing the first 4 bytes
-
     private int getRowCount() {
         return ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).getInt();
     }
@@ -136,5 +136,13 @@ public class PageImpl implements Page {
     // set the row count in first 4 bytes
     private void setRowCount(int count) {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
+    }
+
+    public void setNextPointer(int nextPointer) {
+        return;
+    }
+
+    public int getNextPointer() {
+        return -1;
     }
 }

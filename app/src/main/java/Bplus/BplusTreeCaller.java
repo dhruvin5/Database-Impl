@@ -3,7 +3,7 @@ package Bplus;
 import java.util.Iterator;
 
 import Page.Page;
-import Row.Row;
+import Row.movieRow;
 import Utilities.Utilities;
 import buffer.BufferManager;
 import buffer.BufferManagerImplem;
@@ -23,19 +23,19 @@ public class BplusTreeCaller {
             BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("titleIndexFile", bufferManager);
 
             // Load data from the movie table and populate the B+ tree indexes
-            int currentPageId = 0;  // Initialize page ID (loading rows from the pages)
-            
+            int currentPageId = 0; // Initialize page ID (loading rows from the pages)
+
             while (true) {
                 // Get the current page from the buffer manager
                 // Assuming the second argument is the page type or file name
-                Page p = bufferManager.getPage(currentPageId, "movieDataFile");  // Replace with actual file/page type
+                Page p = bufferManager.getPage(currentPageId, "movieDataFile"); // Replace with actual file/page type
                 if (p == null) {
-                    break;  // No more pages to read
+                    break; // No more pages to read
                 }
 
                 // Iterate through rows in the page
                 int rowId = 0;
-                Row row;
+                movieRow row;
                 while ((row = p.getRow(rowId)) != null) {
                     // Process the row
                     String movieIdStr = new String(row.movieId).trim();
@@ -58,14 +58,14 @@ public class BplusTreeCaller {
             }
 
             // Sample tests
-            int searchMovieId = 1;  // Example movieId for search
+            int searchMovieId = 1; // Example movieId for search
             System.out.println("Searching for movieId: " + searchMovieId);
             Iterator<Rid> movieIdResults = movieIdIndex.search(searchMovieId);
             while (movieIdResults.hasNext()) {
                 System.out.println("MovieId Search Result: " + movieIdResults.next());
             }
 
-            String searchTitle = "Inception";  // Example title for search
+            String searchTitle = "Inception"; // Example title for search
             System.out.println("Searching for title: " + searchTitle);
             Iterator<Rid> titleResults = titleIndex.search(searchTitle);
             while (titleResults.hasNext()) {

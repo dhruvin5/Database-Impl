@@ -7,10 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.AbstractMap;
 
-import Page.LeafIndexPageImpl;
-import Page.Page;
-import Page.PageImpl;
-import Page.PageMetaData;
+import Page.*;
 import configs.Config;
 import SystemCatalog.systemCatalog;
 import SystemCatalog.tableMetaData;
@@ -27,7 +24,6 @@ public class BufferManagerImplem extends BufferManager {
     ArrayList<Integer> freeFrameList;
 
     // LRU Cache
-    // LinkedList<Integer> lruCache;
     LinkedList<AbstractMap.SimpleEntry<String, Integer>> lruCache;
 
     // Page metadata
@@ -38,7 +34,7 @@ public class BufferManagerImplem extends BufferManager {
 
     private HashMap<String, Integer> FileToPID; // Used to maintain the mapping of the current Page Id to the file name
 
-    int totalPages;
+    int totalPages; // total number of pages created
 
     // initialize the buffer pool, page table, free frames list, lru cache, page
     // metadata
@@ -59,9 +55,10 @@ public class BufferManagerImplem extends BufferManager {
             freeFrameList.add(i);
     }
 
+    // get the column sizes for the file
     private HashMap<String, Integer> getColumnSizes(String FILE_NAME) {
 
-        tableMetaData table = this.catalog.getTableMetaData(FILE_NAME);
+        tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata
         ArrayList<String> columnNames = table.getColumnNames(); // Get the table name
         HashMap<String, Integer> columnSizes = new HashMap<>(); // Initialize the
 
@@ -83,15 +80,12 @@ public class BufferManagerImplem extends BufferManager {
             int newID = this.FileToPID.getOrDefault(FILE_NAME, 0); // Get the current page id for the file
             HashMap<String, Integer> columnSize = getColumnSizes(FILE_NAME); // Get the column sizes for the file
             byte boolValue = (byte) (isLeaf ? 1 : 0);
-            if (this.catalog.isIndexFile(FILE_NAME) && isLeaf) {
 
+            if (this.catalog.isIndexFile(FILE_NAME) && isLeaf) {
                 page = new LeafIndexPageImpl(newID, boolValue, columnSize.get("key"), columnSize.get("pid"),
                         columnSize.get("slotID"));
             } else if (this.catalog.isIndexFile(FILE_NAME) && !isLeaf) {
-                // page = new NonLeafIndexPageImpl(newID, boolValue, columnSize.get(""),
-                // columnSize[1], columnSize[2],
-                // columnSize[3]);
-                page = null;
+                page = new NonLeafIndexPage(newID, boolValue, columnSize.get("key"), columnSize.get("pid"));
             } else {
                 page = new PageImpl(newID, columnSize.get("movieId"), columnSize.get("title"));
             }
@@ -298,10 +292,8 @@ public class BufferManagerImplem extends BufferManager {
                     return new LeafIndexPageImpl(pageId, buffer, columnSize.get("key"), columnSize.get("pid"),
                             columnSize.get("slotID"));
                 } else {
-                    return null;
-                    // return new NonLeafIndexPageImpl(pageId, buffer, columnSize[0], columnSize[1],
-                    // columnSize[2],
-                    // columnSize[3]);
+                    return new NonLeafIndexPage(pageId, buffer, columnSize.get("key"), columnSize.get("pid"));
+
                 }
             } else {
                 return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title"));
@@ -379,7 +371,6 @@ public class BufferManagerImplem extends BufferManager {
                 }
             }
         }
-
     }
 
     private boolean ispageLeaf(String FILE_NAME, byte[] buffer) {

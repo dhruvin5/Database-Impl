@@ -35,5 +35,18 @@ public interface Page {
      */
     int getPid();
 
+    /**
+     * Sets the next pointer of the page.
+     * 
+     * @param nextPointer The next pointer to set.
+     */
     public void setNextPointer(int nextPointer);
+
+    /**
+     * Gets the next pointer of the page.
+     * 
+     * @return The next pointer of the page.
+     */
+    public int getNextPointer();
+
 }

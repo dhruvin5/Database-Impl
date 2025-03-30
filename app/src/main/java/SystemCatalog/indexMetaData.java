@@ -1,7 +1,5 @@
 package SystemCatalog;
 
-import SystemCatalog.tableMetaData;
-
 public class indexMetaData {
     private tableMetaData table; // Reference to the table metadata
     private String Key;

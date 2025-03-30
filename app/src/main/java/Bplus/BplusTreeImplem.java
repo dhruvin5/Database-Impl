@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import Page.Page;
-import Row.Row;
+import Row.movieRow;
 import buffer.BufferManager;
 
 public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Rid> {
@@ -38,7 +38,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
     private void writeNode(BplusTreeNode<K> node, int pageId) throws IOException {
         byte[] keysData = serializeNode(node.keys);
         byte[] valuesData = serializeNode(node.values);
-        Row row = new Row(keysData, valuesData);
+        movieRow row = new movieRow(keysData, valuesData);
 
         Page page = bm.getPage(pageId, indexFile);
         bm.unpinPage(pageId, indexFile);

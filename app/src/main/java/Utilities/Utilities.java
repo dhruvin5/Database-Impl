@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import Page.Page;
-import Row.Row;
+import Row.movieRow;
 import buffer.BufferManager;
 
 public class Utilities {
@@ -43,7 +43,7 @@ public class Utilities {
                 byte[] titleBytes = toFixedByteArray(titleStr, 30);
 
                 // create a new Row Object
-                Row row = new Row(idBytes, titleBytes);
+                movieRow row = new movieRow(idBytes, titleBytes);
 
                 // if no page currently, create a page first
                 if (!pageExists) {

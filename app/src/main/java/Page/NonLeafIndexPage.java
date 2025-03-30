@@ -3,10 +3,11 @@ package Page;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+import Row.nonLeafRow;
 import Row.Row;
 import configs.Config;
 
-public class NonLeafIndexPage extends Page {
+public class NonLeafIndexPage implements Page {
 
     private static final int ROW_COUNT_SIZE = 4;
 
@@ -24,42 +25,33 @@ public class NonLeafIndexPage extends Page {
     // the actual data
     private final byte[] rows;
 
-    private byte boolValue;
-
     private int keySize;
 
     private int pidSize;
 
-    private int slotIdSize;
-
-    public NonLeafIndexPage(int currentPageId, byte boolValue, int keySize, int pidSize, int slotIdSize) {
+    public NonLeafIndexPage(int currentPageId, byte boolValue, int keySize, int pidSize) {
         this.currentPageId = currentPageId;
         this.rows = new byte[Config.PAGE_SIZE];
         setRowCount(0);
         setBoolValue(boolValue);
 
-        this.boolValue = boolValue;
         this.keySize = keySize;
         this.pidSize = pidSize;
-        this.slotIdSize = slotIdSize;
-        this.ROW_SIZE = keySize + pidSize + slotIdSize;
+        this.ROW_SIZE = keySize + pidSize;
         this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE) / ROW_SIZE;
     }
 
     // if loading an existing page in Buffer
-    public NonLeafIndexPage(int currentPageId, byte[] existingRows, int keySize, int pidSize,
-            int slotIdSize) {
+    public NonLeafIndexPage(int currentPageId, byte[] existingRows, int keySize, int pidSize) {
         if (existingRows.length != Config.PAGE_SIZE) {
             throw new IllegalArgumentException("Page size must be 4KB!");
         }
         this.currentPageId = currentPageId;
         this.rows = existingRows;
 
-        this.boolValue = existingRows[0];
         this.keySize = keySize;
         this.pidSize = pidSize;
-        this.slotIdSize = slotIdSize;
-        this.ROW_SIZE = keySize + pidSize + slotIdSize;
+        this.ROW_SIZE = keySize + pidSize;
         this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE) / ROW_SIZE;
     }
 
@@ -74,32 +66,34 @@ public class NonLeafIndexPage extends Page {
         // go to the offset
         int offset = BOOL_SIZE + ROW_COUNT_SIZE + rowId * ROW_SIZE;
 
-        byte[] column2 = Arrays.copyOfRange(rows, offset, (offset += this.keySize));
-        byte[] column3 = Arrays.copyOfRange(rows, offset, (offset += this.pidSize));
-        byte[] column4 = Arrays.copyOfRange(rows, offset, (offset += this.slotIdSize));
+        // get the data from the page
+        byte[] key = Arrays.copyOfRange(rows, offset, (offset += this.keySize));
+        byte[] column = Arrays.copyOfRange(rows, offset, (offset += this.pidSize));
 
         // create a row with the data
-        return new Row(column2, column3, column4);
+        return new nonLeafRow(key, column);
     }
 
     public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
-        if (row == null || row.key == null || row.pid == null || row.slotid == null) {
+
+        if (row == null || row.key == null || row.pid == null
+                || row.slotid != null || row.title != null) {
             return -1;
         }
 
+        // check if the page is full
         if (isFull()) {
             return -1;
         }
 
+        // get the row count
         int rowCount = getRowCount();
         int offset = BOOL_SIZE + ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
         // copy the data to the page
-
         copyAndPaste(row.key, this.keySize, offset);
         copyAndPaste(row.pid, this.pidSize, (offset += this.keySize));
-        copyAndPaste(row.slotid, this.slotIdSize, (offset += this.pidSize));
 
         setRowCount(rowCount + 1);
         return rowCount;
@@ -135,7 +129,7 @@ public class NonLeafIndexPage extends Page {
     // get the rowcount by accessing the first 4 bytes
 
     private int getRowCount() {
-        return ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).getInt();
+        return ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).getInt();
     }
 
     // set the row count in first 4 bytes
@@ -145,6 +139,14 @@ public class NonLeafIndexPage extends Page {
 
     private void setBoolValue(byte boolValue) {
         this.rows[0] = boolValue;
+    }
+
+    public void setNextPointer(int nextPointer) {
+        return;
+    }
+
+    public int getNextPointer() {
+        return -1;
     }
 
 }
