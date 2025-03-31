@@ -71,7 +71,7 @@ public class Utilities {
 
                 //System.out.println("Page Id : - "  + currentPageId);
                 count++;
-                if (count % 200 == 0) {
+                if (count % 400 == 0) {
                     System.out.println("Inserted " + count + " rows into the page with ID: " + currentPageId);
                     break; // For testing, break after 5000 rows
                 }

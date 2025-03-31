@@ -34,15 +34,15 @@ public class Caller {
             System.out.println("PASS: Initialized Movie Index");
 
 
-            BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager, order);
+            //BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager, order);
 
-            System.out.println("PASS: Initialized Title Index");
+            //System.out.println("PASS: Initialized Title Index");
 
             // Load data from the movie table and populate the B+ tree indexes
             int currentPageId = 0; // Initialize page ID (loading rows from the pages)
 
 
-            while (currentPageId < 2) {
+            while (currentPageId < 4) {
                 // Get the current page from the buffer manager
                 // Assuming the second argument is the page type or file name
                 Page p = bufferManager.getPage(currentPageId, "movies.bin"); // Replace with actual file/page type
@@ -70,11 +70,7 @@ public class Caller {
 
                     //System.out.println(movieId);
                     movieIdIndex.insert(movieId, movieRid);
-
-
-
-
-
+                   // System.out.println("INSERTED " + movieId);
 
                     //titleIndex.insert(Arrays.toString(titleStr), movieRid);
 
@@ -94,7 +90,7 @@ public class Caller {
                 currentPageId++;
             }
 
-           // bufferManager.force();
+           bufferManager.force();
 
             // Sample tests
             /*
