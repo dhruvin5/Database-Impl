@@ -190,6 +190,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             offset += 4;
         }
 
+       // System.out.println(offset);
+
         for (int r = 0; r < totalRows; r++) {
             Map<String, byte[]> columnMap = new HashMap<>();
 
@@ -206,7 +208,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
 
 
-            byte[] keyBytes = columnMap.get("movieId");
+            byte[] keyBytes = columnMap.get("title");
             if (keyBytes != null) {
                 K key = (K) new String(keyBytes, StandardCharsets.UTF_8);
                 node.keys.add(key);
