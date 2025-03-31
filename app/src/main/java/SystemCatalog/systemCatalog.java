@@ -6,10 +6,12 @@ import java.util.ArrayList;
 public class systemCatalog {
 
     private final HashMap<String, Boolean> isIndex;
-    private final HashMap<String, tableMetaData> tables; // HashMap to store table metadata with table name as the key
+    private final HashMap<String, tableMetaData> tables;
+    private final HashMap<String, Integer> offsets; // HashMap to store table metadata with table name as the key
     private final HashMap<String, indexMetaData> indexes;// HashMap to store index metadata with index file name as the
     private final int leafPageOffset;
     private final int nonLeafPageOffset;
+
     // key
 
     public systemCatalog() {
@@ -19,10 +21,13 @@ public class systemCatalog {
         this.isIndex = new HashMap<>();
         this.leafPageOffset = 5;
         this.nonLeafPageOffset = 5;
+        this.offsets = new HashMap<>();
 
         // Creates the column metadata for the Movie table
         columnMetaData movieID_column = new columnMetaData("movieId", "INTEGER", 9);
         columnMetaData title_column = new columnMetaData("title", "STRING", 30);
+        offsets.put("movie_Id_index.bin", 9);
+        offsets.put("title_index.bin", 30);
 
         // Creates the column metadata for the Movie ID and title index table
         columnMetaData pid_column = new columnMetaData("pid", "INTEGER", 4);
@@ -86,6 +91,13 @@ public class systemCatalog {
             return null;
         }
         return tables.get(tableName).getFile();
+    }
+
+    public int getOffsets(String filename) {
+        if (!offsets.containsKey(filename)) {
+            return 0;
+        }
+        return offsets.get(filename);
     }
 
     public indexMetaData getIndex(String indexName) {

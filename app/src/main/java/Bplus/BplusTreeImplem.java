@@ -48,10 +48,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
             index_info_page_id = bm.createIndexPage(indexFile, false).getPid();
 
-
-
-
-
             // Create a new "leaf" page for the root
             this.rootPageId = bm.createIndexPage(indexFile, true).getPid();
             //System.out.println("RootPage PID:-" + this.rootPageId);
@@ -92,7 +88,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         byte[] data = page.getRows();
         int offset = catalog.getPageOffset(false);
 
-        byte[] colBytes = Arrays.copyOfRange(data, offset + 9, offset  + 13);
+        byte[] colBytes = Arrays.copyOfRange(data, offset + catalog.getOffsets(indexFile), offset  + catalog.getOffsets(indexFile) + 4);
         int new_rootPageId = ByteBuffer.wrap(colBytes).getInt();
 
         bm.unpinPage(pageId, this.indexFile);
@@ -174,7 +170,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         if(!isLeaf)
         {
 
-            byte[] colBytes = Arrays.copyOfRange(data, offset + 9, offset  + 13);
+            byte[] colBytes = Arrays.copyOfRange(data, offset + catalog.getOffsets(indexFile), offset  +  catalog.getOffsets(indexFile) + 4);
             int pid = ByteBuffer.wrap(colBytes).getInt();
 
 
@@ -184,7 +180,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                 node.children.add(pid);
             }
 
-            offset += 13;
+            offset +=  catalog.getOffsets(indexFile) + 4;
             totalRows--;
             columns.remove(columns.size() - 1);
         }
@@ -207,6 +203,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                 offset += colSize;
                 columnMap.put(columnName, colBytes);
             }
+
+
 
             byte[] keyBytes = columnMap.get("movieId");
             if (keyBytes != null) {

@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class tableMetaData {
     private final String tableName; // Name of the table
     private final String fileName; // Name of the file where the table data is stored
-    private HashMap<String, columnMetaData> columnData; // HashMap to store column metadata with column name as the key
+    private HashMap<String, columnMetaData> columnData;// HashMap to store column metadata with column name as the key
     private ArrayList<String> columnNames;
     private final int rowSize; // Size of a row in bytes, calculated as the sum of sizes of all columns
 
