@@ -1,99 +1,90 @@
 package org.example;
 
+import java.util.Arrays;
+
+import Bplus.BplusTreeImplem;
+import Bplus.Rid;
 import Page.Page;
-import Row.*;
+import Row.Row;
 import Utilities.Utilities;
 import buffer.BufferManager;
 import buffer.BufferManagerImplem;
 
 public class Caller {
     public static void main(String[] args) {
-
         try {
-
             // Initialize BufferManager with size 10
-            BufferManager bufferManager = new BufferManagerImplem(1);
+            BufferManager bufferManager = new BufferManagerImplem(10);
 
             // Load dataset into the buffer
-            Utilities.loadDataset(bufferManager, "C:/Users/bhaga/Downloads/title.basics.tsv");
+            Utilities.loadDataset(bufferManager, "/Users/simranmalik/Desktop/title.basics.tsv");
             System.out.println("PASS: Buffer Manager initialized with buffer size: 10");
 
-            test1(bufferManager);
-            test2(bufferManager);
-            test3(bufferManager);
-            test4(bufferManager);
-            test5(bufferManager);
+            // Create two different B+ Trees for movieId and title
+            int order = 100;
+            BplusTreeImplem<String> movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager, order);
+            BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager, order);
 
-            System.out.print("Success");
+            // Load data from the movie table and populate the B+ tree indexes
+            int currentPageId = 0; // Initialize page ID (loading rows from the pages)
 
-        } catch (Exception e) {
+            while (true) {
+                // Get the current page from the buffer manager
+                // Assuming the second argument is the page type or file name
+                Page p = bufferManager.getPage(currentPageId, "movies.bin"); // Replace with actual file/page type
+                bufferManager.unpinPage(currentPageId, "movies.bin");
+                if (p == null) {
+                    break; // No more pages to read
+                }
+
+                // Iterate through rows in the page
+                int rowId = 0;
+                Row row;
+                while ((row = p.getRow(rowId)) != null) {
+                    // Process the row
+                    byte[] movieIdStr = row.movieId;
+                    byte[] titleStr = row.title;
+
+                    //System.out.println(new String(titleStr, Charset.defaultCharset()));
+
+                    // Parse movieId and create Rid for the row
+
+                    Rid movieRid = new Rid(currentPageId, rowId);
+
+                    // Insert movieId and title into B+ Tree indexes
+                    movieIdIndex.insert(Arrays.toString(movieIdStr), movieRid);
+                    titleIndex.insert(Arrays.toString(titleStr), movieRid);
+
+                    // Move to the next row
+                    rowId++;
+                }
+
+                // After processing the page, move to the next page
+                currentPageId++;
+            }
+
+            // Sample tests
+            /*
+             * int searchMovieId = 1; // Example movieId for search
+             * System.out.println("Searching for movieId: " + searchMovieId);
+             * Iterator<Rid> movieIdResults = movieIdIndex.search(searchMovieId);
+             * while (movieIdResults.hasNext()) {
+             * System.out.println("MovieId Search Result: " + movieIdResults.next());
+             * }
+             *
+             * String searchTitle = "Inception"; // Example title for search
+             * System.out.println("Searching for title: " + searchTitle);
+             * Iterator<Rid> titleResults = titleIndex.search(searchTitle);
+             * while (titleResults.hasNext()) {
+             * System.out.println("Title Search Result: " + titleResults.next());
+             * }
+             *
+             * }
+             * }
+             */ } catch (Exception e) {
             e.printStackTrace();
+
         }
-    }
-
-    private static void test1(BufferManager bufferManager) {
-        // Get a Movie data page from the buffer manager
-        Page moviePage = bufferManager.getPage(4, "movies.bin");
-        bufferManager.unpinPage(4, "movies.bin");
-        Row movie_row = moviePage.getRow(0);
-        System.out.println("Movie Row: " + (movie_row.movieId) + " " + new String(movie_row.title));
-    }
-
-    private static void test2(BufferManager bufferManager) {
-        // Create a leaf movie id index file
-        Page movieid_index_page = bufferManager.createIndexPage("movie_Id_index.bin", true);
-        bufferManager.unpinPage(0, "movie_Id_index.bin");
-        movieid_index_page.insertRow(new leafRow("123456784".getBytes(), "4".getBytes(), "5".getBytes()));
-        movieid_index_page.insertRow(new leafRow("145456788".getBytes(), "64".getBytes(), "2".getBytes()));
-        // Get the first row from the movie index page
-        Row row = movieid_index_page.getRow(0);
-        System.out
-                .println("Row: " + new String(row.key) + " " + new String(row.pid) + " " + new String(row.slotid));
-
-        // Get the second row from the movie index page
-        Row row1 = movieid_index_page.getRow(1);
-        System.out.println(
-                "Row: " + new String(row1.key) + " " + new String(row1.pid) + " " + new String(row1.slotid));
-    }
-
-    private static void test3(BufferManager bufferManager) {
-        bufferManager.createIndexPage("title_index.bin", false);
-        bufferManager.unpinPage(0, "title_index.bin");
-
-        Page title_index_page = bufferManager.getPage(0, "title_index.bin");
-        bufferManager.unpinPage(0, "title_index.bin");
-        int val = title_index_page.insertRow(new leafRow("123456789".getBytes(), "4".getBytes(), "5".getBytes()));
-        title_index_page.insertRow(new nonLeafRow("James Bond II".getBytes(), "14".getBytes()));
-        Row title_row = title_index_page.getRow(0);
-        System.out.println("Title Row: " + new String(title_row.key) + " " + new String(title_row.pid));
-    }
-
-    private static void test4(BufferManager bufferManager) {
-        Page page = bufferManager.getPage(0, "movie_Id_index.bin");
-        bufferManager.unpinPage(0, "movie_Id_index.bin");
-        Row row = page.getRow(0);
-        Row row1 = page.getRow(1);
-        System.out.println("Row: " + new String(row.key) + " " + new String(row.pid) + " " + new String(row.slotid));
-        System.out.println("Row: " + new String(row1.key) + " " + new String(row1.pid) + " " + new String(row1.slotid));
-
-        Page page1 = bufferManager.getPage(0, "title_index.bin");
-        bufferManager.unpinPage(0, "title_index.bin");
-        Row row2 = page1.getRow(0);
-        System.out.println("Row: " + new String(row2.key) + " " + new String(row2.pid));
-
-    }
-
-    private static void test5(BufferManager bufferManager) {
-        Page page = bufferManager.getPage(0, "movie_Id_index.bin");
-        bufferManager.unpinPage(0, "movie_Id_index.bin");
-        page.setNextPointer(5);
-        System.out.println("Next Pointer: " + page.getNextPointer());
-        System.out.println("IS LEAF: " + page.isLeaf());
-
-        Page page1 = bufferManager.getPage(0, "title_index.bin");
-        page1.setNextPointer(6);
-        System.out.println("Next Pointer: " + page1.getNextPointer());
-        System.out.println("IS LEAF: " + page1.isLeaf());
 
     }
 }
