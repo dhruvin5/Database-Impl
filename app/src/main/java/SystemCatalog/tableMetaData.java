@@ -44,7 +44,7 @@ public class tableMetaData {
 
     // Returns the list of column names ordered by their insertion order
     public ArrayList<String> getColumnNames() {
-        return this.columnNames;
+        return new ArrayList<>(this.columnNames);
     }
 
     // Returns the column type given a column name

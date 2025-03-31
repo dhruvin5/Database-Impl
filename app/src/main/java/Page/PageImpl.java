@@ -35,7 +35,8 @@ public class PageImpl implements Page {
         this.offSet1 = offSet1;
         this.offSet2 = offSet2;
         this.ROW_SIZE = offSet1 + offSet2;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_SIZE) / ROW_SIZE;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
+        System.out.println("Max row count- " + this.MAX_ROW_COUNT);
     }
 
     // if loading an existing page in Buffer
@@ -49,7 +50,7 @@ public class PageImpl implements Page {
         this.offSet1 = offSet1;
         this.offSet2 = offSet2;
         this.ROW_SIZE = offSet1 + offSet2;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_SIZE) / ROW_SIZE;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
     }
 
     // gets the row using the rowId
@@ -62,7 +63,7 @@ public class PageImpl implements Page {
             return null;
         }
 
-        // go to the offset and reads data
+        // go to the offset
         int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
         byte[] column1 = Arrays.copyOfRange(rows, offset, offset + this.offSet1);
         byte[] column2 = Arrays.copyOfRange(rows, offset + this.offSet1, offset + this.offSet1 + this.offSet2);
@@ -74,10 +75,12 @@ public class PageImpl implements Page {
     @Override
     public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
+        System.out.println("Insert in normal page called");
         if (row == null || row.movieId == null || row.title == null || row.key != null
                 || row.pid != null || row.slotid != null) {
             return -1;
         }
+
 
         if (isFull()) {
             return -1;
@@ -86,22 +89,19 @@ public class PageImpl implements Page {
         byte[] movieIdFixed = new byte[this.offSet1];
         byte[] titleFixed = new byte[this.offSet2];
 
-        // copy the data to the fixed size arrays - padding
         System.arraycopy(row.movieId, 0, movieIdFixed, 0,
                 Math.min(row.movieId.length, this.offSet1));
         System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length,
                 this.offSet2));
 
-        // Gets the correct page offset to insert the data
         int rowCount = getRowCount();
         int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
-        // copy the movieId to the page
+        // copy the row into the page data
         for (int i = 0; i < this.offSet1; i++) {
             this.rows[offset + i] = movieIdFixed[i];
         }
 
-        // copy the title to the page
         for (int i = 0; i < this.offSet2; i++) {
             this.rows[offset + this.offSet1 + i] = titleFixed[i];
         }
@@ -132,30 +132,25 @@ public class PageImpl implements Page {
     }
 
     // get the rowcount by accessing the first 4 bytes
-    private int getRowCount() {
+
+    public int getRowCount() {
         return ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).getInt();
     }
 
+    public boolean getBoolValue() {
+        return false;
+    }
+
     // set the row count in first 4 bytes
-    private void setRowCount(int count) {
+    public void setRowCount(int count) {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
     }
 
-    // sets the next pointer of the page
     public void setNextPointer(int nextPointer) {
-        // Since this is not a leaf page, it does not require to set the next pointer
         return;
     }
 
-    // returns the next pointer of the page
     public int getNextPointer() {
-        // Since this is not a leaf page, return -1
         return -1;
-    }
-
-    // returns if it is a leaf page or not
-    public byte isLeaf() {
-        // Since data page is not a leaf page, return 0
-        return 0;
     }
 }

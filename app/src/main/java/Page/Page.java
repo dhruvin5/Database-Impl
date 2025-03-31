@@ -42,6 +42,11 @@ public interface Page {
      */
     public void setNextPointer(int nextPointer);
 
+    public int getRowCount();
+
+    public boolean getBoolValue();
+
+    public void setRowCount(int count);
     /**
      * Gets the next pointer of the page.
      * 
@@ -49,10 +54,4 @@ public interface Page {
      */
     public int getNextPointer();
 
-    /**
-     * Returns the isLeaf status of the page.
-     * 
-     * @return 1 if the page is a leaf page, 0 otherwise
-     */
-    public byte isLeaf();
 }

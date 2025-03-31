@@ -77,7 +77,7 @@ public class NonLeafIndexPage implements Page {
     public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
 
-        if (row == null || row.key == null || row.pid == null
+        if (row == null  || row.pid == null
                 || row.slotid != null || row.title != null) {
             return -1;
         }
@@ -93,23 +93,33 @@ public class NonLeafIndexPage implements Page {
 
         // copy the data to the page
         copyAndPaste(row.key, this.keySize, offset);
-        copyAndPaste(row.pid, this.pidSize, (offset += this.keySize));
+
+
+        offset += this.keySize;
+        copyAndPaste(row.pid, this.pidSize, offset);
+
+
+
+
 
         setRowCount(rowCount + 1);
         return rowCount;
     }
 
-    // copy the data to the page
     private void copyAndPaste(byte[] data, int size, int offset) {
         byte[] fixed_copy = new byte[size];
-        System.arraycopy(data, 0, fixed_copy, 0, Math.min(data.length, size));
 
+        if (data != null) {
+            System.arraycopy(data, 0, fixed_copy, 0, Math.min(data.length, size));
+        }
         for (int i = 0; i < size; i++) {
             this.rows[offset + i] = fixed_copy[i];
         }
+
+        // Copy the fixed_copy into the rows array starting at the given offset.
+
     }
 
-    // check if the page is full
     public boolean isFull() {
         int rowCount = getRowCount();
         if (rowCount >= MAX_ROW_COUNT) {
@@ -123,40 +133,37 @@ public class NonLeafIndexPage implements Page {
     }
 
     // get the data of the rows
+
     public byte[] getRows() {
+
         return this.rows;
     }
 
     // get the rowcount by accessing the first 4 bytes
 
-    private int getRowCount() {
+    public int getRowCount() {
         return ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).getInt();
     }
 
     // set the row count in first 4 bytes
-    private void setRowCount(int count) {
+    public void setRowCount(int count) {
         ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).putInt(count);
     }
 
-    // set the bool value (isLeaf) of the page
+    public boolean getBoolValue() {
+        return this.rows[0] != 0;
+    }
+
     private void setBoolValue(byte boolValue) {
         this.rows[0] = boolValue;
     }
 
-    // get the next pointer of the page
     public void setNextPointer(int nextPointer) {
-        // Since this page is not a leaf page it is not required to set the next pointer
         return;
     }
 
-    // get the next pointer of the page
     public int getNextPointer() {
-        // Since this page is not a leaf page, return -1
         return -1;
     }
 
-    // get the page type
-    public byte isLeaf() {
-        return this.rows[0];
-    }
 }

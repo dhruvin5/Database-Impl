@@ -69,8 +69,9 @@ public class Utilities {
                 bf.markDirty(currentPageId, "movies.bin");
                 bf.unpinPage(currentPageId, "movies.bin");
 
+                //System.out.println("Page Id : - "  + currentPageId);
                 count++;
-                if (count % 20000 == 0) {
+                if (count % 20 == 0) {
                     System.out.println("Inserted " + count + " rows into the page with ID: " + currentPageId);
                     break; // For testing, break after 5000 rows
                 }

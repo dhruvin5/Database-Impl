@@ -7,14 +7,17 @@ public class systemCatalog {
 
     private final HashMap<String, Boolean> isIndex;
     private final HashMap<String, tableMetaData> tables; // HashMap to store table metadata with table name as the key
-    private final HashMap<String, indexMetaData> indexes; // HashMap to store index metadata with index file name as the
-                                                          // key
+    private final HashMap<String, indexMetaData> indexes;// HashMap to store index metadata with index file name as the
+    private final int leafPageOffset;
+    private final int nonLeafPageOffset;// key
 
     public systemCatalog() {
 
         this.tables = new HashMap<>();
         this.indexes = new HashMap<>();
         this.isIndex = new HashMap<>();
+        this.leafPageOffset = 5;
+        this.nonLeafPageOffset = 5;
 
         // Creates the column metadata for the Movie table
         columnMetaData movieID_column = new columnMetaData("movieId", "INTEGER", 9);
@@ -104,6 +107,16 @@ public class systemCatalog {
     public tableMetaData getTableMetaData(String tableName) {
         return tables.get(tableName);
     }
+
+    public int getPageOffset(boolean isLeaf) {
+        if(isLeaf)
+        {
+            return leafPageOffset;
+        }
+        return nonLeafPageOffset;
+    }
+
+
 
     public boolean isIndexFile(String fileName) {
         return isIndex.getOrDefault(fileName, false);

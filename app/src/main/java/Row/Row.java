@@ -1,7 +1,10 @@
 package Row;
 
 public abstract class Row {
-    // Generic Row class for all types of rows
+    /*
+     * 
+     * Empty Marker Interface For Row
+     */
     public byte[] key;
     public byte[] pid;
     public byte[] slotid;

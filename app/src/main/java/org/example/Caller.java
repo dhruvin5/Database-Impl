@@ -1,7 +1,5 @@
 package org.example;
 
-import java.util.Arrays;
-
 import Bplus.BplusTreeImplem;
 import Bplus.Rid;
 import Page.Page;
@@ -10,32 +8,48 @@ import Utilities.Utilities;
 import buffer.BufferManager;
 import buffer.BufferManagerImplem;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 public class Caller {
     public static void main(String[] args) {
         try {
+
             // Initialize BufferManager with size 10
-            BufferManager bufferManager = new BufferManagerImplem(10);
+           BufferManager bufferManager = new BufferManagerImplem(10);
+
 
             // Load dataset into the buffer
-            Utilities.loadDataset(bufferManager, "/Users/simranmalik/Desktop/title.basics.tsv");
+            Utilities.loadDataset(bufferManager, "/Users/Admin/Desktop/645/lab/title.basics.tsv");
+
+            bufferManager.force();
+
             System.out.println("PASS: Buffer Manager initialized with buffer size: 10");
 
             // Create two different B+ Trees for movieId and title
-            int order = 100;
+            int order = 4;
             BplusTreeImplem<String> movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager, order);
+
+            System.out.println("PASS: Initialized Movie Index");
+
+
             BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager, order);
+
+            System.out.println("PASS: Initialized Title Index");
 
             // Load data from the movie table and populate the B+ tree indexes
             int currentPageId = 0; // Initialize page ID (loading rows from the pages)
 
-            while (true) {
+
+            while (currentPageId < 1) {
                 // Get the current page from the buffer manager
                 // Assuming the second argument is the page type or file name
                 Page p = bufferManager.getPage(currentPageId, "movies.bin"); // Replace with actual file/page type
-                bufferManager.unpinPage(currentPageId, "movies.bin");
                 if (p == null) {
                     break; // No more pages to read
                 }
+                bufferManager.unpinPage(currentPageId,"movies.bin");
 
                 // Iterate through rows in the page
                 int rowId = 0;
@@ -52,7 +66,18 @@ public class Caller {
                     Rid movieRid = new Rid(currentPageId, rowId);
 
                     // Insert movieId and title into B+ Tree indexes
-                    movieIdIndex.insert(Arrays.toString(movieIdStr), movieRid);
+                    String movieId = new String(movieIdStr, StandardCharsets.UTF_8);
+
+                   // System.out.println(movieId);
+//                    movieIdIndex.insert(movieId, movieRid);
+//
+//                    System.out.println("Inserted key: " + movieId);
+//
+//                    System.out.println("**********************************");
+//                    movieIdIndex.printTree();
+//                    System.out.println("**********************************");
+
+
                     titleIndex.insert(Arrays.toString(titleStr), movieRid);
 
                     // Move to the next row
@@ -62,6 +87,8 @@ public class Caller {
                 // After processing the page, move to the next page
                 currentPageId++;
             }
+
+           // bufferManager.force();
 
             // Sample tests
             /*

@@ -1,20 +1,19 @@
 package Page;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import Row.*;
 import configs.Config;
 
 public class LeafIndexPageImpl implements Page {
-    // 1 byte for isLeaf boolean
-    private static final int BOOL_SIZE = 1;
 
-    // has the row count
     private static final int ROW_COUNT_SIZE = 4;
 
-    // 4 bytes for next leaf page pointer
-    private static final int NEXT_LEAF_POINTER_SIZE = 4;
+    private static final int BOOL_SIZE = 1;
+
+    private static final int NEXT_LEAF_POINTER = 4;
 
     // fixed row size
     private final int ROW_SIZE;
@@ -28,13 +27,10 @@ public class LeafIndexPageImpl implements Page {
     // the actual data
     private final byte[] rows;
 
-    // size of the key
     private int keySize;
 
-    // size of the pid
     private int pidSize;
 
-    // size of the slotId
     private int slotIdSize;
 
     public LeafIndexPageImpl(int currentPageId, byte boolValue, int keySize, int pidSize, int slotIdSize) {
@@ -48,7 +44,8 @@ public class LeafIndexPageImpl implements Page {
         this.pidSize = pidSize;
         this.slotIdSize = slotIdSize;
         this.ROW_SIZE = keySize + pidSize + slotIdSize;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER_SIZE) / ROW_SIZE;
+        this.setNextPointer(-1);
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER) / ROW_SIZE;
     }
 
     // if loading an existing page in Buffer
@@ -63,7 +60,7 @@ public class LeafIndexPageImpl implements Page {
         this.pidSize = pidSize;
         this.slotIdSize = slotIdSize;
         this.ROW_SIZE = keySize + pidSize + slotIdSize;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER_SIZE) / ROW_SIZE;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE - NEXT_LEAF_POINTER) / ROW_SIZE;
     }
 
     // get the row by rowId
@@ -75,8 +72,8 @@ public class LeafIndexPageImpl implements Page {
             return null;
         }
 
-        // go to the offset and reads the data from the page
-        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER_SIZE + rowId * ROW_SIZE;
+        // go to the offset
+        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER + rowId * ROW_SIZE;
         byte[] column1 = Arrays.copyOfRange(rows, offset, (offset += this.keySize));
         byte[] column2 = Arrays.copyOfRange(rows, offset, (offset += this.pidSize));
         byte[] column3 = Arrays.copyOfRange(rows, offset, (offset += this.slotIdSize));
@@ -88,6 +85,8 @@ public class LeafIndexPageImpl implements Page {
     @Override
     public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
+
+
         if (row == null || row.key == null || row.pid == null || row.slotid == null
                 || row.title != null || row.movieId != null) {
             return -1;
@@ -97,12 +96,15 @@ public class LeafIndexPageImpl implements Page {
             return -1;
         }
 
-        // get the correct offset to insert the data
         int rowCount = getRowCount();
-        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER_SIZE + rowCount * ROW_SIZE;
+        int offset = BOOL_SIZE + ROW_COUNT_SIZE + NEXT_LEAF_POINTER + rowCount * ROW_SIZE;
 
-        // copies key, pid and slotid to the page
+        // copy the data to the page
         copyAndPaste(row.key, this.keySize, offset);
+
+        String key =  new String(row.key, StandardCharsets.UTF_8);
+
+       // System.out.println("^^^^"+key + ")))" + offset);
         copyAndPaste(row.pid, this.pidSize, (offset += this.keySize));
         copyAndPaste(row.slotid, this.slotIdSize, (offset += this.pidSize));
 
@@ -137,16 +139,17 @@ public class LeafIndexPageImpl implements Page {
     // get the data of the rows
     @Override
     public byte[] getRows() {
-        return this.rows;
+       return this.rows;
     }
 
-    // get the rowcount by accessing bytes 1-4 bytes
-    private int getRowCount() {
+    // get the rowcount by accessing the first 4 bytes
+
+    public int getRowCount() {
         return ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).getInt();
     }
 
     // set the row count in first 4 bytes
-    private void setRowCount(int count) {
+    public void setRowCount(int count) {
         ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).putInt(count);
     }
 
@@ -155,18 +158,17 @@ public class LeafIndexPageImpl implements Page {
         this.rows[0] = boolValue;
     }
 
+    public boolean getBoolValue() {
+        return this.rows[0] != 0;
+    }
+
     // gets the pointer to the next leaf page
     public void setNextPointer(int nextPageId) {
-        ByteBuffer.wrap(rows, BOOL_SIZE + ROW_COUNT_SIZE, NEXT_LEAF_POINTER_SIZE).putInt(nextPageId);
+        ByteBuffer.wrap(rows, 5, 4).putInt(nextPageId);
     }
 
     // gets the pointer to the next leaf page
     public int getNextPointer() {
-        return ByteBuffer.wrap(rows, BOOL_SIZE + ROW_COUNT_SIZE, NEXT_LEAF_POINTER_SIZE).getInt();
-    }
-
-    // check if the page is leaf or not
-    public byte isLeaf() {
-        return this.rows[0];
+        return ByteBuffer.wrap(rows, 5, 4).getInt();
     }
 }

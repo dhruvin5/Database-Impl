@@ -14,7 +14,7 @@ import SystemCatalog.tableMetaData;
 
 public class BufferManagerImplem extends BufferManager {
 
-    // for mapping file name and page id to frames
+    // for mapping page id to frames
     HashMap<String, HashMap<Integer, Integer>> pageTable;
 
     // Buffer pool
@@ -26,15 +26,13 @@ public class BufferManagerImplem extends BufferManager {
     // LRU Cache
     LinkedList<AbstractMap.SimpleEntry<String, Integer>> lruCache;
 
-    // maps File name and Page id to metadata
+    // Page metadata
     HashMap<String, HashMap<Integer, PageMetaData>> pageInfo;
 
-    // sytem catalog instance
+    // Shared catalog instance
     private final systemCatalog catalog;
 
-    // Used to maintain the mapping of the current Page Id to the file name - the
-    // total number of pages created for each file
-    private HashMap<String, Integer> FileToPID;
+    private HashMap<String, Integer> FileToPID; // Used to maintain the mapping of the current Page Id to the file name
 
     int totalPages; // total number of pages created
 
@@ -57,7 +55,7 @@ public class BufferManagerImplem extends BufferManager {
             freeFrameList.add(i);
     }
 
-    // get the column sizes for the file by contacting the system catalog
+    // get the column sizes for the file
     private HashMap<String, Integer> getColumnSizes(String FILE_NAME) {
 
         tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata
@@ -81,9 +79,8 @@ public class BufferManagerImplem extends BufferManager {
 
             int newID = this.FileToPID.getOrDefault(FILE_NAME, 0); // Get the current page id for the file
             HashMap<String, Integer> columnSize = getColumnSizes(FILE_NAME); // Get the column sizes for the file
-            byte boolValue = (byte) (isLeaf ? 1 : 0); // Convert boolean to byte
+            byte boolValue = (byte) (isLeaf ? 1 : 0);
 
-            // Create a new page based on the file type
             if (this.catalog.isIndexFile(FILE_NAME) && isLeaf) {
                 page = new LeafIndexPageImpl(newID, boolValue, columnSize.get("key"), columnSize.get("pid"),
                         columnSize.get("slotID"));
@@ -94,7 +91,7 @@ public class BufferManagerImplem extends BufferManager {
             }
 
             this.totalPages = this.totalPages + 1;
-            this.FileToPID.put(FILE_NAME, newID + 1); // Update the total number of pages created for the file
+            this.FileToPID.put(FILE_NAME, newID + 1); // Update the mapping of file name to page id
         }
 
         // Allocate the page in the buffer pool
@@ -197,11 +194,12 @@ public class BufferManagerImplem extends BufferManager {
     public Page getPage(int pageId, String FILE_NAME) {
         // Check if in the buffer pool
         if (pageTable.containsKey(FILE_NAME) && pageTable.get(FILE_NAME).containsKey(pageId)) {
-            int frameIndex = pageTable.get(FILE_NAME).get(pageId); // page frame index
-            Page page = bufferPool[frameIndex]; // get the page from the buffer pool
+            int frameIndex = pageTable.get(FILE_NAME).get(pageId);
+            Page page = bufferPool[frameIndex];
 
-            PageMetaData metadata = pageInfo.get(FILE_NAME).get(pageId); // get the page metadata
-            metadata.incrementPinCount(); // increment the pin count
+            // increment the pin count
+            PageMetaData metadata = pageInfo.get(FILE_NAME).get(pageId);
+            metadata.incrementPinCount();
 
             // Move the page to the end of the LRU cache (most recently used)
             AbstractMap.SimpleEntry<String, Integer> entry = new AbstractMap.SimpleEntry<>(FILE_NAME, pageId);
@@ -211,10 +209,10 @@ public class BufferManagerImplem extends BufferManager {
             return page;
         } else { // load page from disk
                  // Check if the page exists on disk
-            if (!isPageOnDisk(pageId, FILE_NAME)) {
-                System.out.println("Error: Page " + pageId + " does not exist on disk.");
-                return null; // Page not found on disk
-            }
+//            if (!isPageOnDisk(pageId, FILE_NAME)) {
+//                System.out.println("Error: Page " + pageId + " does not exist on disk.");
+//                return null; // Page not found on disk
+//            }
 
             // get page from disk
             Page page = getPageFromDisk(pageId, FILE_NAME);
@@ -285,21 +283,19 @@ public class BufferManagerImplem extends BufferManager {
             // reads 4KB of data
             fileReader.readFully(buffer);
 
-            // gets the columns needed for the page
             HashMap<String, Integer> columnSize = getColumnSizes(FILE_NAME);
 
-            // check if the page is an index page or a data page
             if (this.catalog.isIndexFile(FILE_NAME)) {
-                boolean isLeaf = ispageLeaf(FILE_NAME, buffer); // check if the page is a leaf page
+                boolean isLeaf = ispageLeaf(FILE_NAME, buffer);
                 if (isLeaf) {
+
                     return new LeafIndexPageImpl(pageId, buffer, columnSize.get("key"), columnSize.get("pid"),
                             columnSize.get("slotID"));
                 } else {
-                    // a non-leaf page
                     return new NonLeafIndexPage(pageId, buffer, columnSize.get("key"), columnSize.get("pid"));
+
                 }
             } else {
-                // a regular data page
                 return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title"));
             }
 
@@ -314,6 +310,7 @@ public class BufferManagerImplem extends BufferManager {
 
         // get the page Id
         int pageId = page.getPid();
+        System.out.println("Writing page of " + FILE_NAME + " with this PID: " + page.getPid());
 
         // open the disk file in read write mode
         try (RandomAccessFile fileWriter = new RandomAccessFile(FILE_NAME, "rw")) {
@@ -330,7 +327,6 @@ public class BufferManagerImplem extends BufferManager {
         }
     }
 
-    // check if the page exist in a file
     private boolean isPageOnDisk(int pageId, String FILE_NAME) {
         if (pageId < this.FileToPID.getOrDefault(FILE_NAME, -1)) {
             return true;
@@ -338,17 +334,14 @@ public class BufferManagerImplem extends BufferManager {
         return false;
     }
 
-    // get the buffer capacity
     public int getBufferCapacity() {
         return this.bufferPool.length;
     }
 
-    // get the number of free frames in the buffer pool
     public int getFreeFrames() {
         return this.freeFrameList.size();
     }
 
-    // get the size of the LRU cache
     public int getLRUCacheSize() {
         return this.lruCache.size();
     }
@@ -363,7 +356,6 @@ public class BufferManagerImplem extends BufferManager {
         return true;
     }
 
-    // flush all dirty pages to disk
     public void force() {
         // Iterate through all pages in the buffer pool using pageTable
         for (String FILE_NAME : pageTable.keySet()) {
@@ -378,7 +370,6 @@ public class BufferManagerImplem extends BufferManager {
         }
     }
 
-    // check if the index page is a leaf page
     private boolean ispageLeaf(String FILE_NAME, byte[] buffer) {
         int is_Leaf_Offset = 0;
         return this.catalog.isIndexFile(FILE_NAME) && (buffer[is_Leaf_Offset] == 1);
