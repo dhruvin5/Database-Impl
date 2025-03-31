@@ -145,19 +145,12 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
        // System.out.println("DATA LENGTH--" + data.length);
         int totalRows = page.getRowCount();
 
-
-
-
-
         ArrayList<String> columns = this.catalog.getTableMetaData(this.indexFile).getColumnNames();
-
 
         boolean isLeaf = page.getBoolValue();  // your code infers leaf by presence of slot_id, etc.
         BplusTreeNode<K> node = new BplusTreeNode<>(isLeaf);
 
-
         int offset = catalog.getPageOffset(isLeaf);
-
 
         if(!isLeaf)
         {
@@ -210,9 +203,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                 //System.out.println("^^" + pid);
                 node.children.add(pid);
             }
-
-
-
         }
         bm.unpinPage(pageId, indexFile);
         return node;
@@ -303,13 +293,22 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         try {
             // Call our private recursive method
             SplitResult<K> result = insertHelper(rootPageId, key, rid);
-            BplusTreeNode<K> root = readNode(rootPageId);
+            //BplusTreeNode<K> root = readNode(rootPageId);
           //  System.out.println("ROOT keys size--: " + root.keys.size());
 
             if (result != null) {
                 // Root split -> create a new root
                 BplusTreeNode<K> newRoot = new BplusTreeNode<>(false);
                 int newRootPageId = bm.createPage(indexFile).getPid();
+
+                // root 0
+                // 2
+                // 0 1
+
+                // 0
+                // 2 1
+
+                // swap the page ids
 
                 // newRoot has one key (the promoted key), and two children
 
@@ -347,7 +346,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
         //System.out.println(pageId + "####" + node.isLeaf);
 
-        Page page = bm.getPage(pageId, indexFile);
+        //Page page = bm.getPage(pageId, indexFile);
         // If leaf, insert here
         if (node.isLeaf) {
             // Insert in sorted order
@@ -371,7 +370,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 //
 //            page.insertRow(new leafRow(keyBytes, pid, slot_id));
 
-            bm.unpinPage(pageId,indexFile);
+           // bm.unpinPage(pageId,indexFile);
 
             if (node.keys.size() >= order) {
                 return splitLeafNode(node, pageId);
@@ -409,7 +408,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 //
 //                page.insertRow(new nonLeafRow(keyBytes, pid));
 
-                bm.unpinPage(pageId,indexFile);
+              //  bm.unpinPage(pageId,indexFile);
                 // Now check if this internal node overflows
                 if (node.keys.size() >= order) {
                     return splitInternalNode(node, pageId);

@@ -9,7 +9,8 @@ public class systemCatalog {
     private final HashMap<String, tableMetaData> tables; // HashMap to store table metadata with table name as the key
     private final HashMap<String, indexMetaData> indexes;// HashMap to store index metadata with index file name as the
     private final int leafPageOffset;
-    private final int nonLeafPageOffset;// key
+    private final int nonLeafPageOffset;
+    // key
 
     public systemCatalog() {
 

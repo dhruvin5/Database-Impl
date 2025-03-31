@@ -246,6 +246,7 @@ public class BufferManagerImplem extends BufferManager {
             metadata.setDirtyBit(true);
             // System.out.println("Page " + pageId + " is marked as dirty.");
         } else {
+           // System.out.println("THIS MARK DIRTY IS CALLED!!");
             System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
@@ -261,7 +262,7 @@ public class BufferManagerImplem extends BufferManager {
                 System.out.println("Error: Page " + pageId + " already has pin count 0. Cannot unpin further.");
             }
         } else { // Page not in the buffer pool
-            System.out.println("Error: Page " + pageId + " not found in buffer.");
+           System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
 
@@ -310,7 +311,7 @@ public class BufferManagerImplem extends BufferManager {
 
         // get the page Id
         int pageId = page.getPid();
-        System.out.println("Writing page of " + FILE_NAME + " with this PID: " + page.getPid());
+        //System.out.println("Writing page of " + FILE_NAME + " with this PID: " + page.getPid());
 
         // open the disk file in read write mode
         try (RandomAccessFile fileWriter = new RandomAccessFile(FILE_NAME, "rw")) {

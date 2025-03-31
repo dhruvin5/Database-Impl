@@ -28,7 +28,7 @@ public class Caller {
             System.out.println("PASS: Buffer Manager initialized with buffer size: 10");
 
             // Create two different B+ Trees for movieId and title
-            int order = 4;
+            int order = 15;
             BplusTreeImplem<String> movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager, order);
 
             System.out.println("PASS: Initialized Movie Index");
@@ -42,14 +42,14 @@ public class Caller {
             int currentPageId = 0; // Initialize page ID (loading rows from the pages)
 
 
-            while (currentPageId < 1) {
+            while (currentPageId < 2) {
                 // Get the current page from the buffer manager
                 // Assuming the second argument is the page type or file name
                 Page p = bufferManager.getPage(currentPageId, "movies.bin"); // Replace with actual file/page type
                 if (p == null) {
                     break; // No more pages to read
                 }
-                bufferManager.unpinPage(currentPageId,"movies.bin");
+
 
                 // Iterate through rows in the page
                 int rowId = 0;
@@ -68,22 +68,28 @@ public class Caller {
                     // Insert movieId and title into B+ Tree indexes
                     String movieId = new String(movieIdStr, StandardCharsets.UTF_8);
 
-                   // System.out.println(movieId);
-//                    movieIdIndex.insert(movieId, movieRid);
-//
-//                    System.out.println("Inserted key: " + movieId);
-//
-//                    System.out.println("**********************************");
-//                    movieIdIndex.printTree();
-//                    System.out.println("**********************************");
+                    //System.out.println(movieId);
+                    movieIdIndex.insert(movieId, movieRid);
 
 
-                    titleIndex.insert(Arrays.toString(titleStr), movieRid);
+
+
+
+
+                    //titleIndex.insert(Arrays.toString(titleStr), movieRid);
+
+                  //
 
                     // Move to the next row
                     rowId++;
                 }
 
+                System.out.println("Inserted page: " + currentPageId);
+                System.out.println("**********************************");
+                movieIdIndex.printTree();
+                System.out.println("**********************************");
+
+                bufferManager.unpinPage(currentPageId,"movies.bin");
                 // After processing the page, move to the next page
                 currentPageId++;
             }
