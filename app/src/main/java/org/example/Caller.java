@@ -17,8 +17,7 @@ public class Caller {
         try {
 
             // Initialize BufferManager with size 10
-           BufferManager bufferManager = new BufferManagerImplem(10);
-
+            BufferManager bufferManager = new BufferManagerImplem(10);
 
             // Load dataset into the buffer
             Utilities.loadDataset(bufferManager, "/Users/Admin/Desktop/645/lab/title.basics.tsv");
@@ -28,19 +27,17 @@ public class Caller {
             System.out.println("PASS: Buffer Manager initialized with buffer size: 10");
 
             // Create two different B+ Trees for movieId and title
-            int order = 15;
-            //BplusTreeImplem<String> movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager, order);
+            // BplusTreeImplem<String> movieIdIndex = new
+            // BplusTreeImplem<>("movie_Id_index.bin", bufferManager, order);
 
             System.out.println("PASS: Initialized Movie Index");
 
+            BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
 
-            BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager, order);
-
-            //System.out.println("PASS: Initialized Title Index");
+            // System.out.println("PASS: Initialized Title Index");
 
             // Load data from the movie table and populate the B+ tree indexes
             int currentPageId = 0; // Initialize page ID (loading rows from the pages)
-
 
             while (currentPageId < 4) {
                 // Get the current page from the buffer manager
@@ -50,7 +47,6 @@ public class Caller {
                     break; // No more pages to read
                 }
 
-
                 // Iterate through rows in the page
                 int rowId = 0;
                 Row row;
@@ -59,7 +55,7 @@ public class Caller {
                     byte[] movieIdStr = row.movieId;
                     byte[] titleStr = row.title;
 
-                    //System.out.println(new String(titleStr, Charset.defaultCharset()));
+                    // System.out.println(new String(titleStr, Charset.defaultCharset()));
 
                     // Parse movieId and create Rid for the row
 
@@ -68,13 +64,13 @@ public class Caller {
                     // Insert movieId and title into B+ Tree indexes
                     String movieId = new String(titleStr, StandardCharsets.UTF_8);
 
-                    //System.out.println(movieId);
-                   // movieIdIndex.insert(movieId, movieRid);
-                   // System.out.println("INSERTED " + movieId);
+                    // System.out.println(movieId);
+                    // movieIdIndex.insert(movieId, movieRid);
+                    // System.out.println("INSERTED " + movieId);
 
                     titleIndex.insert(movieId, movieRid);
 
-                  //
+                    //
 
                     // Move to the next row
                     rowId++;
@@ -85,12 +81,12 @@ public class Caller {
                 titleIndex.printTree();
                 System.out.println("**********************************");
 
-                bufferManager.unpinPage(currentPageId,"movies.bin");
+                bufferManager.unpinPage(currentPageId, "movies.bin");
                 // After processing the page, move to the next page
                 currentPageId++;
             }
 
-           bufferManager.force();
+            bufferManager.force();
 
             // Sample tests
             /*
