@@ -209,16 +209,17 @@ public class BufferManagerImplem extends BufferManager {
             return page;
         } else { // load page from disk
                  // Check if the page exists on disk
-//            if (!isPageOnDisk(pageId, FILE_NAME)) {
-//                System.out.println("Error: Page " + pageId + " does not exist on disk.");
-//                return null; // Page not found on disk
-//            }
+            // if (!isPageOnDisk(pageId, FILE_NAME)) {
+            // System.out.println("Error: Page " + pageId + " does not exist on disk.");
+            // return null; // Page not found on disk
+            // }
 
             // get page from disk
             Page page = getPageFromDisk(pageId, FILE_NAME);
 
             if (page == null) {
-                System.out.println("Error: Failed to load page" + pageId + "from disk. " + FILE_NAME);
+                // System.out.println("Error: Failed to load page" + pageId + "from disk. " +
+                // FILE_NAME);
                 return null; // failed to load page from disk
             }
 
@@ -246,7 +247,7 @@ public class BufferManagerImplem extends BufferManager {
             metadata.setDirtyBit(true);
             // System.out.println("Page " + pageId + " is marked as dirty.");
         } else {
-           // System.out.println("THIS MARK DIRTY IS CALLED!!");
+            // System.out.println("THIS MARK DIRTY IS CALLED!!");
             System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
@@ -262,7 +263,7 @@ public class BufferManagerImplem extends BufferManager {
                 System.out.println("Error: Page " + pageId + " already has pin count 0. Cannot unpin further.");
             }
         } else { // Page not in the buffer pool
-           System.out.println("Error: Page " + pageId + " not found in buffer.");
+            System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
 
@@ -311,7 +312,8 @@ public class BufferManagerImplem extends BufferManager {
 
         // get the page Id
         int pageId = page.getPid();
-        //System.out.println("Writing page of " + FILE_NAME + " with this PID: " + page.getPid());
+        // System.out.println("Writing page of " + FILE_NAME + " with this PID: " +
+        // page.getPid());
 
         // open the disk file in read write mode
         try (RandomAccessFile fileWriter = new RandomAccessFile(FILE_NAME, "rw")) {
@@ -376,6 +378,30 @@ public class BufferManagerImplem extends BufferManager {
         return this.catalog.isIndexFile(FILE_NAME) && (buffer[is_Leaf_Offset] == 1);
     }
 
+    public void clearCache() {
 
+        force();
+
+        for (int i = 0; i < this.bufferPool.length; i++) {
+
+            this.bufferPool[i] = null;
+
+        }
+
+        this.freeFrameList.clear();
+
+        for (int i = 0; i < this.bufferPool.length; i++) {
+
+            this.freeFrameList.add(i);
+
+        }
+
+        this.lruCache.clear();
+
+        this.pageTable.clear();
+
+        this.pageInfo.clear();
+
+    }
 
 }

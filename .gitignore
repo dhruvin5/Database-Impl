@@ -9,3 +9,10 @@ build
 .idea/
 
 imdb.bin
+
+movies.bin
+
+movie_Id_index.bin
+
+title_index.bin
+

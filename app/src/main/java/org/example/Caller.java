@@ -7,31 +7,33 @@ import Row.Row;
 import Utilities.Utilities;
 import buffer.BufferManager;
 import buffer.BufferManagerImplem;
+import org.example.performanceTestingModule;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class Caller {
     public static void main(String[] args) {
         try {
 
             // Initialize BufferManager with size 10
-            BufferManager bufferManager = new BufferManagerImplem(500);
-
-            // Load dataset into the buffer
-            Utilities.loadDataset(bufferManager, "/Users/Admin/Desktop/645/lab/title.basics.tsv");
+            BufferManager bufferManager = new BufferManagerImplem(10);
+            Utilities.loadDataset(bufferManager, "c:/Users/bhaga/Downloads/title.basics.tsv"); // Load dataset into
+                                                                                               // the buffer
 
             bufferManager.force();
-
             System.out.println("PASS: Buffer Manager initialized with buffer size: 10");
 
             // Create two different B+ Trees for movieId and title
-             BplusTreeImplem<String> movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager);
+            BplusTreeImplem<String> movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager);
 
             System.out.println("PASS: Initialized Movie Index");
 
-            //BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
+            BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
 
             // System.out.println("PASS: Initialized Title Index");
 
@@ -46,71 +48,30 @@ public class Caller {
                     break; // No more pages to read
                 }
 
-                // Iterate through rows in the page
                 int rowId = 0;
                 Row row;
                 while ((row = p.getRow(rowId)) != null) {
                     // Process the row
                     byte[] movieIdStr = row.movieId;
                     byte[] titleStr = row.title;
-
-                    // System.out.println(new String(titleStr, Charset.defaultCharset()));
-
-                    // Parse movieId and create Rid for the row
-
                     Rid movieRid = new Rid(currentPageId, rowId);
-
-                    // Insert movieId and title into B+ Tree indexes
-                    String movieId = new String(movieIdStr, StandardCharsets.UTF_8);
-
-                    // System.out.println(movieId);
-                     movieIdIndex.insert(movieId, movieRid);
-                    // System.out.println("INSERTED " + movieId);
-
-                  //  titleIndex.insert(movieId, movieRid);
-
-                    //
-
-                    // Move to the next row
+                    String movieId = new String(movieIdStr, StandardCharsets.UTF_8); // Insert movieId and title into B+
+                                                                                     // Tree indexes
+                    movieIdIndex.insert(movieId, movieRid);
                     rowId++;
                 }
-
-
-
                 bufferManager.unpinPage(currentPageId, "movies.bin");
                 // After processing the page, move to the next page
                 currentPageId++;
             }
-          //  System.out.println("Inserted page: " + currentPageId);
-//            System.out.println("**********************************");
-//            movieIdIndex.printTree();
-//            System.out.println("**********************************");
-            movieIdIndex.pinLevels(2);
-            movieIdIndex.unPinLevels(2);
+            System.out.println("PASS: Loaded data into B+ tree indexes");
 
+            performanceTestingModule testModule = new performanceTestingModule(bufferManager, movieIdIndex, titleIndex);
+            testModule.performanceTesting_MovieID(); // Call the performance testing method
             bufferManager.force();
 
-            // Sample tests
-            /*
-             * int searchMovieId = 1; // Example movieId for search
-             * System.out.println("Searching for movieId: " + searchMovieId);
-             * Iterator<Rid> movieIdResults = movieIdIndex.search(searchMovieId);
-             * while (movieIdResults.hasNext()) {
-             * System.out.println("MovieId Search Result: " + movieIdResults.next());
-             * }
-             *
-             * String searchTitle = "Inception"; // Example title for search
-             * System.out.println("Searching for title: " + searchTitle);
-             * Iterator<Rid> titleResults = titleIndex.search(searchTitle);
-             * while (titleResults.hasNext()) {
-             * System.out.println("Title Search Result: " + titleResults.next());
-             * }
-             *
-             * }
-             * }
-             */ } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-
         }
 
     }
