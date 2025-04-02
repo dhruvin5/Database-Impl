@@ -24,5 +24,10 @@ public class Rid {
     public int getSlotId() {
         return slotId;
     }
+    @Override
+    public String toString() {
+    return String.format("Rid(pageId=%d, slotId=%d)", pageId, slotId);
+    }
+
 }
 
