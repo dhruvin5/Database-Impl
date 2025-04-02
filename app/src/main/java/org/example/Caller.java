@@ -20,22 +20,17 @@ public class Caller {
     public static void main(String[] args) {
         try {
 
+            // Delete if files exist
             // Initialize BufferManager with size 10
-            BufferManager bufferManager = new BufferManagerImplem(10);
-            Utilities.loadDataset(bufferManager, "c:/Users/bhaga/Downloads/title.basics.tsv"); // Load dataset into
-                                                                                               // the buffer
-
-            bufferManager.force();
-            System.out.println("PASS: Buffer Manager initialized with buffer size: 10");
+            BufferManager bufferManager = new BufferManagerImplem(10000);
+            Utilities.loadDataset(bufferManager, "c:/Users/bhaga/Downloads/title.basics.tsv"); // Load dataset
+            System.out.println("PASS: Buffer Manager initialized with buffer size: 10000");
 
             // Create two different B+ Trees for movieId and title
             BplusTreeImplem<String> movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager);
-
-            System.out.println("PASS: Initialized Movie Index");
-
             BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
 
-            // System.out.println("PASS: Initialized Title Index");
+            System.out.println("PASS: Initialized Empty B+ Tree Indexes");
 
             // Load data from the movie table and populate the B+ tree indexes
             int currentPageId = 0; // Initialize page ID (loading rows from the pages)
@@ -54,10 +49,11 @@ public class Caller {
                     // Process the row
                     byte[] movieIdStr = row.movieId;
                     byte[] titleStr = row.title;
-                    Rid movieRid = new Rid(currentPageId, rowId);
-                    String movieId = new String(movieIdStr, StandardCharsets.UTF_8); // Insert movieId and title into B+
-                                                                                     // Tree indexes
-                    movieIdIndex.insert(movieId, movieRid);
+                    Rid Rid = new Rid(currentPageId, rowId);
+                    String movieId = new String(movieIdStr, StandardCharsets.UTF_8);
+                    String title = new String(titleStr, StandardCharsets.UTF_8);
+                    // movieIdIndex.insert(movieId, Rid);
+                    titleIndex.insert(title, Rid);
                     rowId++;
                 }
                 bufferManager.unpinPage(currentPageId, "movies.bin");
@@ -67,8 +63,9 @@ public class Caller {
             System.out.println("PASS: Loaded data into B+ tree indexes");
 
             performanceTestingModule testModule = new performanceTestingModule(bufferManager, movieIdIndex, titleIndex);
-            testModule.performanceTesting_MovieID(); // Call the performance testing method
-            bufferManager.force();
+
+            // testModule.performanceTesting_MovieID(); // Call the performance testing
+            testModule.performanceTesting_Title(); // Call the performance testing
 
         } catch (Exception e) {
             e.printStackTrace();

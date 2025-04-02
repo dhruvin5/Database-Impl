@@ -71,10 +71,11 @@ public class Utilities {
 
                 // System.out.println("Page Id : - " + currentPageId);
                 count++;
-                if (count % 20000 == 0) {
-                    System.out.println("Inserted " + count + " rows into the page with ID: " + currentPageId);
-                    break; // For testing, break after 5000 rows
-                }
+                // if (count % 20000 == 0) {
+                // System.out.println("Inserted " + count + " rows into the page with ID: " +
+                // currentPageId);
+                // break; // For testing, break after 5000 rows
+                // }
             }
         } catch (IOException e) {
             e.printStackTrace();
