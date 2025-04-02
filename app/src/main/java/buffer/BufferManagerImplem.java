@@ -218,7 +218,7 @@ public class BufferManagerImplem extends BufferManager {
             Page page = getPageFromDisk(pageId, FILE_NAME);
 
             if (page == null) {
-                System.out.println("Error: Failed to load page" + pageId + "from disk.");
+                System.out.println("Error: Failed to load page" + pageId + "from disk. " + FILE_NAME);
                 return null; // failed to load page from disk
             }
 
@@ -375,5 +375,7 @@ public class BufferManagerImplem extends BufferManager {
         int is_Leaf_Offset = 0;
         return this.catalog.isIndexFile(FILE_NAME) && (buffer[is_Leaf_Offset] == 1);
     }
+
+
 
 }

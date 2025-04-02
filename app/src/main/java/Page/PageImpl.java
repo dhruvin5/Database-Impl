@@ -37,7 +37,7 @@ public class PageImpl implements Page {
         this.offSet2 = offSet2;
         this.ROW_SIZE = offSet1 + offSet2;
         this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
-        System.out.println("Max row count- " + this.MAX_ROW_COUNT);
+        //System.out.println("Max row count- " + this.MAX_ROW_COUNT);
     }
 
     // if loading an existing page in Buffer

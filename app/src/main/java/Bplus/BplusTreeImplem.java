@@ -86,6 +86,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
     }
 
     private int readRootNodeInfo(int pageId) throws IOException {
+        System.out.println("IT CAME HERE");
         Page page = bm.getPage(pageId, this.indexFile);
         byte[] data = page.getRows();
         int offset = catalog.getPageOffset(false);
@@ -444,11 +445,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         return matchingRids.iterator();
     }
 
-    /**
-     * Performs a range search between startKey and endKey (inclusive) in the B+
-     * tree
-     * and returns an iterator over the Rid values found.
-     */
     @Override
     public Iterator<Rid> rangeSearch(K startKey, K endKey) {
         List<Rid> results = new ArrayList<>();
@@ -496,6 +492,52 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             e.printStackTrace();
         }
     }
+
+    public void pinLevels(int level) {
+        try {
+            pinFirst2LevelsHelper(rootPageId, level, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void unPinLevels(int level) {
+        try {
+            unPinFirst2LevelsHelper(rootPageId, level, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void pinFirst2LevelsHelper(int pageId, int level, int currLevel) throws IOException, ClassNotFoundException {
+
+        if(currLevel < level)
+        {
+            BplusTreeNode<K> node = readNode(pageId);
+            for (int i = 0; i < node.children.size(); i++) {
+                int childPageId = node.children.get(i);
+                //  System.out.println(indent + "    Child " + i + " (Page " + childPageId + "):");
+                pinFirst2LevelsHelper(childPageId, level, currLevel + 1);
+            }
+        }
+        bm.getPage(pageId, this.indexFile);
+    }
+
+    private void unPinFirst2LevelsHelper(int pageId, int level, int currLevel) throws IOException, ClassNotFoundException {
+
+        if(currLevel < level)
+        {
+            BplusTreeNode<K> node = readNode(pageId);
+            for (int i = 0; i < node.children.size(); i++) {
+                int childPageId = node.children.get(i);
+                //  System.out.println(indent + "    Child " + i + " (Page " + childPageId + "):");
+                unPinFirst2LevelsHelper(childPageId, level, currLevel + 1);
+            }
+        }
+        //System.out.println(pageId);
+        bm.unpinPage(pageId,indexFile);
+    }
+
 
     private void printNode(int pageId, int level) throws IOException, ClassNotFoundException {
         BplusTreeNode<K> node = readNode(pageId);
