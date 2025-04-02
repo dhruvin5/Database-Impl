@@ -76,7 +76,7 @@ public class PageImpl implements Page {
     @Override
     public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
-        System.out.println("Insert in normal page called");
+
         if (row == null || row.movieId == null || row.title == null || row.key != null
                 || row.pid != null || row.slotid != null) {
             return -1;

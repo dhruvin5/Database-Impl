@@ -27,12 +27,11 @@ public class Caller {
             System.out.println("PASS: Buffer Manager initialized with buffer size: 10");
 
             // Create two different B+ Trees for movieId and title
-            // BplusTreeImplem<String> movieIdIndex = new
-            // BplusTreeImplem<>("movie_Id_index.bin", bufferManager, order);
+             BplusTreeImplem<String> movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager);
 
             System.out.println("PASS: Initialized Movie Index");
 
-            BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
+            //BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
 
             // System.out.println("PASS: Initialized Title Index");
 
@@ -62,13 +61,13 @@ public class Caller {
                     Rid movieRid = new Rid(currentPageId, rowId);
 
                     // Insert movieId and title into B+ Tree indexes
-                    String movieId = new String(titleStr, StandardCharsets.UTF_8);
+                    String movieId = new String(movieIdStr, StandardCharsets.UTF_8);
 
                     // System.out.println(movieId);
-                    // movieIdIndex.insert(movieId, movieRid);
+                     movieIdIndex.insert(movieId, movieRid);
                     // System.out.println("INSERTED " + movieId);
 
-                    titleIndex.insert(movieId, movieRid);
+                  //  titleIndex.insert(movieId, movieRid);
 
                     //
 
@@ -78,7 +77,7 @@ public class Caller {
 
                 System.out.println("Inserted page: " + currentPageId);
                 System.out.println("**********************************");
-                titleIndex.printTree();
+                movieIdIndex.printTree();
                 System.out.println("**********************************");
 
                 bufferManager.unpinPage(currentPageId, "movies.bin");

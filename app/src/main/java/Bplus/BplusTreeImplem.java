@@ -144,7 +144,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
     private byte[] serializeUsingObjectStream(K key) throws IOException {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(key);
             oos.flush();
             return bos.toByteArray();
@@ -199,7 +199,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                 columnMap.put(columnName, colBytes);
             }
 
-            byte[] keyBytes = columnMap.get("title");
+            byte[] keyBytes = columnMap.get(catalog.getIndex(indexFile).getKey());
             if (keyBytes != null) {
                 K key = (K) new String(keyBytes, StandardCharsets.UTF_8);
                 node.keys.add(key);
@@ -239,7 +239,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
     @SuppressWarnings("unchecked")
     private K deserializeUsingObjectStream(byte[] data) throws IOException, ClassNotFoundException {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
-                ObjectInputStream ois = new ObjectInputStream(bis)) {
+             ObjectInputStream ois = new ObjectInputStream(bis)) {
             return (K) ois.readObject();
         }
     }
