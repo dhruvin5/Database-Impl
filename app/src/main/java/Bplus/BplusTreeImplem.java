@@ -10,7 +10,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -310,8 +309,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
         if (node.isLeaf) {
 
-            int i = Collections.binarySearch(node.keys, key);
-            if (i < 0) i = -(i + 1);
+            int i = binarySearch(node.keys, key);
+            //if (i < 0) i = -(i + 1);
 
             node.keys.add(i, key);
             node.values.add(i, rid);
@@ -325,8 +324,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             }
         } else {
 
-            int i = Collections.binarySearch(node.keys, key);
-            if (i < 0) i = -(i + 1);
+            int i = binarySearch(node.keys, key);
+            //if (i < 0) i = -(i + 1);
 
             //System.out.println(key + "%%%" + node.children + "%%%" +i);
 
@@ -339,8 +338,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                 K splitKey = childSplit.splitKey;
                 int newPageId = childSplit.newPageId;
 
-                int pos = Collections.binarySearch(node.keys, splitKey);
-                if (pos < 0) pos = -(pos + 1);
+                int pos = binarySearch(node.keys, splitKey);
+                //if (pos < 0) pos = -(pos + 1);
 
                 node.keys.add(pos, splitKey);
                 node.children.add(pos + 1, newPageId);
@@ -444,15 +443,9 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
     
             // Traverse to the correct leaf node.
             while (!node.isLeaf) {
-                int i = Collections.binarySearch(node.keys, key);
-                System.out.println("Binary search result: " + i); // Added for debugging
-                if(node.keys.contains(key)){
-                    i = 1;
-                }
-                else if (i < 0) {
-                    i = -(i + 1); // Get the index of the child pointer to follow.
-                }
-    
+                int i = binarySearch(node.keys, key);
+                System.out.println("Binary search result key: " + key + "ind" + i); // Added for debugging
+
                 int childPageId = node.children.get(i); // Get the page ID from the children list.
                 System.out.println("Descending to child page: " + childPageId);
                 node = readNode(childPageId);
@@ -462,7 +455,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             System.out.println("Reached leaf node with keys: " + node.keys);
     
             // Perform binary search within the leaf node.
-            int pos = Collections.binarySearch(node.keys, key);
+            int pos = binarySearch(node.keys, key);
             if (pos < 0) {
                 System.out.println("Key not found in leaf.");
                 return matchingRids.iterator();
@@ -500,9 +493,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         }
         return matchingRids.iterator();
     }
-    
-    
-        
 
     /**
      * Performs a range search between startKey and endKey (inclusive) in the B+ tree
@@ -518,13 +508,9 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
     
             // Traverse to the first leaf node that might contain startKey (using search logic).
             while (!node.isLeaf) {
-                int i = Collections.binarySearch(node.keys, startKey);
+                int i = binarySearch(node.keys, startKey);
                 System.out.println("Binary search result: " + i); // Added for debugging
-    
-                if (i < 0) {
-                    i = -(i + 1); // Get the index of the child pointer to follow.
-                }
-    
+
                 int childPageId = node.children.get(i);
                 System.out.println("Descending to child page: " + childPageId);
                 node = readNode(childPageId);
@@ -533,11 +519,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             System.out.println("Reached initial leaf node: " + node.keys);
     
             // Find the starting position within the leaf node.
-            int pos = Collections.binarySearch(node.keys, startKey);
-            if (pos < 0) {
-                pos = -(pos + 1);
-            }
-    
+            int pos = binarySearch(node.keys, startKey);
+
             System.out.println("Starting position in leaf: " + pos);
     
             // Scan through leaf nodes until endKey is exceeded.
@@ -563,6 +546,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                     System.out.println("End of leaf chain reached.");
                     break;
                 }
+
                 System.out.println("Moving to next leaf node: " + node.next);
                 node = readNode(node.next);
                 pos = 0; // Reset position for the next leaf node.
@@ -574,6 +558,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         }
         return results.iterator();
     }
+
     public void printTree() {
         try {
             printNode(rootPageId, 0);
@@ -603,5 +588,24 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         }
     }
 
+    private static <T extends Comparable<T>> int binarySearch(List<T> sortedList, T key) {
+        int low = 0;
+        int high = sortedList.size() - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2; // Prevent potential overflow
+            int comparison = key.compareTo(sortedList.get(mid));
+
+            if (comparison == 0) {
+                return mid; // Key found at index mid
+            } else if (comparison < 0) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+
+        return low; // Key not found, return insertion point (low)
+    }
 }
 
