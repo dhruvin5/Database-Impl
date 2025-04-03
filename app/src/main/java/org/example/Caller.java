@@ -18,7 +18,7 @@ public class Caller {
         try{
             System.out.println("========================== STARTING TEST: INITIALIZING BUFFER MANAGER ==========================");
             BufferManager bufferManager = new BufferManagerImplem(7);
-            Utilities.loadDataset(bufferManager, "C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\src\\main\\title.basics.tsv");
+            Utilities.loadDataset(bufferManager, "C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\src\\title.basics.tsv");
             bufferManager.force();
             System.out.println("========================== PASS TEST: INITIALIZING BUFFER MANAGER ==========================");
 
@@ -35,6 +35,7 @@ public class Caller {
                     break;
                 }
                 int totalRowPerPage = p.getRowCount();
+                System.out.println("totalrowperpage: "+totalRowPerPage);
                 for(int rowCount=0; rowCount<totalRowPerPage;rowCount++){
                     Row row = p.getRow(rowCount);
                     if (row == null) {
