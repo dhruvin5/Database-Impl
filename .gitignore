@@ -9,3 +9,5 @@ build
 .idea/
 
 imdb.bin
+
+title.basics.tsv/

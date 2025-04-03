@@ -575,7 +575,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         }
 
         int ROW_SIZE = KEY_SIZE + PID_SIZE;
-        return (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE) / ROW_SIZE;
+        // return (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE) / ROW_SIZE;
+        return 4;
     }
 
 }

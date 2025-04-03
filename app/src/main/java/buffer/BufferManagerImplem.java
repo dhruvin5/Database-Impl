@@ -182,6 +182,7 @@ public class BufferManagerImplem extends BufferManager {
             int lruFrameIndex = evictPage();
 
             if (lruFrameIndex == -1) {
+                System.out.println("All pages are pinned, nothing removed from LRU cache, page creation failed");
                 return null; // all pages are pinned, nothing removed from LRU cache, page creation failed
             }
 
