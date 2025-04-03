@@ -218,7 +218,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
 
 
-            byte[] keyBytes = columnMap.get("title");
+            //byte[] keyBytes = columnMap.get("title");
+            byte[] keyBytes = columnMap.get("movieId");
             if (keyBytes != null) {
                 K key = (K) new String(keyBytes, StandardCharsets.UTF_8);
                 node.keys.add(key);
@@ -309,7 +310,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
         if (node.isLeaf) {
 
-            int i = binarySearch(node.keys, key);
+            int i = binarySearch(node.keys, key,true);
             //if (i < 0) i = -(i + 1);
 
             node.keys.add(i, key);
@@ -324,7 +325,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             }
         } else {
 
-            int i = binarySearch(node.keys, key);
+            int i = binarySearch(node.keys, key,true);
             //if (i < 0) i = -(i + 1);
 
             //System.out.println(key + "%%%" + node.children + "%%%" +i);
@@ -338,7 +339,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                 K splitKey = childSplit.splitKey;
                 int newPageId = childSplit.newPageId;
 
-                int pos = binarySearch(node.keys, splitKey);
+                int pos = binarySearch(node.keys, splitKey,true);
                 //if (pos < 0) pos = -(pos + 1);
 
                 node.keys.add(pos, splitKey);
@@ -440,32 +441,40 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         try {
             BplusTreeNode<K> node = readNode(rootPageId);
             System.out.println("Searching for key: " + key);
-    
-            // Traverse to the correct leaf node.
-            while (!node.isLeaf) {
-                int i = binarySearch(node.keys, key);
-                System.out.println("Binary search result key: " + key + "ind" + i); // Added for debugging
 
-                int childPageId = node.children.get(i); // Get the page ID from the children list.
+            // Traverse to the correct leaf node
+            while (!node.isLeaf) {
+                int i = binarySearch(node.keys, key, true);
+
+                // If the search key is found in the given set of keys then we traverse to right child.
+                if (i < node.keys.size() && node.keys.get(i).compareTo(key) == 0){
+                    i++;
+                }
+
+                System.out.println("Binary search result key: " + key + " ind " + i);
+
+                int childPageId = node.children.get(i);
                 System.out.println("Descending to child page: " + childPageId);
                 node = readNode(childPageId);
             }
-    
+
             // Now, 'node' is the correct leaf node.
             System.out.println("Reached leaf node with keys: " + node.keys);
-    
-            // Perform binary search within the leaf node.
-            int pos = binarySearch(node.keys, key);
+
+            // Perform binary search within the leaf node. checking if key is found in the leaf node.
+            int pos = binarySearch(node.keys, key, false);
+
+            // If the key does not exist, exit early.
             if (pos < 0) {
                 System.out.println("Key not found in leaf.");
                 return matchingRids.iterator();
             }
-    
+
             // Move back to the first occurrence of the key.
             while (pos > 0 && node.keys.get(pos - 1).compareTo(key) == 0) {
                 pos--;
             }
-    
+
             // Scan forward to collect all matching Rids.
             System.out.println("Starting scan at position: " + pos);
             while (pos < node.keys.size() && node.keys.get(pos).compareTo(key) == 0) {
@@ -473,14 +482,14 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                 matchingRids.add(node.values.get(pos));
                 pos++;
             }
-    
+
             // Continue to the next leaf node if necessary.
             while (node.next != -1) {
                 node = readNode(node.next);
                 if (node.keys.isEmpty() || node.keys.get(0).compareTo(key) != 0) {
                     break;
                 }
-    
+
                 pos = 0;
                 while (pos < node.keys.size() && node.keys.get(pos).compareTo(key) == 0) {
                     System.out.println("Found matching Rid in next leaf: " + node.values.get(pos));
@@ -488,7 +497,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                     pos++;
                 }
             }
-        } catch (Exception e) {
+            } catch (Exception e) {
             e.printStackTrace();
         }
         return matchingRids.iterator();
@@ -508,8 +517,12 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
     
             // Traverse to the first leaf node that might contain startKey (using search logic).
             while (!node.isLeaf) {
-                int i = binarySearch(node.keys, startKey);
+                int i = binarySearch(node.keys, startKey, true);
                 System.out.println("Binary search result: " + i); // Added for debugging
+                // If the search key is found in the given set of keys then we traverse to right child.
+                if (i < node.keys.size() && node.keys.get(i).compareTo(startKey) == 0){
+                    i++;
+                }
 
                 int childPageId = node.children.get(i);
                 System.out.println("Descending to child page: " + childPageId);
@@ -519,7 +532,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             System.out.println("Reached initial leaf node: " + node.keys);
     
             // Find the starting position within the leaf node.
-            int pos = binarySearch(node.keys, startKey);
+            int pos = binarySearch(node.keys, startKey, true);
 
             System.out.println("Starting position in leaf: " + pos);
     
@@ -588,7 +601,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         }
     }
 
-    private static <T extends Comparable<T>> int binarySearch(List<T> sortedList, T key) {
+    private static <T extends Comparable<T>> int binarySearch(List<T> sortedList, T key, boolean isReturnInsertionPoint) {
         int low = 0;
         int high = sortedList.size() - 1;
 
@@ -605,7 +618,13 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             }
         }
 
-        return low; // Key not found, return insertion point (low)
+        if (isReturnInsertionPoint)
+        {
+            return low; // Key not found, return insertion point (low)
+        }
+
+        // If key is not found we end up returning -1.
+        return -1;
     }
 }
 
