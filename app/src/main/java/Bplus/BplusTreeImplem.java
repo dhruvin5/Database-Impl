@@ -276,9 +276,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
         if (node.isLeaf) {
 
-            int i = Collections.binarySearch(node.keys, key);
-            if (i < 0)
-                i = -(i + 1);
+            int i = binarySearch(node.keys, key);
+
 
             node.keys.add(i, key);
             node.values.add(i, rid);
@@ -292,9 +291,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             }
         } else {
 
-            int i = Collections.binarySearch(node.keys, key);
-            if (i < 0)
-                i = -(i + 1);
+            int i = binarySearch(node.keys, key);
 
             // System.out.println(key + "%%%" + node.children + "%%%" +i);
 
@@ -307,7 +304,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                 K splitKey = childSplit.splitKey;
                 int newPageId = childSplit.newPageId;
 
-                int pos = Collections.binarySearch(node.keys, splitKey);
+                int pos = binarySearch(node.keys, splitKey);
                 if (pos < 0)
                     pos = -(pos + 1);
 
@@ -394,50 +391,60 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         return new SplitResult<>(splitKey, newNodePageId);
     }
 
-    @Override
 
+    @Override
     public Iterator<Rid> search(K key) {
         List<Rid> matchingRids = new ArrayList<>();
         try {
-            // Descend to the appropriate leaf node.
             BplusTreeNode<K> node = readNode(rootPageId);
+            System.out.println("Searching for key: " + key);
+
+            // Traverse to the correct leaf node.
             while (!node.isLeaf) {
-                int i = Collections.binarySearch(node.keys, key);
-                if (i < 0) {
-                    i = -(i + 1);
-                }
-                node = readNode(node.children.get(i));
+                int i = binarySearch(node.keys, key);
+                System.out.println("Binary search result key: " + key + "ind" + i); // Added for debugging
+
+                int childPageId = node.children.get(i); // Get the page ID from the children list.
+                System.out.println("Descending to child page: " + childPageId);
+                node = readNode(childPageId);
             }
 
-            // Now in a leaf node. Use binary search to find one occurrence.
-            int pos = Collections.binarySearch(node.keys, key);
+            // Now, 'node' is the correct leaf node.
+            System.out.println("Reached leaf node with keys: " + node.keys);
+
+            // Perform binary search within the leaf node.
+            int pos = binarySearch(node.keys, key);
             if (pos < 0) {
-                // Key not present.
+                System.out.println("Key not found in leaf.");
                 return matchingRids.iterator();
             }
 
-            // If duplicates exist, back up to the first occurrence.
+            // Move back to the first occurrence of the key.
             while (pos > 0 && node.keys.get(pos - 1).compareTo(key) == 0) {
                 pos--;
             }
 
-            // Collect all matching Rids in this leaf.
-            while (true) {
+            // Scan forward to collect all matching Rids.
+            System.out.println("Starting scan at position: " + pos);
+            while (pos < node.keys.size() && node.keys.get(pos).compareTo(key) == 0) {
+                System.out.println("Found matching Rid: " + node.values.get(pos));
+                matchingRids.add(node.values.get(pos));
+                pos++;
+            }
+
+            // Continue to the next leaf node if necessary.
+            while (node.next != -1) {
+                node = readNode(node.next);
+                if (node.keys.isEmpty() || node.keys.get(0).compareTo(key) != 0) {
+                    break;
+                }
+
+                pos = 0;
                 while (pos < node.keys.size() && node.keys.get(pos).compareTo(key) == 0) {
+                    System.out.println("Found matching Rid in next leaf: " + node.values.get(pos));
                     matchingRids.add(node.values.get(pos));
                     pos++;
                 }
-                // If there is a next leaf, check if its first key equals the search key.
-                if (node.next == -1) {
-                    break;
-                }
-                BplusTreeNode<K> nextLeaf = readNode(node.next);
-                // If the next leaf's first key is not equal to key, we're done.
-                if (nextLeaf.keys.isEmpty() || nextLeaf.keys.get(0).compareTo(key) != 0) {
-                    break;
-                }
-                node = nextLeaf;
-                pos = 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -445,40 +452,61 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         return matchingRids.iterator();
     }
 
+
     @Override
     public Iterator<Rid> rangeSearch(K startKey, K endKey) {
         List<Rid> results = new ArrayList<>();
         try {
             BplusTreeNode<K> node = readNode(rootPageId);
+            System.out.println("Starting range search: [" + startKey + ", " + endKey + "]");
+
+            // Traverse to the first leaf node that might contain startKey (using search logic).
             while (!node.isLeaf) {
-                int i = Collections.binarySearch(node.keys, startKey);
-                if (i < 0) {
-                    i = -(i + 1);
-                }
-                node = readNode(node.children.get(i));
+                int i = binarySearch(node.keys, startKey);
+                System.out.println("Binary search result: " + i); // Added for debugging
+
+                int childPageId = node.children.get(i);
+                System.out.println("Descending to child page: " + childPageId);
+                node = readNode(childPageId);
             }
 
-            int pos = Collections.binarySearch(node.keys, startKey);
-            if (pos < 0) {
-                pos = -(pos + 1);
-            }
+            System.out.println("Reached initial leaf node: " + node.keys);
 
+            // Find the starting position within the leaf node.
+            int pos = binarySearch(node.keys, startKey);
+
+            System.out.println("Starting position in leaf: " + pos);
+
+            // Scan through leaf nodes until endKey is exceeded.
             while (node != null) {
+                System.out.println("Scanning leaf node: " + node.keys);
                 for (; pos < node.keys.size(); pos++) {
                     K currentKey = node.keys.get(pos);
+                    System.out.println("Checking key: " + currentKey);
+
                     if (currentKey.compareTo(endKey) > 0) {
+                        System.out.println("End key reached, finishing range search.");
                         return results.iterator();
                     }
+
                     if (currentKey.compareTo(startKey) >= 0 && currentKey.compareTo(endKey) <= 0) {
+                        System.out.println("Found Rid in range: " + node.values.get(pos));
                         results.add(node.values.get(pos));
                     }
                 }
+
+                // Move to the next leaf node if available.
                 if (node.next == -1) {
+                    System.out.println("End of leaf chain reached.");
                     break;
                 }
+
+                System.out.println("Moving to next leaf node: " + node.next);
                 node = readNode(node.next);
-                pos = 0;
+                pos = 0; // Reset position for the next leaf node.
             }
+
+            System.out.println("Range search completed.");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -576,6 +604,26 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
         int ROW_SIZE = KEY_SIZE + PID_SIZE;
         return (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE) / ROW_SIZE;
+    }
+
+    private static <T extends Comparable<T>> int binarySearch(List<T> sortedList, T key) {
+        int low = 0;
+        int high = sortedList.size() - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2; // Prevent potential overflow
+            int comparison = key.compareTo(sortedList.get(mid));
+
+            if (comparison == 0) {
+                return mid; // Key found at index mid
+            } else if (comparison < 0) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+
+        return low; // Key not found, return insertion point (low)
     }
 
 }
