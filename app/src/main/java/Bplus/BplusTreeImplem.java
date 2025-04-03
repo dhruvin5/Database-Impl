@@ -3,6 +3,7 @@ package Bplus;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 
 import Page.Page;
@@ -47,7 +48,16 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         //this.index_info_page_id = 0;
 
         File file = new File(indexFile);
-        if (!file.exists()) {
+
+        if(file.exists())
+        {
+            if (file.delete()) {
+                System.out.println("File deleted successfully.");
+            } else {
+                System.out.println("Failed to delete the file.");
+            }
+        }
+
 
             index_info_page_id = bm.createIndexPage(indexFile, false).getPid();
 
@@ -67,14 +77,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
             bm.unpinPage(this.index_info_page_id, this.indexFile);
             //this.root = rootNode;
-        }
-        else {
-            index_info_page_id = 0;
 
-            rootPageId = readRootNodeInfo(index_info_page_id);
-
-            System.out.println("ROOT PAGE ID: " + rootPageId);
-        }
     }
 
     private void writeRootNodeInfo(int pageId, int rootPageId) throws IOException {
@@ -213,7 +216,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
 
 
-            byte[] keyBytes = columnMap.get("title");
+            byte[] keyBytes = columnMap.get(catalog.getIndex(indexFile).getKey());
             if (keyBytes != null) {
                 K key = (K) new String(keyBytes, StandardCharsets.UTF_8);
                 node.keys.add(key);
@@ -488,13 +491,21 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         return matchingRids.iterator();
     }
 
-    /**
-     * Performs a range search between startKey and endKey (inclusive) in the B+ tree
-     * and returns an iterator over the Rid values found.
-     */
-
     @Override
     public Iterator<Rid> rangeSearch(K startKey, K endKey) {
+
+        boolean isSwapped = false;
+        if (startKey.compareTo(endKey) > 0) {
+            K temp = startKey;
+            startKey = endKey;
+            endKey = temp;
+            isSwapped  = true;
+
+       //     System.out.println("SWAPPED$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
+        }
+
+
         List<Rid> results = new ArrayList<>();
         try {
             BplusTreeNode<K> node = readNode(rootPageId);
@@ -526,6 +537,13 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
                     if (currentKey.compareTo(endKey) > 0) {
                         System.out.println("End key reached, finishing range search.");
+                        if(isSwapped)
+                        {
+                            List<Rid> reversedResults = new ArrayList<>(results);
+                            Collections.reverse(reversedResults);
+                          //  System.out.println("REVERSED^^^");
+                            return reversedResults.iterator();
+                        }
                         return results.iterator();
                     }
 
@@ -549,6 +567,15 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             System.out.println("Range search completed.");
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+      //  System.out.println("REVERSED^^^" + isSwapped);
+        if(isSwapped)
+        {
+            List<Rid> reversedResults = new ArrayList<>(results);
+            Collections.reverse(reversedResults);
+           // System.out.println("REVERSED^^^");
+            return reversedResults.iterator();
         }
         return results.iterator();
     }

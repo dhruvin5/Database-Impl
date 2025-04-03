@@ -1,0 +1,3635 @@
+Reusing configuration cache.
+> Task :app:processResources NO-SOURCE
+> Task :app:compileJava UP-TO-DATE
+> Task :app:classes UP-TO-DATE
+
+> Task :app:run
+Inserted 40 rows into the page with ID: 0
+PASS: Buffer Manager initialized with buffer size: 10
+PASS: Initialized Movie Index
+File deleted successfully.
+Searching for key: tt0000001
+Reached leaf node with keys: []
+Starting scan at position: 0
+Inserted key: tt0000001
+**********************************
+Leaf Node (Page 1):
+  Keys: [tt0000001]
+  Values: [Rid(pageId=0, slotId=0)]
+  Next: -1
+**********************************
+Searching for key: tt0000002
+Reached leaf node with keys: [tt0000001]
+Starting scan at position: 1
+Inserted key: tt0000002
+**********************************
+Leaf Node (Page 1):
+  Keys: [tt0000001, tt0000002]
+  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+  Next: -1
+**********************************
+Searching for key: tt0000003
+Reached leaf node with keys: [tt0000001, tt0000002]
+Starting scan at position: 2
+Inserted key: tt0000003
+**********************************
+Leaf Node (Page 1):
+  Keys: [tt0000001, tt0000002, tt0000003]
+  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1), Rid(pageId=0, slotId=2)]
+  Next: -1
+**********************************
+Searching for key: tt0000004
+Reached leaf node with keys: [tt0000001, tt0000002, tt0000003]
+Starting scan at position: 3
+Inserted key: tt0000004
+**********************************
+Internal Node (Page 3):
+  Keys: [tt0000003]
+  Children: 
+    Child 0 (Page 1):
+        Leaf Node (Page 1):
+          Keys: [tt0000001, tt0000002]
+          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+          Next: 2
+    Child 1 (Page 2):
+        Leaf Node (Page 2):
+          Keys: [tt0000003, tt0000004]
+          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+          Next: -1
+**********************************
+Searching for key: tt0000005
+Binary search result key: tt0000005ind1
+Descending to child page: 2
+Reached leaf node with keys: [tt0000003, tt0000004]
+Starting scan at position: 2
+Inserted key: tt0000005
+**********************************
+Internal Node (Page 3):
+  Keys: [tt0000003]
+  Children: 
+    Child 0 (Page 1):
+        Leaf Node (Page 1):
+          Keys: [tt0000001, tt0000002]
+          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+          Next: 2
+    Child 1 (Page 2):
+        Leaf Node (Page 2):
+          Keys: [tt0000003, tt0000004, tt0000005]
+          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3), Rid(pageId=0, slotId=4)]
+          Next: -1
+**********************************
+Searching for key: tt0000006
+Binary search result key: tt0000006ind1
+Descending to child page: 2
+Reached leaf node with keys: [tt0000003, tt0000004, tt0000005]
+Starting scan at position: 3
+Inserted key: tt0000006
+**********************************
+Internal Node (Page 3):
+  Keys: [tt0000003, tt0000005]
+  Children: 
+    Child 0 (Page 1):
+        Leaf Node (Page 1):
+          Keys: [tt0000001, tt0000002]
+          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+          Next: 2
+    Child 1 (Page 2):
+        Leaf Node (Page 2):
+          Keys: [tt0000003, tt0000004]
+          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+          Next: 4
+    Child 2 (Page 4):
+        Leaf Node (Page 4):
+          Keys: [tt0000005, tt0000006]
+          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+          Next: -1
+**********************************
+Searching for key: tt0000007
+Binary search result key: tt0000007ind2
+Descending to child page: 4
+Reached leaf node with keys: [tt0000005, tt0000006]
+Starting scan at position: 2
+Inserted key: tt0000007
+**********************************
+Internal Node (Page 3):
+  Keys: [tt0000003, tt0000005]
+  Children: 
+    Child 0 (Page 1):
+        Leaf Node (Page 1):
+          Keys: [tt0000001, tt0000002]
+          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+          Next: 2
+    Child 1 (Page 2):
+        Leaf Node (Page 2):
+          Keys: [tt0000003, tt0000004]
+          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+          Next: 4
+    Child 2 (Page 4):
+        Leaf Node (Page 4):
+          Keys: [tt0000005, tt0000006, tt0000007]
+          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5), Rid(pageId=0, slotId=6)]
+          Next: -1
+**********************************
+Searching for key: tt0000008
+Binary search result key: tt0000008ind2
+Descending to child page: 4
+Reached leaf node with keys: [tt0000005, tt0000006, tt0000007]
+Starting scan at position: 3
+Inserted key: tt0000008
+**********************************
+Internal Node (Page 3):
+  Keys: [tt0000003, tt0000005, tt0000007]
+  Children: 
+    Child 0 (Page 1):
+        Leaf Node (Page 1):
+          Keys: [tt0000001, tt0000002]
+          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+          Next: 2
+    Child 1 (Page 2):
+        Leaf Node (Page 2):
+          Keys: [tt0000003, tt0000004]
+          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+          Next: 4
+    Child 2 (Page 4):
+        Leaf Node (Page 4):
+          Keys: [tt0000005, tt0000006]
+          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+          Next: 5
+    Child 3 (Page 5):
+        Leaf Node (Page 5):
+          Keys: [tt0000007, tt0000008]
+          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+          Next: -1
+**********************************
+Searching for key: tt0000009
+Binary search result key: tt0000009ind3
+Descending to child page: 5
+Reached leaf node with keys: [tt0000007, tt0000008]
+Starting scan at position: 2
+Inserted key: tt0000009
+**********************************
+Internal Node (Page 3):
+  Keys: [tt0000003, tt0000005, tt0000007]
+  Children: 
+    Child 0 (Page 1):
+        Leaf Node (Page 1):
+          Keys: [tt0000001, tt0000002]
+          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+          Next: 2
+    Child 1 (Page 2):
+        Leaf Node (Page 2):
+          Keys: [tt0000003, tt0000004]
+          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+          Next: 4
+    Child 2 (Page 4):
+        Leaf Node (Page 4):
+          Keys: [tt0000005, tt0000006]
+          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+          Next: 5
+    Child 3 (Page 5):
+        Leaf Node (Page 5):
+          Keys: [tt0000007, tt0000008, tt0000009]
+          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7), Rid(pageId=0, slotId=8)]
+          Next: -1
+**********************************
+Searching for key: tt0000010
+Binary search result key: tt0000010ind3
+Descending to child page: 5
+Reached leaf node with keys: [tt0000007, tt0000008, tt0000009]
+Starting scan at position: 3
+Inserted key: tt0000010
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: -1
+**********************************
+Searching for key: tt0000011
+Binary search result key: tt0000011ind1
+Descending to child page: 7
+Binary search result key: tt0000011ind1
+Descending to child page: 6
+Reached leaf node with keys: [tt0000009, tt0000010]
+Starting scan at position: 2
+Inserted key: tt0000011
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010, tt0000011]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9), Rid(pageId=0, slotId=10)]
+                  Next: -1
+**********************************
+Searching for key: tt0000012
+Binary search result key: tt0000012ind1
+Descending to child page: 7
+Binary search result key: tt0000012ind1
+Descending to child page: 6
+Reached leaf node with keys: [tt0000009, tt0000010, tt0000011]
+Starting scan at position: 3
+Inserted key: tt0000012
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: -1
+**********************************
+Searching for key: tt0000013
+Binary search result key: tt0000013ind1
+Descending to child page: 7
+Binary search result key: tt0000013ind2
+Descending to child page: 9
+Reached leaf node with keys: [tt0000011, tt0000012]
+Starting scan at position: 2
+Inserted key: tt0000013
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012, tt0000013]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11), Rid(pageId=0, slotId=12)]
+                  Next: -1
+**********************************
+Searching for key: tt0000014
+Binary search result key: tt0000014ind1
+Descending to child page: 7
+Binary search result key: tt0000014ind2
+Descending to child page: 9
+Reached leaf node with keys: [tt0000011, tt0000012, tt0000013]
+Starting scan at position: 3
+Inserted key: tt0000014
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011, tt0000013]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+            Child 3 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: -1
+**********************************
+Searching for key: tt0000015
+Binary search result key: tt0000015ind1
+Descending to child page: 7
+Binary search result key: tt0000015ind3
+Descending to child page: 10
+Reached leaf node with keys: [tt0000013, tt0000014]
+Starting scan at position: 2
+Inserted key: tt0000015
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011, tt0000013]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+            Child 3 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014, tt0000015]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13), Rid(pageId=0, slotId=14)]
+                  Next: -1
+**********************************
+Searching for key: tt0000016
+Binary search result key: tt0000016ind1
+Descending to child page: 7
+Binary search result key: tt0000016ind3
+Descending to child page: 10
+Reached leaf node with keys: [tt0000013, tt0000014, tt0000015]
+Starting scan at position: 3
+Inserted key: tt0000016
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: -1
+**********************************
+Searching for key: tt0000017
+Binary search result key: tt0000017ind2
+Descending to child page: 12
+Binary search result key: tt0000017ind1
+Descending to child page: 11
+Reached leaf node with keys: [tt0000015, tt0000016]
+Starting scan at position: 2
+Inserted key: tt0000017
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016, tt0000017]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15), Rid(pageId=0, slotId=16)]
+                  Next: -1
+**********************************
+Searching for key: tt0000018
+Binary search result key: tt0000018ind2
+Descending to child page: 12
+Binary search result key: tt0000018ind1
+Descending to child page: 11
+Reached leaf node with keys: [tt0000015, tt0000016, tt0000017]
+Starting scan at position: 3
+Inserted key: tt0000018
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                  Next: -1
+**********************************
+Searching for key: tt0000019
+Binary search result key: tt0000019ind2
+Descending to child page: 12
+Binary search result key: tt0000019ind2
+Descending to child page: 13
+Reached leaf node with keys: [tt0000017, tt0000018]
+Starting scan at position: 2
+Inserted key: tt0000019
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018, tt0000019]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17), Rid(pageId=0, slotId=18)]
+                  Next: -1
+**********************************
+Searching for key: tt0000020
+Binary search result key: tt0000020ind2
+Descending to child page: 12
+Binary search result key: tt0000020ind2
+Descending to child page: 13
+Reached leaf node with keys: [tt0000017, tt0000018, tt0000019]
+Starting scan at position: 3
+Inserted key: tt0000020
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017, tt0000019]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                  Next: 14
+            Child 3 (Page 14):
+                Leaf Node (Page 14):
+                  Keys: [tt0000019, tt0000020]
+                  Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                  Next: -1
+**********************************
+Searching for key: tt0000022
+Binary search result key: tt0000022ind2
+Descending to child page: 12
+Binary search result key: tt0000022ind3
+Descending to child page: 14
+Reached leaf node with keys: [tt0000019, tt0000020]
+Starting scan at position: 2
+Inserted key: tt0000022
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017, tt0000019]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                  Next: 14
+            Child 3 (Page 14):
+                Leaf Node (Page 14):
+                  Keys: [tt0000019, tt0000020, tt0000022]
+                  Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19), Rid(pageId=0, slotId=20)]
+                  Next: -1
+**********************************
+Searching for key: tt0000023
+Binary search result key: tt0000023ind2
+Descending to child page: 12
+Binary search result key: tt0000023ind3
+Descending to child page: 14
+Reached leaf node with keys: [tt0000019, tt0000020, tt0000022]
+Starting scan at position: 3
+Inserted key: tt0000023
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013, tt0000019]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                  Next: 14
+    Child 3 (Page 16):
+        Internal Node (Page 16):
+          Keys: [tt0000022]
+          Children: 
+            Child 0 (Page 14):
+                Leaf Node (Page 14):
+                  Keys: [tt0000019, tt0000020]
+                  Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                  Next: 15
+            Child 1 (Page 15):
+                Leaf Node (Page 15):
+                  Keys: [tt0000022, tt0000023]
+                  Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                  Next: -1
+**********************************
+Searching for key: tt0000024
+Binary search result key: tt0000024ind3
+Descending to child page: 16
+Binary search result key: tt0000024ind1
+Descending to child page: 15
+Reached leaf node with keys: [tt0000022, tt0000023]
+Starting scan at position: 2
+Inserted key: tt0000024
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013, tt0000019]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                  Next: 14
+    Child 3 (Page 16):
+        Internal Node (Page 16):
+          Keys: [tt0000022]
+          Children: 
+            Child 0 (Page 14):
+                Leaf Node (Page 14):
+                  Keys: [tt0000019, tt0000020]
+                  Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                  Next: 15
+            Child 1 (Page 15):
+                Leaf Node (Page 15):
+                  Keys: [tt0000022, tt0000023, tt0000024]
+                  Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21), Rid(pageId=0, slotId=22)]
+                  Next: -1
+**********************************
+Searching for key: tt0000025
+Binary search result key: tt0000025ind3
+Descending to child page: 16
+Binary search result key: tt0000025ind1
+Descending to child page: 15
+Reached leaf node with keys: [tt0000022, tt0000023, tt0000024]
+Starting scan at position: 3
+Inserted key: tt0000025
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013, tt0000019]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                  Next: 14
+    Child 3 (Page 16):
+        Internal Node (Page 16):
+          Keys: [tt0000022, tt0000024]
+          Children: 
+            Child 0 (Page 14):
+                Leaf Node (Page 14):
+                  Keys: [tt0000019, tt0000020]
+                  Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                  Next: 15
+            Child 1 (Page 15):
+                Leaf Node (Page 15):
+                  Keys: [tt0000022, tt0000023]
+                  Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                  Next: 17
+            Child 2 (Page 17):
+                Leaf Node (Page 17):
+                  Keys: [tt0000024, tt0000025]
+                  Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                  Next: -1
+**********************************
+Searching for key: tt0000026
+Binary search result key: tt0000026ind3
+Descending to child page: 16
+Binary search result key: tt0000026ind2
+Descending to child page: 17
+Reached leaf node with keys: [tt0000024, tt0000025]
+Starting scan at position: 2
+Inserted key: tt0000026
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013, tt0000019]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                  Next: 14
+    Child 3 (Page 16):
+        Internal Node (Page 16):
+          Keys: [tt0000022, tt0000024]
+          Children: 
+            Child 0 (Page 14):
+                Leaf Node (Page 14):
+                  Keys: [tt0000019, tt0000020]
+                  Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                  Next: 15
+            Child 1 (Page 15):
+                Leaf Node (Page 15):
+                  Keys: [tt0000022, tt0000023]
+                  Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                  Next: 17
+            Child 2 (Page 17):
+                Leaf Node (Page 17):
+                  Keys: [tt0000024, tt0000025, tt0000026]
+                  Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23), Rid(pageId=0, slotId=24)]
+                  Next: -1
+**********************************
+Searching for key: tt0000027
+Binary search result key: tt0000027ind3
+Descending to child page: 16
+Binary search result key: tt0000027ind2
+Descending to child page: 17
+Reached leaf node with keys: [tt0000024, tt0000025, tt0000026]
+Starting scan at position: 3
+Inserted key: tt0000027
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013, tt0000019]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                  Next: 14
+    Child 3 (Page 16):
+        Internal Node (Page 16):
+          Keys: [tt0000022, tt0000024, tt0000026]
+          Children: 
+            Child 0 (Page 14):
+                Leaf Node (Page 14):
+                  Keys: [tt0000019, tt0000020]
+                  Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                  Next: 15
+            Child 1 (Page 15):
+                Leaf Node (Page 15):
+                  Keys: [tt0000022, tt0000023]
+                  Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                  Next: 17
+            Child 2 (Page 17):
+                Leaf Node (Page 17):
+                  Keys: [tt0000024, tt0000025]
+                  Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                  Next: 18
+            Child 3 (Page 18):
+                Leaf Node (Page 18):
+                  Keys: [tt0000026, tt0000027]
+                  Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                  Next: -1
+**********************************
+Searching for key: tt0000028
+Binary search result key: tt0000028ind3
+Descending to child page: 16
+Binary search result key: tt0000028ind3
+Descending to child page: 18
+Reached leaf node with keys: [tt0000026, tt0000027]
+Starting scan at position: 2
+Inserted key: tt0000028
+**********************************
+Internal Node (Page 8):
+  Keys: [tt0000007, tt0000013, tt0000019]
+  Children: 
+    Child 0 (Page 3):
+        Internal Node (Page 3):
+          Keys: [tt0000003, tt0000005]
+          Children: 
+            Child 0 (Page 1):
+                Leaf Node (Page 1):
+                  Keys: [tt0000001, tt0000002]
+                  Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                  Next: 2
+            Child 1 (Page 2):
+                Leaf Node (Page 2):
+                  Keys: [tt0000003, tt0000004]
+                  Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                  Next: 4
+            Child 2 (Page 4):
+                Leaf Node (Page 4):
+                  Keys: [tt0000005, tt0000006]
+                  Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                  Next: 5
+    Child 1 (Page 7):
+        Internal Node (Page 7):
+          Keys: [tt0000009, tt0000011]
+          Children: 
+            Child 0 (Page 5):
+                Leaf Node (Page 5):
+                  Keys: [tt0000007, tt0000008]
+                  Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                  Next: 6
+            Child 1 (Page 6):
+                Leaf Node (Page 6):
+                  Keys: [tt0000009, tt0000010]
+                  Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                  Next: 9
+            Child 2 (Page 9):
+                Leaf Node (Page 9):
+                  Keys: [tt0000011, tt0000012]
+                  Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                  Next: 10
+    Child 2 (Page 12):
+        Internal Node (Page 12):
+          Keys: [tt0000015, tt0000017]
+          Children: 
+            Child 0 (Page 10):
+                Leaf Node (Page 10):
+                  Keys: [tt0000013, tt0000014]
+                  Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                  Next: 11
+            Child 1 (Page 11):
+                Leaf Node (Page 11):
+                  Keys: [tt0000015, tt0000016]
+                  Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                  Next: 13
+            Child 2 (Page 13):
+                Leaf Node (Page 13):
+                  Keys: [tt0000017, tt0000018]
+                  Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                  Next: 14
+    Child 3 (Page 16):
+        Internal Node (Page 16):
+          Keys: [tt0000022, tt0000024, tt0000026]
+          Children: 
+            Child 0 (Page 14):
+                Leaf Node (Page 14):
+                  Keys: [tt0000019, tt0000020]
+                  Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                  Next: 15
+            Child 1 (Page 15):
+                Leaf Node (Page 15):
+                  Keys: [tt0000022, tt0000023]
+                  Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                  Next: 17
+            Child 2 (Page 17):
+                Leaf Node (Page 17):
+                  Keys: [tt0000024, tt0000025]
+                  Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                  Next: 18
+            Child 3 (Page 18):
+                Leaf Node (Page 18):
+                  Keys: [tt0000026, tt0000027, tt0000028]
+                  Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25), Rid(pageId=0, slotId=26)]
+                  Next: -1
+**********************************
+Searching for key: tt0000029
+Binary search result key: tt0000029ind3
+Descending to child page: 16
+Binary search result key: tt0000029ind3
+Descending to child page: 18
+Reached leaf node with keys: [tt0000026, tt0000027, tt0000028]
+Starting scan at position: 3
+Inserted key: tt0000029
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: -1
+**********************************
+Searching for key: tt0000030
+Binary search result key: tt0000030ind1
+Descending to child page: 21
+Binary search result key: tt0000030ind1
+Descending to child page: 20
+Binary search result key: tt0000030ind1
+Descending to child page: 19
+Reached leaf node with keys: [tt0000028, tt0000029]
+Starting scan at position: 2
+Inserted key: tt0000030
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029, tt0000030]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27), Rid(pageId=0, slotId=28)]
+                          Next: -1
+**********************************
+Searching for key: tt0000031
+Binary search result key: tt0000031ind1
+Descending to child page: 21
+Binary search result key: tt0000031ind1
+Descending to child page: 20
+Binary search result key: tt0000031ind1
+Descending to child page: 19
+Reached leaf node with keys: [tt0000028, tt0000029, tt0000030]
+Starting scan at position: 3
+Inserted key: tt0000031
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: -1
+**********************************
+Searching for key: tt0000032
+Binary search result key: tt0000032ind1
+Descending to child page: 21
+Binary search result key: tt0000032ind1
+Descending to child page: 20
+Binary search result key: tt0000032ind2
+Descending to child page: 23
+Reached leaf node with keys: [tt0000030, tt0000031]
+Starting scan at position: 2
+Inserted key: tt0000032
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031, tt0000032]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29), Rid(pageId=0, slotId=30)]
+                          Next: -1
+**********************************
+Searching for key: tt0000033
+Binary search result key: tt0000033ind1
+Descending to child page: 21
+Binary search result key: tt0000033ind1
+Descending to child page: 20
+Binary search result key: tt0000033ind2
+Descending to child page: 23
+Reached leaf node with keys: [tt0000030, tt0000031, tt0000032]
+Starting scan at position: 3
+Inserted key: tt0000033
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030, tt0000032]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+                    Child 3 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31)]
+                          Next: -1
+**********************************
+Searching for key: tt0000034
+Binary search result key: tt0000034ind1
+Descending to child page: 21
+Binary search result key: tt0000034ind1
+Descending to child page: 20
+Binary search result key: tt0000034ind3
+Descending to child page: 24
+Reached leaf node with keys: [tt0000032, tt0000033]
+Starting scan at position: 2
+Inserted key: tt0000034
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030, tt0000032]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+                    Child 3 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033, tt0000034]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31), Rid(pageId=0, slotId=32)]
+                          Next: -1
+**********************************
+Searching for key: tt0000035
+Binary search result key: tt0000035ind1
+Descending to child page: 21
+Binary search result key: tt0000035ind1
+Descending to child page: 20
+Binary search result key: tt0000035ind3
+Descending to child page: 24
+Reached leaf node with keys: [tt0000032, tt0000033, tt0000034]
+Starting scan at position: 3
+Inserted key: tt0000035
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026, tt0000032]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+            Child 2 (Page 26):
+                Internal Node (Page 26):
+                  Keys: [tt0000034]
+                  Children: 
+                    Child 0 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31)]
+                          Next: 25
+                    Child 1 (Page 25):
+                        Leaf Node (Page 25):
+                          Keys: [tt0000034, tt0000035]
+                          Values: [Rid(pageId=0, slotId=32), Rid(pageId=0, slotId=33)]
+                          Next: -1
+**********************************
+Searching for key: tt0000036
+Binary search result key: tt0000036ind1
+Descending to child page: 21
+Binary search result key: tt0000036ind2
+Descending to child page: 26
+Binary search result key: tt0000036ind1
+Descending to child page: 25
+Reached leaf node with keys: [tt0000034, tt0000035]
+Starting scan at position: 2
+Inserted key: tt0000036
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026, tt0000032]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+            Child 2 (Page 26):
+                Internal Node (Page 26):
+                  Keys: [tt0000034]
+                  Children: 
+                    Child 0 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31)]
+                          Next: 25
+                    Child 1 (Page 25):
+                        Leaf Node (Page 25):
+                          Keys: [tt0000034, tt0000035, tt0000036]
+                          Values: [Rid(pageId=0, slotId=32), Rid(pageId=0, slotId=33), Rid(pageId=0, slotId=34)]
+                          Next: -1
+**********************************
+Searching for key: tt0000037
+Binary search result key: tt0000037ind1
+Descending to child page: 21
+Binary search result key: tt0000037ind2
+Descending to child page: 26
+Binary search result key: tt0000037ind1
+Descending to child page: 25
+Reached leaf node with keys: [tt0000034, tt0000035, tt0000036]
+Starting scan at position: 3
+Inserted key: tt0000037
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026, tt0000032]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+            Child 2 (Page 26):
+                Internal Node (Page 26):
+                  Keys: [tt0000034, tt0000036]
+                  Children: 
+                    Child 0 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31)]
+                          Next: 25
+                    Child 1 (Page 25):
+                        Leaf Node (Page 25):
+                          Keys: [tt0000034, tt0000035]
+                          Values: [Rid(pageId=0, slotId=32), Rid(pageId=0, slotId=33)]
+                          Next: 27
+                    Child 2 (Page 27):
+                        Leaf Node (Page 27):
+                          Keys: [tt0000036, tt0000037]
+                          Values: [Rid(pageId=0, slotId=34), Rid(pageId=0, slotId=35)]
+                          Next: -1
+**********************************
+Searching for key: tt0000038
+Binary search result key: tt0000038ind1
+Descending to child page: 21
+Binary search result key: tt0000038ind2
+Descending to child page: 26
+Binary search result key: tt0000038ind2
+Descending to child page: 27
+Reached leaf node with keys: [tt0000036, tt0000037]
+Starting scan at position: 2
+Inserted key: tt0000038
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026, tt0000032]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+            Child 2 (Page 26):
+                Internal Node (Page 26):
+                  Keys: [tt0000034, tt0000036]
+                  Children: 
+                    Child 0 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31)]
+                          Next: 25
+                    Child 1 (Page 25):
+                        Leaf Node (Page 25):
+                          Keys: [tt0000034, tt0000035]
+                          Values: [Rid(pageId=0, slotId=32), Rid(pageId=0, slotId=33)]
+                          Next: 27
+                    Child 2 (Page 27):
+                        Leaf Node (Page 27):
+                          Keys: [tt0000036, tt0000037, tt0000038]
+                          Values: [Rid(pageId=0, slotId=34), Rid(pageId=0, slotId=35), Rid(pageId=0, slotId=36)]
+                          Next: -1
+**********************************
+Searching for key: tt0000039
+Binary search result key: tt0000039ind1
+Descending to child page: 21
+Binary search result key: tt0000039ind2
+Descending to child page: 26
+Binary search result key: tt0000039ind2
+Descending to child page: 27
+Reached leaf node with keys: [tt0000036, tt0000037, tt0000038]
+Starting scan at position: 3
+Inserted key: tt0000039
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026, tt0000032]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+            Child 2 (Page 26):
+                Internal Node (Page 26):
+                  Keys: [tt0000034, tt0000036, tt0000038]
+                  Children: 
+                    Child 0 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31)]
+                          Next: 25
+                    Child 1 (Page 25):
+                        Leaf Node (Page 25):
+                          Keys: [tt0000034, tt0000035]
+                          Values: [Rid(pageId=0, slotId=32), Rid(pageId=0, slotId=33)]
+                          Next: 27
+                    Child 2 (Page 27):
+                        Leaf Node (Page 27):
+                          Keys: [tt0000036, tt0000037]
+                          Values: [Rid(pageId=0, slotId=34), Rid(pageId=0, slotId=35)]
+                          Next: 28
+                    Child 3 (Page 28):
+                        Leaf Node (Page 28):
+                          Keys: [tt0000038, tt0000039]
+                          Values: [Rid(pageId=0, slotId=36), Rid(pageId=0, slotId=37)]
+                          Next: -1
+**********************************
+Searching for key: tt0000040
+Binary search result key: tt0000040ind1
+Descending to child page: 21
+Binary search result key: tt0000040ind2
+Descending to child page: 26
+Binary search result key: tt0000040ind3
+Descending to child page: 28
+Reached leaf node with keys: [tt0000038, tt0000039]
+Starting scan at position: 2
+Inserted key: tt0000040
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026, tt0000032]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+            Child 2 (Page 26):
+                Internal Node (Page 26):
+                  Keys: [tt0000034, tt0000036, tt0000038]
+                  Children: 
+                    Child 0 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31)]
+                          Next: 25
+                    Child 1 (Page 25):
+                        Leaf Node (Page 25):
+                          Keys: [tt0000034, tt0000035]
+                          Values: [Rid(pageId=0, slotId=32), Rid(pageId=0, slotId=33)]
+                          Next: 27
+                    Child 2 (Page 27):
+                        Leaf Node (Page 27):
+                          Keys: [tt0000036, tt0000037]
+                          Values: [Rid(pageId=0, slotId=34), Rid(pageId=0, slotId=35)]
+                          Next: 28
+                    Child 3 (Page 28):
+                        Leaf Node (Page 28):
+                          Keys: [tt0000038, tt0000039, tt0000040]
+                          Values: [Rid(pageId=0, slotId=36), Rid(pageId=0, slotId=37), Rid(pageId=0, slotId=38)]
+                          Next: -1
+**********************************
+Searching for key: tt0000041
+Binary search result key: tt0000041ind1
+Descending to child page: 21
+Binary search result key: tt0000041ind2
+Descending to child page: 26
+Binary search result key: tt0000041ind3
+Descending to child page: 28
+Reached leaf node with keys: [tt0000038, tt0000039, tt0000040]
+Starting scan at position: 3
+Inserted key: tt0000041
+**********************************
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026, tt0000032, tt0000038]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+            Child 2 (Page 26):
+                Internal Node (Page 26):
+                  Keys: [tt0000034, tt0000036]
+                  Children: 
+                    Child 0 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31)]
+                          Next: 25
+                    Child 1 (Page 25):
+                        Leaf Node (Page 25):
+                          Keys: [tt0000034, tt0000035]
+                          Values: [Rid(pageId=0, slotId=32), Rid(pageId=0, slotId=33)]
+                          Next: 27
+                    Child 2 (Page 27):
+                        Leaf Node (Page 27):
+                          Keys: [tt0000036, tt0000037]
+                          Values: [Rid(pageId=0, slotId=34), Rid(pageId=0, slotId=35)]
+                          Next: 28
+            Child 3 (Page 30):
+                Internal Node (Page 30):
+                  Keys: [tt0000040]
+                  Children: 
+                    Child 0 (Page 28):
+                        Leaf Node (Page 28):
+                          Keys: [tt0000038, tt0000039]
+                          Values: [Rid(pageId=0, slotId=36), Rid(pageId=0, slotId=37)]
+                          Next: 29
+                    Child 1 (Page 29):
+                        Leaf Node (Page 29):
+                          Keys: [tt0000040, tt0000041]
+                          Values: [Rid(pageId=0, slotId=38), Rid(pageId=0, slotId=39)]
+                          Next: -1
+**********************************
+printing whole tree again
+Internal Node (Page 22):
+  Keys: [tt0000019]
+  Children: 
+    Child 0 (Page 8):
+        Internal Node (Page 8):
+          Keys: [tt0000007, tt0000013]
+          Children: 
+            Child 0 (Page 3):
+                Internal Node (Page 3):
+                  Keys: [tt0000003, tt0000005]
+                  Children: 
+                    Child 0 (Page 1):
+                        Leaf Node (Page 1):
+                          Keys: [tt0000001, tt0000002]
+                          Values: [Rid(pageId=0, slotId=0), Rid(pageId=0, slotId=1)]
+                          Next: 2
+                    Child 1 (Page 2):
+                        Leaf Node (Page 2):
+                          Keys: [tt0000003, tt0000004]
+                          Values: [Rid(pageId=0, slotId=2), Rid(pageId=0, slotId=3)]
+                          Next: 4
+                    Child 2 (Page 4):
+                        Leaf Node (Page 4):
+                          Keys: [tt0000005, tt0000006]
+                          Values: [Rid(pageId=0, slotId=4), Rid(pageId=0, slotId=5)]
+                          Next: 5
+            Child 1 (Page 7):
+                Internal Node (Page 7):
+                  Keys: [tt0000009, tt0000011]
+                  Children: 
+                    Child 0 (Page 5):
+                        Leaf Node (Page 5):
+                          Keys: [tt0000007, tt0000008]
+                          Values: [Rid(pageId=0, slotId=6), Rid(pageId=0, slotId=7)]
+                          Next: 6
+                    Child 1 (Page 6):
+                        Leaf Node (Page 6):
+                          Keys: [tt0000009, tt0000010]
+                          Values: [Rid(pageId=0, slotId=8), Rid(pageId=0, slotId=9)]
+                          Next: 9
+                    Child 2 (Page 9):
+                        Leaf Node (Page 9):
+                          Keys: [tt0000011, tt0000012]
+                          Values: [Rid(pageId=0, slotId=10), Rid(pageId=0, slotId=11)]
+                          Next: 10
+            Child 2 (Page 12):
+                Internal Node (Page 12):
+                  Keys: [tt0000015, tt0000017]
+                  Children: 
+                    Child 0 (Page 10):
+                        Leaf Node (Page 10):
+                          Keys: [tt0000013, tt0000014]
+                          Values: [Rid(pageId=0, slotId=12), Rid(pageId=0, slotId=13)]
+                          Next: 11
+                    Child 1 (Page 11):
+                        Leaf Node (Page 11):
+                          Keys: [tt0000015, tt0000016]
+                          Values: [Rid(pageId=0, slotId=14), Rid(pageId=0, slotId=15)]
+                          Next: 13
+                    Child 2 (Page 13):
+                        Leaf Node (Page 13):
+                          Keys: [tt0000017, tt0000018]
+                          Values: [Rid(pageId=0, slotId=16), Rid(pageId=0, slotId=17)]
+                          Next: 14
+    Child 1 (Page 21):
+        Internal Node (Page 21):
+          Keys: [tt0000026, tt0000032, tt0000038]
+          Children: 
+            Child 0 (Page 16):
+                Internal Node (Page 16):
+                  Keys: [tt0000022, tt0000024]
+                  Children: 
+                    Child 0 (Page 14):
+                        Leaf Node (Page 14):
+                          Keys: [tt0000019, tt0000020]
+                          Values: [Rid(pageId=0, slotId=18), Rid(pageId=0, slotId=19)]
+                          Next: 15
+                    Child 1 (Page 15):
+                        Leaf Node (Page 15):
+                          Keys: [tt0000022, tt0000023]
+                          Values: [Rid(pageId=0, slotId=20), Rid(pageId=0, slotId=21)]
+                          Next: 17
+                    Child 2 (Page 17):
+                        Leaf Node (Page 17):
+                          Keys: [tt0000024, tt0000025]
+                          Values: [Rid(pageId=0, slotId=22), Rid(pageId=0, slotId=23)]
+                          Next: 18
+            Child 1 (Page 20):
+                Internal Node (Page 20):
+                  Keys: [tt0000028, tt0000030]
+                  Children: 
+                    Child 0 (Page 18):
+                        Leaf Node (Page 18):
+                          Keys: [tt0000026, tt0000027]
+                          Values: [Rid(pageId=0, slotId=24), Rid(pageId=0, slotId=25)]
+                          Next: 19
+                    Child 1 (Page 19):
+                        Leaf Node (Page 19):
+                          Keys: [tt0000028, tt0000029]
+                          Values: [Rid(pageId=0, slotId=26), Rid(pageId=0, slotId=27)]
+                          Next: 23
+                    Child 2 (Page 23):
+                        Leaf Node (Page 23):
+                          Keys: [tt0000030, tt0000031]
+                          Values: [Rid(pageId=0, slotId=28), Rid(pageId=0, slotId=29)]
+                          Next: 24
+            Child 2 (Page 26):
+                Internal Node (Page 26):
+                  Keys: [tt0000034, tt0000036]
+                  Children: 
+                    Child 0 (Page 24):
+                        Leaf Node (Page 24):
+                          Keys: [tt0000032, tt0000033]
+                          Values: [Rid(pageId=0, slotId=30), Rid(pageId=0, slotId=31)]
+                          Next: 25
+                    Child 1 (Page 25):
+                        Leaf Node (Page 25):
+                          Keys: [tt0000034, tt0000035]
+                          Values: [Rid(pageId=0, slotId=32), Rid(pageId=0, slotId=33)]
+                          Next: 27
+                    Child 2 (Page 27):
+                        Leaf Node (Page 27):
+                          Keys: [tt0000036, tt0000037]
+                          Values: [Rid(pageId=0, slotId=34), Rid(pageId=0, slotId=35)]
+                          Next: 28
+            Child 3 (Page 30):
+                Internal Node (Page 30):
+                  Keys: [tt0000040]
+                  Children: 
+                    Child 0 (Page 28):
+                        Leaf Node (Page 28):
+                          Keys: [tt0000038, tt0000039]
+                          Values: [Rid(pageId=0, slotId=36), Rid(pageId=0, slotId=37)]
+                          Next: 29
+                    Child 1 (Page 29):
+                        Leaf Node (Page 29):
+                          Keys: [tt0000040, tt0000041]
+                          Values: [Rid(pageId=0, slotId=38), Rid(pageId=0, slotId=39)]
+                          Next: -1
+--------------------------
+Test 1 single key search 
+--------------------------
+Searching for key: tt0000010
+Binary search result key: tt0000010ind0
+Descending to child page: 8
+Binary search result key: tt0000010ind1
+Descending to child page: 7
+Binary search result key: tt0000010ind1
+Descending to child page: 6
+Reached leaf node with keys: [tt0000009, tt0000010]
+Starting scan at position: 1
+Found matching Rid: Rid(pageId=0, slotId=9)
+ single key search java.util.ArrayList$Itr@27716f4
+Found Rid -> PageID: 0, SlotID: 9
+Found record for tt0000010:
+Movie ID: tt0000010
+Title: Leaving the Factory           
+--------------------------
+Test 2 single key search 
+--------------------------
+Searching for key: tt0000038
+Binary search result key: tt0000038ind1
+Descending to child page: 21
+Binary search result key: tt0000038ind2
+Descending to child page: 26
+Binary search result key: tt0000038ind2
+Descending to child page: 27
+Reached leaf node with keys: [tt0000036, tt0000037]
+Starting scan at position: 2
+Found matching Rid in next leaf: Rid(pageId=0, slotId=36)
+ single key search java.util.ArrayList$Itr@4a574795
+Found Rid -> PageID: 0, SlotID: 36
+Found record for tt0000038:
+Movie ID: tt0000038
+Title: The Ball Game                 
+-----testing range search-----
+KEY 1: tt0000010
+KEY 2: tt0000038
+Starting range search: [tt0000010, tt0000038]
+Binary search result: 0
+Descending to child page: 8
+Binary search result: 1
+Descending to child page: 7
+Binary search result: 1
+Descending to child page: 6
+Reached initial leaf node: [tt0000009, tt0000010]
+Starting position in leaf: 1
+Scanning leaf node: [tt0000009, tt0000010]
+Checking key: tt0000010
+Found Rid in range: Rid(pageId=0, slotId=9)
+Moving to next leaf node: 9
+Scanning leaf node: [tt0000011, tt0000012]
+Checking key: tt0000011
+Found Rid in range: Rid(pageId=0, slotId=10)
+Checking key: tt0000012
+Found Rid in range: Rid(pageId=0, slotId=11)
+Moving to next leaf node: 10
+Scanning leaf node: [tt0000013, tt0000014]
+Checking key: tt0000013
+Found Rid in range: Rid(pageId=0, slotId=12)
+Checking key: tt0000014
+Found Rid in range: Rid(pageId=0, slotId=13)
+Moving to next leaf node: 11
+Scanning leaf node: [tt0000015, tt0000016]
+Checking key: tt0000015
+Found Rid in range: Rid(pageId=0, slotId=14)
+Checking key: tt0000016
+Found Rid in range: Rid(pageId=0, slotId=15)
+Moving to next leaf node: 13
+Scanning leaf node: [tt0000017, tt0000018]
+Checking key: tt0000017
+Found Rid in range: Rid(pageId=0, slotId=16)
+Checking key: tt0000018
+Found Rid in range: Rid(pageId=0, slotId=17)
+Moving to next leaf node: 14
+Scanning leaf node: [tt0000019, tt0000020]
+Checking key: tt0000019
+Found Rid in range: Rid(pageId=0, slotId=18)
+Checking key: tt0000020
+Found Rid in range: Rid(pageId=0, slotId=19)
+Moving to next leaf node: 15
+Scanning leaf node: [tt0000022, tt0000023]
+Checking key: tt0000022
+Found Rid in range: Rid(pageId=0, slotId=20)
+Checking key: tt0000023
+Found Rid in range: Rid(pageId=0, slotId=21)
+Moving to next leaf node: 17
+Scanning leaf node: [tt0000024, tt0000025]
+Checking key: tt0000024
+Found Rid in range: Rid(pageId=0, slotId=22)
+Checking key: tt0000025
+Found Rid in range: Rid(pageId=0, slotId=23)
+Moving to next leaf node: 18
+Scanning leaf node: [tt0000026, tt0000027]
+Checking key: tt0000026
+Found Rid in range: Rid(pageId=0, slotId=24)
+Checking key: tt0000027
+Found Rid in range: Rid(pageId=0, slotId=25)
+Moving to next leaf node: 19
+Scanning leaf node: [tt0000028, tt0000029]
+Checking key: tt0000028
+Found Rid in range: Rid(pageId=0, slotId=26)
+Checking key: tt0000029
+Found Rid in range: Rid(pageId=0, slotId=27)
+Moving to next leaf node: 23
+Scanning leaf node: [tt0000030, tt0000031]
+Checking key: tt0000030
+Found Rid in range: Rid(pageId=0, slotId=28)
+Checking key: tt0000031
+Found Rid in range: Rid(pageId=0, slotId=29)
+Moving to next leaf node: 24
+Scanning leaf node: [tt0000032, tt0000033]
+Checking key: tt0000032
+Found Rid in range: Rid(pageId=0, slotId=30)
+Checking key: tt0000033
+Found Rid in range: Rid(pageId=0, slotId=31)
+Moving to next leaf node: 25
+Scanning leaf node: [tt0000034, tt0000035]
+Checking key: tt0000034
+Found Rid in range: Rid(pageId=0, slotId=32)
+Checking key: tt0000035
+Found Rid in range: Rid(pageId=0, slotId=33)
+Moving to next leaf node: 27
+Scanning leaf node: [tt0000036, tt0000037]
+Checking key: tt0000036
+Found Rid in range: Rid(pageId=0, slotId=34)
+Checking key: tt0000037
+Found Rid in range: Rid(pageId=0, slotId=35)
+Moving to next leaf node: 28
+Scanning leaf node: [tt0000038, tt0000039]
+Checking key: tt0000038
+Found Rid in range: Rid(pageId=0, slotId=36)
+Checking key: tt0000039
+End key reached, finishing range search.
+ range key search java.util.ArrayList$Itr@f6f4d33
+Found Rid in range -> PageID: 0, SlotID: 9
+Found Rid in range -> PageID: 0, SlotID: 10
+Found Rid in range -> PageID: 0, SlotID: 11
+Found Rid in range -> PageID: 0, SlotID: 12
+Found Rid in range -> PageID: 0, SlotID: 13
+Found Rid in range -> PageID: 0, SlotID: 14
+Found Rid in range -> PageID: 0, SlotID: 15
+Found Rid in range -> PageID: 0, SlotID: 16
+Found Rid in range -> PageID: 0, SlotID: 17
+Found Rid in range -> PageID: 0, SlotID: 18
+Found Rid in range -> PageID: 0, SlotID: 19
+Found Rid in range -> PageID: 0, SlotID: 20
+Found Rid in range -> PageID: 0, SlotID: 21
+Found Rid in range -> PageID: 0, SlotID: 22
+Found Rid in range -> PageID: 0, SlotID: 23
+Found Rid in range -> PageID: 0, SlotID: 24
+Found Rid in range -> PageID: 0, SlotID: 25
+Found Rid in range -> PageID: 0, SlotID: 26
+Found Rid in range -> PageID: 0, SlotID: 27
+Found Rid in range -> PageID: 0, SlotID: 28
+Found Rid in range -> PageID: 0, SlotID: 29
+Found Rid in range -> PageID: 0, SlotID: 30
+Found Rid in range -> PageID: 0, SlotID: 31
+Found Rid in range -> PageID: 0, SlotID: 32
+Found Rid in range -> PageID: 0, SlotID: 33
+Found Rid in range -> PageID: 0, SlotID: 34
+Found Rid in range -> PageID: 0, SlotID: 35
+Found Rid in range -> PageID: 0, SlotID: 36
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000010
+Title: Leaving the Factory           
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000011
+Title: Akrobatisches Potpourri       
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000012
+Title: The Arrival of a Train        
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000013
+Title: The Photographical Congress Ar
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000014
+Title: The Waterer Watered           
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000015
+Title: Around a Cabin                
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000016
+Title: Boat Leaving the Port         
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000017
+Title: Italienischer Bauerntanz      
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000018
+Title: Das boxende Känguruh         
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000019
+Title: The Clown Barber              
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000020
+Title: The Derby 1895                
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000022
+Title: Blacksmith Scene              
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000023
+Title: The Sea                       
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000024
+Title: Opening of the Kiel Canal     
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000025
+Title: The Oxford and Cambridge Unive
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000026
+Title: The Messers. Lumière at Cards
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000027
+Title: Cordeliers' Square in Lyon    
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000028
+Title: Fishing for Goldfish          
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000029
+Title: Baby's Meal                   
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000030
+Title: Rough Sea at Dover            
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000031
+Title: Jumping the Blanket           
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000032
+Title: Die Serpentintänzerin        
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000033
+Title: Horse Trick Riders            
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000034
+Title: Arrivée d'un train gare de Vi
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000035
+Title: Watering the Flowers          
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000036
+Title: Awakening of Rip              
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000037
+Title: Sea Bathing                   
+Found record in range tt0000010 to tt0000038:
+Movie ID: tt0000038
+Title: The Ball Game                 
+--------------------------
+Test 3 single key search 
+--------------------------
+Searching for key: tt0000020
+Binary search result key: tt0000020ind1
+Descending to child page: 21
+Binary search result key: tt0000020ind0
+Descending to child page: 16
+Binary search result key: tt0000020ind0
+Descending to child page: 14
+Reached leaf node with keys: [tt0000019, tt0000020]
+Starting scan at position: 1
+Found matching Rid: Rid(pageId=0, slotId=19)
+ single key search java.util.ArrayList$Itr@23fc625e
+Found Rid -> PageID: 0, SlotID: 19
+Found record for tt0000020:
+Movie ID: tt0000020
+Title: The Derby 1895                
+-----testing range search 3-----
+KEY 1: tt0000020
+KEY 2: tt0000010
+Starting range search: [tt0000010, tt0000020]
+Binary search result: 0
+Descending to child page: 8
+Binary search result: 1
+Descending to child page: 7
+Binary search result: 1
+Descending to child page: 6
+Reached initial leaf node: [tt0000009, tt0000010]
+Starting position in leaf: 1
+Scanning leaf node: [tt0000009, tt0000010]
+Checking key: tt0000010
+Found Rid in range: Rid(pageId=0, slotId=9)
+Moving to next leaf node: 9
+Scanning leaf node: [tt0000011, tt0000012]
+Checking key: tt0000011
+Found Rid in range: Rid(pageId=0, slotId=10)
+Checking key: tt0000012
+Found Rid in range: Rid(pageId=0, slotId=11)
+Moving to next leaf node: 10
+Scanning leaf node: [tt0000013, tt0000014]
+Checking key: tt0000013
+Found Rid in range: Rid(pageId=0, slotId=12)
+Checking key: tt0000014
+Found Rid in range: Rid(pageId=0, slotId=13)
+Moving to next leaf node: 11
+Scanning leaf node: [tt0000015, tt0000016]
+Checking key: tt0000015
+Found Rid in range: Rid(pageId=0, slotId=14)
+Checking key: tt0000016
+Found Rid in range: Rid(pageId=0, slotId=15)
+Moving to next leaf node: 13
+Scanning leaf node: [tt0000017, tt0000018]
+Checking key: tt0000017
+Found Rid in range: Rid(pageId=0, slotId=16)
+Checking key: tt0000018
+Found Rid in range: Rid(pageId=0, slotId=17)
+Moving to next leaf node: 14
+Scanning leaf node: [tt0000019, tt0000020]
+Checking key: tt0000019
+Found Rid in range: Rid(pageId=0, slotId=18)
+Checking key: tt0000020
+Found Rid in range: Rid(pageId=0, slotId=19)
+Moving to next leaf node: 15
+Scanning leaf node: [tt0000022, tt0000023]
+Checking key: tt0000022
+End key reached, finishing range search.
+ range key search java.util.ArrayList$Itr@3f99bd52
+Found Rid in range -> PageID: 0, SlotID: 19
+Found Rid in range -> PageID: 0, SlotID: 18
+Found Rid in range -> PageID: 0, SlotID: 17
+Found Rid in range -> PageID: 0, SlotID: 16
+Found Rid in range -> PageID: 0, SlotID: 15
+Found Rid in range -> PageID: 0, SlotID: 14
+Found Rid in range -> PageID: 0, SlotID: 13
+Found Rid in range -> PageID: 0, SlotID: 12
+Found Rid in range -> PageID: 0, SlotID: 11
+Found Rid in range -> PageID: 0, SlotID: 10
+Found Rid in range -> PageID: 0, SlotID: 9
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000020
+Title: The Derby 1895                
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000019
+Title: The Clown Barber              
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000018
+Title: Das boxende Känguruh         
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000017
+Title: Italienischer Bauerntanz      
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000016
+Title: Boat Leaving the Port         
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000015
+Title: Around a Cabin                
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000014
+Title: The Waterer Watered           
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000013
+Title: The Photographical Congress Ar
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000012
+Title: The Arrival of a Train        
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000011
+Title: Akrobatisches Potpourri       
+Found record in range tt0000020 to tt0000010:
+Movie ID: tt0000010
+Title: Leaving the Factory           
+
+BUILD SUCCESSFUL in 486ms
+2 actionable tasks: 1 executed, 1 up-to-date
+Configuration cache entry reused.
