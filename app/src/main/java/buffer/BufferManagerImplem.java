@@ -27,7 +27,7 @@ public class BufferManagerImplem extends BufferManager {
     LinkedList<AbstractMap.SimpleEntry<String, Integer>> lruCache;
 
     // Page metadata
-    HashMap<String, HashMap<Integer, PageMetaData>> pageInfo;
+    public HashMap<String, HashMap<Integer, PageMetaData>> pageInfo;
 
     // Shared catalog instance
     private final systemCatalog catalog;
@@ -128,7 +128,7 @@ public class BufferManagerImplem extends BufferManager {
     }
 
     // LRU page eviction if possible
-    int evictPage() {
+    public int evictPage() {
         if (lruCache.isEmpty()) {
             System.out.println("Error: No pages available for eviction.");
             return -1; // No pages to evict
@@ -377,6 +377,17 @@ public class BufferManagerImplem extends BufferManager {
         return this.catalog.isIndexFile(FILE_NAME) && (buffer[is_Leaf_Offset] == 1);
     }
 
-
+    public int existsInCache(String FILE_NAME, int pageId) {
+        // Iterate through the LRU cache to find the index of the page
+        for (int i = 0; i < lruCache.size(); i++) {
+            AbstractMap.SimpleEntry<String, Integer> entry = lruCache.get(i);
+            // Check if the file name and page ID match the given arguments
+            if (entry.getKey().equals(FILE_NAME) && entry.getValue() == pageId) {
+                return i; // Return the index of the page in the cache
+            }
+        }
+        return -1; // Return -1 if the page is not found in the cache
+    }
+    
 
 }

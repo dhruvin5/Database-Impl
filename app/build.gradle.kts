@@ -52,10 +52,11 @@ application {
 //    commandLine = listOf("./test_script.sh")
 //}
 
-//tasks.named<Test>("test") {
-//    // dependsOn("runQueryTestScript")  // Ensure the script runs before unit tests
-//    // Use JUnit Platform for unit tests.
-//    useJUnitPlatform()
+tasks.named<Test>("test") {
+   // dependsOn("runQueryTestScript")  // Ensure the script runs before unit tests
+   // Use JUnit Platform for unit tests.
+   useJUnitPlatform()
+}
 //
 //    // Enable logging for standard output and error streams.
 //    testLogging {
