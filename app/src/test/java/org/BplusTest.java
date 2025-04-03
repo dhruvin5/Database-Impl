@@ -40,15 +40,10 @@ class BplusTest {
     @Test
     void testInsertAndSearchTitle() {
         try{
-            // Sample movie data
-            String movieTitle = "tt0000001";
-            //String movieTitle = "Inceptionnnnnnnnnnnnnnnnnnn";
-            Rid movieRid = new Rid(0, 0);
+            String movieTitle = "Inception";
+            Rid movieRid = new Rid(1, 0);
             titleIndex.insert(movieTitle, movieRid);
-
-            Iterator<Rid> result = movieIdIndex.search(movieTitle);
-
-            // assertEquals(0,0);
+            Iterator<Rid> result = titleIndex.search(movieTitle);
             assertEquals(movieRid, result.next(), "The Rid should match the inserted one.");
             //assertEquals(movieRid, result.next(), "The Rid should match the inserted one.");
         } catch (Exception e){
