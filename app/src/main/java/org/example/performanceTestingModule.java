@@ -85,8 +85,14 @@ public class performanceTestingModule {
 
         for (int i = 0; i < 2500; i++) {
             // Generate random range for title
-            String rangeStartStr = generateRandomString();
-            String rangeEndStr = generateRandomString();
+            String rangeStartStr = generateRandomString("");
+            String firstLetter = rangeStartStr.substring(0, 1);
+
+            // 50% chance for the first letter to be the next letter if it is not Z or Y
+            if (firstLetter.toLowerCase() != "z" && random.nextBoolean()) {
+                firstLetter = (char) (firstLetter.charAt(0) + random.nextInt(2)) + "";
+            }
+            String rangeEndStr = generateRandomString(firstLetter);
             if (rangeEndStr.compareTo(rangeStartStr) <= 0) {
                 rangeEndStr = rangeStartStr + "Z"; // Ensure rangeEndStr is greater
             }
@@ -94,18 +100,22 @@ public class performanceTestingModule {
             System.out.println("Query: " + i + " Range: " + rangeStartStr + " to " + rangeEndStr);
 
             // Method 1: Direct scan
+            System.out.println("Direct Scan");
             bufferManager.clearCache();
             long startTimeMethod1 = System.nanoTime();
             int numRowsMethod1 = directScan(bufferManager, rangeStartStr, rangeEndStr, true);
             long endTimeMethod1 = System.nanoTime();
             long timeMethod1 = endTimeMethod1 - startTimeMethod1;
+            System.out.println("Direct Scan Time: " + timeMethod1 / 1000000.0 + " Found " + numRowsMethod1 + " rows");
 
             // Method 2: Using B+ Tree index
+            System.out.println("B+ Tree Scan");
             bufferManager.clearCache();
             long startTimeMethod2 = System.nanoTime();
             int numRowsMethod2 = bPlusTreeScan(titleIndex, rangeStartStr, rangeEndStr);
             long endTimeMethod2 = System.nanoTime();
             long timeMethod2 = endTimeMethod2 - startTimeMethod2;
+            System.out.println("B+ Tree Scan Time: " + timeMethod2 / 1000000.0);
 
             if (numRowsMethod1 != numRowsMethod2) {
                 System.out.println("ERROR: Mismatch in row counts: " + numRowsMethod1 + " vs " + numRowsMethod2);
@@ -114,6 +124,18 @@ public class performanceTestingModule {
             // Collect data
             linearScanResult.add(numRowsMethod1 + " " + timeMethod1 / 1000000.0);
             bPlusTreeResult.add(numRowsMethod2 + " " + timeMethod2 / 1000000.0);
+
+            if (i % 100 == 0) {
+                linearScanResult.sort((a, b) -> Integer.compare(
+                        Integer.parseInt(a.substring(0, a.indexOf(' '))),
+                        Integer.parseInt(b.substring(0, b.indexOf(' ')))));
+                bPlusTreeResult.sort((a, b) -> Integer.compare(
+                        Integer.parseInt(a.substring(0, a.indexOf(' '))),
+                        Integer.parseInt(b.substring(0, b.indexOf(' ')))));
+
+                writeResultsToFile("title_linearScanResults.txt", linearScanResult);
+                writeResultsToFile("title_bPlusTreeResults.txt", bPlusTreeResult);
+            }
         }
 
         linearScanResult.sort((a, b) -> Integer.compare(
@@ -155,6 +177,7 @@ public class performanceTestingModule {
                 rowId++;
             }
             manager.unpinPage(currentPageId, "movies.bin");
+            // System.out.println("Page ID: " + currentPageId);
             currentPageId++;
         }
 
@@ -188,11 +211,11 @@ public class performanceTestingModule {
         }
     }
 
-    private String generateRandomString() {
+    private String generateRandomString(String prefix) {
         Random random = new Random();
         int length = 5 + random.nextInt(6);
         StringBuilder sb = new StringBuilder();
-
+        sb.append(prefix);
         for (int i = 0; i < length; i++) {
             char c = (char) ('A' + random.nextInt(26));
             sb.append(c);

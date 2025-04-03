@@ -209,10 +209,10 @@ public class BufferManagerImplem extends BufferManager {
             return page;
         } else { // load page from disk
                  // Check if the page exists on disk
-            if (!isPageOnDisk(pageId, FILE_NAME)) {
-                System.out.println("Error: Page " + pageId + " does not exist on disk.");
-                return null;
-            }
+            // if (!isPageOnDisk(pageId, FILE_NAME)) {
+            // System.out.println("Error: Page " + pageId + " does not exist on disk.");
+            // return null;
+            // }
 
             // get page from disk
             Page page = getPageFromDisk(pageId, FILE_NAME);
