@@ -1,188 +1,234 @@
 package org;
 
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import Page.Page;
+import Page.PageImpl;
+import Row.movieRow;
+import configs.Config;
+
+import java.nio.ByteBuffer;
+
 class PageTest {
-    /*
-    //Test if insert row works when adding null row and valid rows
+
+    /**
+     * Tests insertion behavior with null rows and valid rows (movieId=9 bytes, title=30 bytes).
+     */
     @Test
     void testInsertRow_1() {
-        //creates a page
-        PageImpl page = new PageImpl(1);
-        
-        byte[] movieId = new byte[9];
-        byte[] title = new byte[30];
-        
-        movieId[0] = (byte) 1;
+        // Create a new PageImpl with offsets for movieId=9, title=30.
+        PageImpl page = new PageImpl(1, 9, 30);
+
+        // Prepare valid data
+        byte[] validMovieId = new byte[9];
+        byte[] validTitle   = new byte[30];
+        validMovieId[0] = (byte) 1;
         for (int i = 0; i < 6; i++) {
-            title[i] = (byte) "movie1".charAt(i);
+            validTitle[i] = (byte) "movie1".charAt(i);
         }
 
-        //Test if page can add null row
-        assertEquals(page.insertRow(null), -1, "Page cannot add null row"); 
-        //Test if page can add row with null movieId and title
-        assertEquals(page.insertRow(new Row(null, null)), -1, "Page cannot add null row");
-        //Test if page can add row with null movieId
-        assertEquals(page.insertRow(new Row(movieId, null)), -1, "Page cannot add null movieId");
-        //Test if page can add row with null title
-        assertEquals(page.insertRow(new Row(null, title)), -1, "Page cannot add null title");
-        //Test if page can add row with valid movieId and title
-        assertEquals(page.insertRow(new Row(movieId, title)), 0, "Page can add row");
+        // 1) Insert a null row => should fail
+        assertEquals(-1, page.insertRow(null),
+            "Inserting null Row object should return -1");
 
+        // 2) Insert row with null movieId and title => fails
+        assertEquals(-1, page.insertRow(new movieRow(null, null)),
+            "Row with both fields null should return -1");
+
+        // 3) Insert row with valid movieId but null title => fails
+        assertEquals(-1, page.insertRow(new movieRow(validMovieId, null)),
+            "Row with null title should return -1");
+
+        // 4) Insert row with null movieId but valid title => fails
+        assertEquals(-1, page.insertRow(new movieRow(null, validTitle)),
+            "Row with null movieId should return -1");
+
+        // 5) Insert a fully valid row => succeeds
+        int firstRowId = page.insertRow(new movieRow(validMovieId, validTitle));
+        assertEquals(0, firstRowId,
+            "The first valid row should be inserted at index 0");
     }
 
-
-    // Test if insertingRows works when adding more than one row into the page
+    /**
+     * Tests inserting multiple rows until the page is full (with 9+30=39 bytes per row).
+     */
     @Test
     void testInsertRow_2() {
-        //creates a page
-        PageImpl page = new PageImpl(1);
+        // Construct the page with (movieId=9, title=30).
+        PageImpl page = new PageImpl(1, 9, 30);
 
-        //Repeatedly adds rows to the page
-        for(int i = 0; i < 104; i++) {
-            byte[] movieId = new byte[9];
-            movieId[0] = (byte) i;
+        // According to your constructor, MAX_ROW_COUNT = (PAGE_SIZE - 4)/39
+        int expectedMax = (Config.PAGE_SIZE - 4) / (9 + 30);
+
+        for (int i = 0; i < expectedMax; i++) {
+            byte[] id = new byte[9];
+            id[0] = (byte) i;
             byte[] title = new byte[30];
-            Row row = new Row(movieId, title);
-            int rowId = page.insertRow(row);
-            assertEquals(i, rowId, "Row ID is't correct");
+            int rowId = page.insertRow(new movieRow(id, title));
+            assertEquals(i, rowId, "Inserted row ID should match " + i);
         }
-        //The page is full and should not able to add another row
-        byte[] movieId = new byte[9];
-        movieId[0] = 104;
-        byte[] title = new byte[30];
-        int rowId = page.insertRow(new Row(movieId, title));
-        assertEquals(-1, rowId, "Page cannot add another row");
+
+        // Page should now be full
+        assertTrue(page.isFull(),
+            "Page should be full after inserting " + expectedMax + " rows");
+
+        // Attempt one more
+        int failRow = page.insertRow(new movieRow(new byte[9], new byte[30]));
+        assertEquals(-1, failRow,
+            "Inserting past capacity should return -1");
     }
 
-    // Test if GetRow works by getting a row that is and not in the page, verifying if the data stored is corrected
+    /**
+     * Tests retrieving rows (valid and invalid indices).
+     */
     @Test
     void testGetRow() {
-        //creates a page
-        PageImpl page = new PageImpl(1);
-        //Test if page can get row that is not in the page
-        assertNull(page.getRow(0), "Row should be null");
-        assertNull(page.getRow(-1), "Row should be null");
+        PageImpl page = new PageImpl(1, 9, 30);
 
-        //Test if page can get row that is in the page
-        byte[] movieId = new byte[9];
+        // No rows => out-of-range => null
+        assertNull(page.getRow(0), "Empty page => getRow(0) returns null");
+        assertNull(page.getRow(-1), "Negative index => null");
+        assertNull(page.getRow(999), "Out of range => null");
+
+        // Insert a row
+        byte[] id = new byte[9];
+        id[0] = 42;
         byte[] title = new byte[30];
-
-        movieId[0] = (byte) 1;
-        for (int i = 0; i < 6; i++) {
-            title[i] = (byte) "movie1".charAt(i);
+        for (int i = 0; i < 5; i++) {
+            title[i] = (byte) "abcde".charAt(i);
         }
-        
-        // adds row to the page
-        Row row = new Row(movieId, title);
-        page.insertRow(row);
+        int rowId = page.insertRow(new movieRow(id, title));
+        assertEquals(0, rowId, "First inserted row => index 0");
 
-        // retrieves the row
-        Row retrievedRow = page.getRow(0);
-        assertNotNull(retrievedRow);
+        // Retrieve row 0 => should match
+        var row0 = page.getRow(0);
+        assertNotNull(row0, "Row 0 should exist after insertion");
+        assertArrayEquals(id, row0.movieId, "MovieId should match");
+        assertArrayEquals(title, row0.title, "Title should match");
 
-        // verifies the data stored in the row is correct
-        assertArrayEquals(movieId, retrievedRow.movieId);
-        assertArrayEquals(title, retrievedRow.title);
+        // Attempt row 1 => doesn't exist => null
+        assertNull(page.getRow(1), "We only inserted 1 row => getRow(1) is null");
     }
 
-    // Checks if IsFull works by checking the status of the page as we add more rows
+    /**
+     * Tests progressively inserting rows until the page is reported full.
+     */
     @Test
     void testIsFull() {
-        PageImpl page = new PageImpl(1);
-        // Adds new rows to the page
-        for (int i = 0; i < 104; i++) {
-            assertFalse(page.isFull(), "Page should not be full");
-            byte[] movieId = new byte[9];
-            byte[] title = new byte[30];
-            Row row = new Row(movieId, title);
-            page.insertRow(row);
+        PageImpl page = new PageImpl(2, 9, 30);
+        int maxRows = (Config.PAGE_SIZE - 4) / (9 + 30);
+
+        for (int i = 0; i < maxRows; i++) {
+            assertFalse(page.isFull(), "Should not be full at iteration i=" + i);
+            page.insertRow(new movieRow(new byte[9], new byte[30]));
         }
-        
-        // The page is full and should not able to add another row
-        assertTrue(page.isFull(), "Page should be full");
-        assertEquals(-1, page.insertRow(new Row(new byte[9], new byte[30])), "Page cannot add another row");
+
+        assertTrue(page.isFull(), 
+            "Now it should be full after " + maxRows + " inserts");
+
+        // Insert one more => fail
+        assertEquals(-1, page.insertRow(new movieRow(new byte[9], new byte[30])),
+            "Extra insert beyond capacity => -1");
     }
 
-    // Checks if the page id can be retrieved
+    /**
+     * Checks that getPid() returns the pageId we gave to the constructor.
+     */
     @Test
     void testGetPid() {
-        // Creates a page and checks if the page id is correct
-        for(int i = 0; i < 25; i++) {
-            PageImpl page = new PageImpl(i);
-            assertNotNull(page, "Page object is not null");
-            assertEquals(i, page.getPid(), "Page ID should match - Retrieved: " + page.getPid() + " Expected: " + i);
+        // Try some sample page IDs
+        for (int i = 0; i < 5; i++) {
+            PageImpl page = new PageImpl(i, 9, 30);
+            assertEquals(i, page.getPid(),
+                "page.getPid() should match the constructor argument " + i);
         }
-        // Checks if the page id is correct when the page id is negative
-        PageImpl page = new PageImpl(-1);
-        assertNotNull(page, "Page object is not null");
-        assertEquals(-1, page.getPid(), "Page ID should match - Retrieved: " + page.getPid() + " Expected: " + -1);
 
+        // Negative ID
+        PageImpl negPage = new PageImpl(-99, 9, 30);
+        assertEquals(-99, negPage.getPid(), 
+            "Should handle negative IDs as well");
     }
 
-    // Test GetRows when the page is empty and when the page has no rows
+    /**
+     * If we haven't inserted anything, the raw bytes are all zero 
+     * (including the first 4 for rowCount).
+     */
     @Test
     void testGetRows_1() {
-        PageImpl page = new PageImpl(1);
-        byte[] rows = page.getRows();
-        assertNotNull(rows);
-        assertEquals(4096, rows.length);
+        PageImpl page = new PageImpl(5, 9, 30);
+        byte[] raw = page.getRows();
+        assertNotNull(raw, "getRows() must not return null");
+        assertEquals(Config.PAGE_SIZE, raw.length, 
+            "Should match the 4KB (or config-based) page size");
 
-        // Check if all bytes are zero
-        for (int i = 0; i < 4096; i++) {
-            assertEquals(0, rows[i]);
+        // The entire array, including [0..3] for rowCount=0, should be zero
+        for (byte b : raw) {
+            assertEquals(0, b, "No data inserted => all zeros in raw bytes");
         }
     }
 
-  
-    // Test GetRows when the page has data in the rows
+    /**
+     * Insert two rows, then verify rowCount and row data in raw byte array.
+     */
     @Test
     void testGetRows_2() {
-        PageImpl page = new PageImpl(1);
-        
+        PageImpl page = new PageImpl(10, 9, 30);
 
-        byte[] movieId1 = new byte[9];
+        // Insert row1
+        byte[] id1 = new byte[9];
+        id1[0] = 1;
         byte[] title1 = new byte[30];
-        movieId1[0] = 1;
         for (int i = 0; i < 6; i++) {
             title1[i] = (byte) "movie1".charAt(i);
         }
+        page.insertRow(new movieRow(id1, title1));
 
-        // adds row1 to the page
-        Row row1 = new Row(movieId1, title1);
-        page.insertRow(row1);
-
-        byte[] movieId2 = new byte[9];
+        // Insert row2
+        byte[] id2 = new byte[9];
+        id2[0] = 2;
         byte[] title2 = new byte[30];
-        movieId2[0] = 2;
         for (int i = 0; i < 6; i++) {
             title2[i] = (byte) "movie2".charAt(i);
         }
+        page.insertRow(new movieRow(id2, title2));
 
-        // adds row2 to the page
-        Row row2 = new Row(movieId2, title2);
-        page.insertRow(row2);
+        byte[] raw = page.getRows();
+        assertNotNull(raw, "Raw page data must not be null");
+        assertEquals(Config.PAGE_SIZE, raw.length, 
+            "Must be full page size");
 
-        // Check the row statistics are correct
-        byte[] rows = page.getRows();
-        assertNotNull(rows, "Rows should not be null");
-        assertEquals(4096, rows.length);
-        
-        
-        //Check if row1 moveId and title are correct in rows
+        // The first 4 bytes => integer rowCount
+        int storedCount = ByteBuffer.wrap(raw, 0, 4).getInt();
+        assertEquals(2, storedCount, "We inserted exactly 2 rows");
+
+        // row0 => offset=4 => 9 bytes of movieId + 30 bytes of title => 39 total
+        int rowSize = 9 + 30;
+        int row0Start = 4;
+
+        // Check row0 movieId
         for (int i = 0; i < 9; i++) {
-            assertEquals(movieId1[i], rows[i+4], "Movie ID for row 1 should match");
+            assertEquals(id1[i], raw[row0Start + i],
+                         "row0's movieId mismatch at i=" + i);
         }
+        // Check row0 title
         for (int i = 0; i < 30; i++) {
-            assertEquals(title1[i], rows[9 + i+4], "Title for row 1 should match");
+            assertEquals(title1[i], raw[row0Start + 9 + i],
+                         "row0's title mismatch at i=" + i);
         }
 
-        
-        //Check if row2 moveId and title are correct in rows
+        // row1 => offset=4+39=43
+        int row1Start = row0Start + rowSize;
+
+        // Check row1 movieId
         for (int i = 0; i < 9; i++) {
-            assertEquals(movieId2[i], rows[39 + i+4], "Movie ID for row 2 should match");
+            assertEquals(id2[i], raw[row1Start + i],
+                         "row1's movieId mismatch at i=" + i);
         }
+        // Check row1 title
         for (int i = 0; i < 30; i++) {
-            assertEquals(title2[i], rows[48 + i+4], "Title for row 2 should match");
+            assertEquals(title2[i], raw[row1Start + 9 + i],
+                         "row1's title mismatch at i=" + i);
         }
     }
-        */
 }
