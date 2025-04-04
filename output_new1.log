@@ -1,4 +1,4 @@
-Reusing configuration cache.
+Calculating task graph as configuration cache cannot be reused because file 'app/build.gradle.kts' has changed.
 > Task :app:processResources NO-SOURCE
 > Task :app:compileJava UP-TO-DATE
 > Task :app:classes UP-TO-DATE
@@ -10,7 +10,7 @@ PASS: Initialized Movie Index
 File deleted successfully.
 Searching for key: tt0000001
 Reached leaf node with keys: []
-Starting scan at position: 0
+Key not found in leaf.
 Inserted key: tt0000001
 **********************************
 Leaf Node (Page 1):
@@ -20,7 +20,7 @@ Leaf Node (Page 1):
 **********************************
 Searching for key: tt0000002
 Reached leaf node with keys: [tt0000001]
-Starting scan at position: 1
+Key not found in leaf.
 Inserted key: tt0000002
 **********************************
 Leaf Node (Page 1):
@@ -30,7 +30,7 @@ Leaf Node (Page 1):
 **********************************
 Searching for key: tt0000003
 Reached leaf node with keys: [tt0000001, tt0000002]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000003
 **********************************
 Leaf Node (Page 1):
@@ -40,7 +40,7 @@ Leaf Node (Page 1):
 **********************************
 Searching for key: tt0000004
 Reached leaf node with keys: [tt0000001, tt0000002, tt0000003]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000004
 **********************************
 Internal Node (Page 3):
@@ -58,10 +58,10 @@ Internal Node (Page 3):
           Next: -1
 **********************************
 Searching for key: tt0000005
-Binary search result key: tt0000005ind1
+Binary search result key: tt0000005 ind 1
 Descending to child page: 2
 Reached leaf node with keys: [tt0000003, tt0000004]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000005
 **********************************
 Internal Node (Page 3):
@@ -79,10 +79,10 @@ Internal Node (Page 3):
           Next: -1
 **********************************
 Searching for key: tt0000006
-Binary search result key: tt0000006ind1
+Binary search result key: tt0000006 ind 1
 Descending to child page: 2
 Reached leaf node with keys: [tt0000003, tt0000004, tt0000005]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000006
 **********************************
 Internal Node (Page 3):
@@ -105,10 +105,10 @@ Internal Node (Page 3):
           Next: -1
 **********************************
 Searching for key: tt0000007
-Binary search result key: tt0000007ind2
+Binary search result key: tt0000007 ind 2
 Descending to child page: 4
 Reached leaf node with keys: [tt0000005, tt0000006]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000007
 **********************************
 Internal Node (Page 3):
@@ -131,10 +131,10 @@ Internal Node (Page 3):
           Next: -1
 **********************************
 Searching for key: tt0000008
-Binary search result key: tt0000008ind2
+Binary search result key: tt0000008 ind 2
 Descending to child page: 4
 Reached leaf node with keys: [tt0000005, tt0000006, tt0000007]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000008
 **********************************
 Internal Node (Page 3):
@@ -162,10 +162,10 @@ Internal Node (Page 3):
           Next: -1
 **********************************
 Searching for key: tt0000009
-Binary search result key: tt0000009ind3
+Binary search result key: tt0000009 ind 3
 Descending to child page: 5
 Reached leaf node with keys: [tt0000007, tt0000008]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000009
 **********************************
 Internal Node (Page 3):
@@ -193,10 +193,10 @@ Internal Node (Page 3):
           Next: -1
 **********************************
 Searching for key: tt0000010
-Binary search result key: tt0000010ind3
+Binary search result key: tt0000010 ind 3
 Descending to child page: 5
 Reached leaf node with keys: [tt0000007, tt0000008, tt0000009]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000010
 **********************************
 Internal Node (Page 8):
@@ -237,12 +237,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000011
-Binary search result key: tt0000011ind1
+Binary search result key: tt0000011 ind 1
 Descending to child page: 7
-Binary search result key: tt0000011ind1
+Binary search result key: tt0000011 ind 1
 Descending to child page: 6
 Reached leaf node with keys: [tt0000009, tt0000010]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000011
 **********************************
 Internal Node (Page 8):
@@ -283,12 +283,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000012
-Binary search result key: tt0000012ind1
+Binary search result key: tt0000012 ind 1
 Descending to child page: 7
-Binary search result key: tt0000012ind1
+Binary search result key: tt0000012 ind 1
 Descending to child page: 6
 Reached leaf node with keys: [tt0000009, tt0000010, tt0000011]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000012
 **********************************
 Internal Node (Page 8):
@@ -334,12 +334,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000013
-Binary search result key: tt0000013ind1
+Binary search result key: tt0000013 ind 1
 Descending to child page: 7
-Binary search result key: tt0000013ind2
+Binary search result key: tt0000013 ind 2
 Descending to child page: 9
 Reached leaf node with keys: [tt0000011, tt0000012]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000013
 **********************************
 Internal Node (Page 8):
@@ -385,12 +385,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000014
-Binary search result key: tt0000014ind1
+Binary search result key: tt0000014 ind 1
 Descending to child page: 7
-Binary search result key: tt0000014ind2
+Binary search result key: tt0000014 ind 2
 Descending to child page: 9
 Reached leaf node with keys: [tt0000011, tt0000012, tt0000013]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000014
 **********************************
 Internal Node (Page 8):
@@ -441,12 +441,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000015
-Binary search result key: tt0000015ind1
+Binary search result key: tt0000015 ind 1
 Descending to child page: 7
-Binary search result key: tt0000015ind3
+Binary search result key: tt0000015 ind 3
 Descending to child page: 10
 Reached leaf node with keys: [tt0000013, tt0000014]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000015
 **********************************
 Internal Node (Page 8):
@@ -497,12 +497,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000016
-Binary search result key: tt0000016ind1
+Binary search result key: tt0000016 ind 1
 Descending to child page: 7
-Binary search result key: tt0000016ind3
+Binary search result key: tt0000016 ind 3
 Descending to child page: 10
 Reached leaf node with keys: [tt0000013, tt0000014, tt0000015]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000016
 **********************************
 Internal Node (Page 8):
@@ -562,12 +562,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000017
-Binary search result key: tt0000017ind2
+Binary search result key: tt0000017 ind 2
 Descending to child page: 12
-Binary search result key: tt0000017ind1
+Binary search result key: tt0000017 ind 1
 Descending to child page: 11
 Reached leaf node with keys: [tt0000015, tt0000016]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000017
 **********************************
 Internal Node (Page 8):
@@ -627,12 +627,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000018
-Binary search result key: tt0000018ind2
+Binary search result key: tt0000018 ind 2
 Descending to child page: 12
-Binary search result key: tt0000018ind1
+Binary search result key: tt0000018 ind 1
 Descending to child page: 11
 Reached leaf node with keys: [tt0000015, tt0000016, tt0000017]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000018
 **********************************
 Internal Node (Page 8):
@@ -697,12 +697,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000019
-Binary search result key: tt0000019ind2
+Binary search result key: tt0000019 ind 2
 Descending to child page: 12
-Binary search result key: tt0000019ind2
+Binary search result key: tt0000019 ind 2
 Descending to child page: 13
 Reached leaf node with keys: [tt0000017, tt0000018]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000019
 **********************************
 Internal Node (Page 8):
@@ -767,12 +767,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000020
-Binary search result key: tt0000020ind2
+Binary search result key: tt0000020 ind 2
 Descending to child page: 12
-Binary search result key: tt0000020ind2
+Binary search result key: tt0000020 ind 2
 Descending to child page: 13
 Reached leaf node with keys: [tt0000017, tt0000018, tt0000019]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000020
 **********************************
 Internal Node (Page 8):
@@ -842,12 +842,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000022
-Binary search result key: tt0000022ind2
+Binary search result key: tt0000022 ind 2
 Descending to child page: 12
-Binary search result key: tt0000022ind3
+Binary search result key: tt0000022 ind 3
 Descending to child page: 14
 Reached leaf node with keys: [tt0000019, tt0000020]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000022
 **********************************
 Internal Node (Page 8):
@@ -917,12 +917,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000023
-Binary search result key: tt0000023ind2
+Binary search result key: tt0000023 ind 2
 Descending to child page: 12
-Binary search result key: tt0000023ind3
+Binary search result key: tt0000023 ind 3
 Descending to child page: 14
 Reached leaf node with keys: [tt0000019, tt0000020, tt0000022]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000023
 **********************************
 Internal Node (Page 8):
@@ -1001,12 +1001,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000024
-Binary search result key: tt0000024ind3
+Binary search result key: tt0000024 ind 3
 Descending to child page: 16
-Binary search result key: tt0000024ind1
+Binary search result key: tt0000024 ind 1
 Descending to child page: 15
 Reached leaf node with keys: [tt0000022, tt0000023]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000024
 **********************************
 Internal Node (Page 8):
@@ -1085,12 +1085,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000025
-Binary search result key: tt0000025ind3
+Binary search result key: tt0000025 ind 3
 Descending to child page: 16
-Binary search result key: tt0000025ind1
+Binary search result key: tt0000025 ind 1
 Descending to child page: 15
 Reached leaf node with keys: [tt0000022, tt0000023, tt0000024]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000025
 **********************************
 Internal Node (Page 8):
@@ -1174,12 +1174,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000026
-Binary search result key: tt0000026ind3
+Binary search result key: tt0000026 ind 3
 Descending to child page: 16
-Binary search result key: tt0000026ind2
+Binary search result key: tt0000026 ind 2
 Descending to child page: 17
 Reached leaf node with keys: [tt0000024, tt0000025]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000026
 **********************************
 Internal Node (Page 8):
@@ -1263,12 +1263,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000027
-Binary search result key: tt0000027ind3
+Binary search result key: tt0000027 ind 3
 Descending to child page: 16
-Binary search result key: tt0000027ind2
+Binary search result key: tt0000027 ind 2
 Descending to child page: 17
 Reached leaf node with keys: [tt0000024, tt0000025, tt0000026]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000027
 **********************************
 Internal Node (Page 8):
@@ -1357,12 +1357,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000028
-Binary search result key: tt0000028ind3
+Binary search result key: tt0000028 ind 3
 Descending to child page: 16
-Binary search result key: tt0000028ind3
+Binary search result key: tt0000028 ind 3
 Descending to child page: 18
 Reached leaf node with keys: [tt0000026, tt0000027]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000028
 **********************************
 Internal Node (Page 8):
@@ -1451,12 +1451,12 @@ Internal Node (Page 8):
                   Next: -1
 **********************************
 Searching for key: tt0000029
-Binary search result key: tt0000029ind3
+Binary search result key: tt0000029 ind 3
 Descending to child page: 16
-Binary search result key: tt0000029ind3
+Binary search result key: tt0000029 ind 3
 Descending to child page: 18
 Reached leaf node with keys: [tt0000026, tt0000027, tt0000028]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000029
 **********************************
 Internal Node (Page 22):
@@ -1562,14 +1562,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000030
-Binary search result key: tt0000030ind1
+Binary search result key: tt0000030 ind 1
 Descending to child page: 21
-Binary search result key: tt0000030ind1
+Binary search result key: tt0000030 ind 1
 Descending to child page: 20
-Binary search result key: tt0000030ind1
+Binary search result key: tt0000030 ind 1
 Descending to child page: 19
 Reached leaf node with keys: [tt0000028, tt0000029]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000030
 **********************************
 Internal Node (Page 22):
@@ -1675,14 +1675,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000031
-Binary search result key: tt0000031ind1
+Binary search result key: tt0000031 ind 1
 Descending to child page: 21
-Binary search result key: tt0000031ind1
+Binary search result key: tt0000031 ind 1
 Descending to child page: 20
-Binary search result key: tt0000031ind1
+Binary search result key: tt0000031 ind 1
 Descending to child page: 19
 Reached leaf node with keys: [tt0000028, tt0000029, tt0000030]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000031
 **********************************
 Internal Node (Page 22):
@@ -1793,14 +1793,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000032
-Binary search result key: tt0000032ind1
+Binary search result key: tt0000032 ind 1
 Descending to child page: 21
-Binary search result key: tt0000032ind1
+Binary search result key: tt0000032 ind 1
 Descending to child page: 20
-Binary search result key: tt0000032ind2
+Binary search result key: tt0000032 ind 2
 Descending to child page: 23
 Reached leaf node with keys: [tt0000030, tt0000031]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000032
 **********************************
 Internal Node (Page 22):
@@ -1911,14 +1911,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000033
-Binary search result key: tt0000033ind1
+Binary search result key: tt0000033 ind 1
 Descending to child page: 21
-Binary search result key: tt0000033ind1
+Binary search result key: tt0000033 ind 1
 Descending to child page: 20
-Binary search result key: tt0000033ind2
+Binary search result key: tt0000033 ind 2
 Descending to child page: 23
 Reached leaf node with keys: [tt0000030, tt0000031, tt0000032]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000033
 **********************************
 Internal Node (Page 22):
@@ -2034,14 +2034,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000034
-Binary search result key: tt0000034ind1
+Binary search result key: tt0000034 ind 1
 Descending to child page: 21
-Binary search result key: tt0000034ind1
+Binary search result key: tt0000034 ind 1
 Descending to child page: 20
-Binary search result key: tt0000034ind3
+Binary search result key: tt0000034 ind 3
 Descending to child page: 24
 Reached leaf node with keys: [tt0000032, tt0000033]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000034
 **********************************
 Internal Node (Page 22):
@@ -2157,14 +2157,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000035
-Binary search result key: tt0000035ind1
+Binary search result key: tt0000035 ind 1
 Descending to child page: 21
-Binary search result key: tt0000035ind1
+Binary search result key: tt0000035 ind 1
 Descending to child page: 20
-Binary search result key: tt0000035ind3
+Binary search result key: tt0000035 ind 3
 Descending to child page: 24
 Reached leaf node with keys: [tt0000032, tt0000033, tt0000034]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000035
 **********************************
 Internal Node (Page 22):
@@ -2289,14 +2289,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000036
-Binary search result key: tt0000036ind1
+Binary search result key: tt0000036 ind 1
 Descending to child page: 21
-Binary search result key: tt0000036ind2
+Binary search result key: tt0000036 ind 2
 Descending to child page: 26
-Binary search result key: tt0000036ind1
+Binary search result key: tt0000036 ind 1
 Descending to child page: 25
 Reached leaf node with keys: [tt0000034, tt0000035]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000036
 **********************************
 Internal Node (Page 22):
@@ -2421,14 +2421,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000037
-Binary search result key: tt0000037ind1
+Binary search result key: tt0000037 ind 1
 Descending to child page: 21
-Binary search result key: tt0000037ind2
+Binary search result key: tt0000037 ind 2
 Descending to child page: 26
-Binary search result key: tt0000037ind1
+Binary search result key: tt0000037 ind 1
 Descending to child page: 25
 Reached leaf node with keys: [tt0000034, tt0000035, tt0000036]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000037
 **********************************
 Internal Node (Page 22):
@@ -2558,14 +2558,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000038
-Binary search result key: tt0000038ind1
+Binary search result key: tt0000038 ind 1
 Descending to child page: 21
-Binary search result key: tt0000038ind2
+Binary search result key: tt0000038 ind 2
 Descending to child page: 26
-Binary search result key: tt0000038ind2
+Binary search result key: tt0000038 ind 2
 Descending to child page: 27
 Reached leaf node with keys: [tt0000036, tt0000037]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000038
 **********************************
 Internal Node (Page 22):
@@ -2695,14 +2695,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000039
-Binary search result key: tt0000039ind1
+Binary search result key: tt0000039 ind 1
 Descending to child page: 21
-Binary search result key: tt0000039ind2
+Binary search result key: tt0000039 ind 2
 Descending to child page: 26
-Binary search result key: tt0000039ind2
+Binary search result key: tt0000039 ind 2
 Descending to child page: 27
 Reached leaf node with keys: [tt0000036, tt0000037, tt0000038]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000039
 **********************************
 Internal Node (Page 22):
@@ -2837,14 +2837,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000040
-Binary search result key: tt0000040ind1
+Binary search result key: tt0000040 ind 1
 Descending to child page: 21
-Binary search result key: tt0000040ind2
+Binary search result key: tt0000040 ind 2
 Descending to child page: 26
-Binary search result key: tt0000040ind3
+Binary search result key: tt0000040 ind 3
 Descending to child page: 28
 Reached leaf node with keys: [tt0000038, tt0000039]
-Starting scan at position: 2
+Key not found in leaf.
 Inserted key: tt0000040
 **********************************
 Internal Node (Page 22):
@@ -2979,14 +2979,14 @@ Internal Node (Page 22):
                           Next: -1
 **********************************
 Searching for key: tt0000041
-Binary search result key: tt0000041ind1
+Binary search result key: tt0000041 ind 1
 Descending to child page: 21
-Binary search result key: tt0000041ind2
+Binary search result key: tt0000041 ind 2
 Descending to child page: 26
-Binary search result key: tt0000041ind3
+Binary search result key: tt0000041 ind 3
 Descending to child page: 28
 Reached leaf node with keys: [tt0000038, tt0000039, tt0000040]
-Starting scan at position: 3
+Key not found in leaf.
 Inserted key: tt0000041
 **********************************
 Internal Node (Page 22):
@@ -3273,11 +3273,11 @@ Internal Node (Page 22):
 Test 1 single key search 
 --------------------------
 Searching for key: tt0000010
-Binary search result key: tt0000010ind0
+Binary search result key: tt0000010 ind 0
 Descending to child page: 8
-Binary search result key: tt0000010ind1
+Binary search result key: tt0000010 ind 1
 Descending to child page: 7
-Binary search result key: tt0000010ind1
+Binary search result key: tt0000010 ind 1
 Descending to child page: 6
 Reached leaf node with keys: [tt0000009, tt0000010]
 Starting scan at position: 1
@@ -3291,15 +3291,15 @@ Title: Leaving the Factory           
 Test 2 single key search 
 --------------------------
 Searching for key: tt0000038
-Binary search result key: tt0000038ind1
+Binary search result key: tt0000038 ind 1
 Descending to child page: 21
-Binary search result key: tt0000038ind2
-Descending to child page: 26
-Binary search result key: tt0000038ind2
-Descending to child page: 27
-Reached leaf node with keys: [tt0000036, tt0000037]
-Starting scan at position: 2
-Found matching Rid in next leaf: Rid(pageId=0, slotId=36)
+Binary search result key: tt0000038 ind 3
+Descending to child page: 30
+Binary search result key: tt0000038 ind 0
+Descending to child page: 28
+Reached leaf node with keys: [tt0000038, tt0000039]
+Starting scan at position: 0
+Found matching Rid: Rid(pageId=0, slotId=36)
  single key search java.util.ArrayList$Itr@4a574795
 Found Rid -> PageID: 0, SlotID: 36
 Found record for tt0000038:
@@ -3521,11 +3521,11 @@ Title: The Ball Game                 
 Test 3 single key search 
 --------------------------
 Searching for key: tt0000020
-Binary search result key: tt0000020ind1
+Binary search result key: tt0000020 ind 1
 Descending to child page: 21
-Binary search result key: tt0000020ind0
+Binary search result key: tt0000020 ind 0
 Descending to child page: 16
-Binary search result key: tt0000020ind0
+Binary search result key: tt0000020 ind 0
 Descending to child page: 14
 Reached leaf node with keys: [tt0000019, tt0000020]
 Starting scan at position: 1
@@ -3630,6 +3630,6 @@ Found record in range tt0000020 to tt0000010:
 Movie ID: tt0000010
 Title: Leaving the Factory           
 
-BUILD SUCCESSFUL in 486ms
+BUILD SUCCESSFUL in 577ms
 2 actionable tasks: 1 executed, 1 up-to-date
-Configuration cache entry reused.
+Configuration cache entry stored.

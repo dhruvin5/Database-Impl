@@ -41,8 +41,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         this.catalog = new systemCatalog();
         this.indexFile = indexFile;
         this.bm = bm;
-        this.leafOrder = maxOrderSize(true);
-        this.order = maxOrderSize(false);
+        this.leafOrder = 4;
+        this.order = 4;
         this.maxKeys = order - 1;
 
         //this.index_info_page_id = 0;
@@ -307,7 +307,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
         if (node.isLeaf) {
 
-            int i = binarySearch(node.keys, key);
+            int i = binarySearch(node.keys, key,true);
             //if (i < 0) i = -(i + 1);
 
             node.keys.add(i, key);
@@ -322,7 +322,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             }
         } else {
 
-            int i = binarySearch(node.keys, key);
+            int i = binarySearch(node.keys, key,true);
             //if (i < 0) i = -(i + 1);
 
             //System.out.println(key + "%%%" + node.children + "%%%" +i);
@@ -336,8 +336,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                 K splitKey = childSplit.splitKey;
                 int newPageId = childSplit.newPageId;
 
-                int pos = binarySearch(node.keys, splitKey);
-                //if (pos < 0) pos = -(pos + 1);
+                int pos = binarySearch(node.keys, splitKey,true);                //if (pos < 0) pos = -(pos + 1);
 
                 node.keys.add(pos, splitKey);
                 node.children.add(pos + 1, newPageId);
@@ -438,12 +437,18 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             BplusTreeNode<K> node = readNode(rootPageId);
             System.out.println("Searching for key: " + key);
 
-            // Traverse to the correct leaf node.
+            // Traverse to the correct leaf node
             while (!node.isLeaf) {
-                int i = binarySearch(node.keys, key);
-                System.out.println("Binary search result key: " + key + "ind" + i); // Added for debugging
+                int i = binarySearch(node.keys, key, true);
 
-                int childPageId = node.children.get(i); // Get the page ID from the children list.
+                // If the search key is found in the given set of keys then we traverse to right child.
+                if (i < node.keys.size() && node.keys.get(i).compareTo(key) == 0){
+                    i++;
+                }
+
+                System.out.println("Binary search result key: " + key + " ind " + i);
+
+                int childPageId = node.children.get(i);
                 System.out.println("Descending to child page: " + childPageId);
                 node = readNode(childPageId);
             }
@@ -451,8 +456,10 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             // Now, 'node' is the correct leaf node.
             System.out.println("Reached leaf node with keys: " + node.keys);
 
-            // Perform binary search within the leaf node.
-            int pos = binarySearch(node.keys, key);
+            // Perform binary search within the leaf node. checking if key is found in the leaf node.
+            int pos = binarySearch(node.keys, key, false);
+
+            // If the key does not exist, exit early.
             if (pos < 0) {
                 System.out.println("Key not found in leaf.");
                 return matchingRids.iterator();
@@ -513,8 +520,12 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
             // Traverse to the first leaf node that might contain startKey (using search logic).
             while (!node.isLeaf) {
-                int i = binarySearch(node.keys, startKey);
-                System.out.println("Binary search result: " + i); // Added for debugging
+                int i = binarySearch(node.keys, startKey, true);
+                System.out.println("Binary search result: " + i);
+
+                if (i < node.keys.size() && node.keys.get(i).compareTo(startKey) == 0){
+                    i++;
+                }// Added for debugging
 
                 int childPageId = node.children.get(i);
                 System.out.println("Descending to child page: " + childPageId);
@@ -524,7 +535,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             System.out.println("Reached initial leaf node: " + node.keys);
 
             // Find the starting position within the leaf node.
-            int pos = binarySearch(node.keys, startKey);
+            int pos = binarySearch(node.keys, startKey, true);
 
             System.out.println("Starting position in leaf: " + pos);
 
@@ -553,7 +564,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
                     }
                 }
 
-                // Move to the next leaf node if available.
                 if (node.next == -1) {
                     System.out.println("End of leaf chain reached.");
                     break;
@@ -561,7 +571,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
 
                 System.out.println("Moving to next leaf node: " + node.next);
                 node = readNode(node.next);
-                pos = 0; // Reset position for the next leaf node.
+                pos = 0;
             }
 
             System.out.println("Range search completed.");
@@ -569,12 +579,11 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             e.printStackTrace();
         }
 
-      //  System.out.println("REVERSED^^^" + isSwapped);
+
         if(isSwapped)
         {
             List<Rid> reversedResults = new ArrayList<>(results);
             Collections.reverse(reversedResults);
-           // System.out.println("REVERSED^^^");
             return reversedResults.iterator();
         }
         return results.iterator();
@@ -611,7 +620,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             BplusTreeNode<K> node = readNode(pageId);
             for (int i = 0; i < node.children.size(); i++) {
                 int childPageId = node.children.get(i);
-                //  System.out.println(indent + "    Child " + i + " (Page " + childPageId + "):");
                 pinFirst2LevelsHelper(childPageId, level, currLevel + 1);
             }
         }
@@ -625,11 +633,10 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
             BplusTreeNode<K> node = readNode(pageId);
             for (int i = 0; i < node.children.size(); i++) {
                 int childPageId = node.children.get(i);
-                //  System.out.println(indent + "    Child " + i + " (Page " + childPageId + "):");
                 unPinFirst2LevelsHelper(childPageId, level, currLevel + 1);
             }
         }
-        //System.out.println(pageId);
+
         bm.unpinPage(pageId,indexFile);
     }
 
@@ -655,24 +662,29 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         }
     }
 
-    private static <T extends Comparable<T>> int binarySearch(List<T> sortedList, T key) {
+
+    private static <T extends Comparable<T>> int binarySearch(List<T> sortedList, T key, boolean isReturnInsertionPoint) {
         int low = 0;
         int high = sortedList.size() - 1;
 
         while (low <= high) {
-            int mid = low + (high - low) / 2; // Prevent potential overflow
+            int mid = low + (high - low) / 2;
             int comparison = key.compareTo(sortedList.get(mid));
 
             if (comparison == 0) {
-                return mid; // Key found at index mid
+                return mid;
             } else if (comparison < 0) {
                 high = mid - 1;
             } else {
                 low = mid + 1;
             }
-
         }
-        return low;
+
+        if (isReturnInsertionPoint)
+        {
+            return low;
+        }
+        return -1;
     }
     private int maxOrderSize(boolean isLeaf) {
         tableMetaData data = catalog.getTableMetaData(indexFile);
