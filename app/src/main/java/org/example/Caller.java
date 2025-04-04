@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class Caller {
 
-    // Common function to search for movieId or title
+    // Test C3 : Search on movie id index and movie title index
     public static int testC3(BufferManager bufferManager, BplusTreeImplem<String> index, String searchType) {
         boolean stat = true;
 
@@ -32,8 +32,8 @@ public class Caller {
                 Row row = p.getRow(randomRow);
 
                 // Randomly select movieId or title based on the searchType
-                String movieId = new String(row.movieId, StandardCharsets.UTF_8).trim();  // Trim any extra spaces
-                String movieTitle = new String(row.title, StandardCharsets.UTF_8).trim();  // Trim any extra spaces
+                String movieId = new String(row.movieId, StandardCharsets.UTF_8);
+                String movieTitle = new String(row.title, StandardCharsets.UTF_8);
                 String searchKey = searchType.equals("movieId") ? movieId : movieTitle;
 
                 System.out.println("Searching for " + searchType + ": " + searchKey + " from the " + searchType + " index file");
@@ -55,8 +55,8 @@ public class Caller {
                         if (page_single_key_search != null) {
                             Row rowFromFile = page_single_key_search.getRow(rowId);
                             if (rowFromFile != null) {
-                                String movieIdFromFile = new String(rowFromFile.movieId, StandardCharsets.UTF_8).trim();  // Trim to ensure no extra spaces
-                                String titleFromFile = new String(rowFromFile.title, StandardCharsets.UTF_8).trim();  // Trim to ensure no extra spaces
+                                String movieIdFromFile = new String(rowFromFile.movieId, StandardCharsets.UTF_8);
+                                String titleFromFile = new String(rowFromFile.title, StandardCharsets.UTF_8);
                                 System.out.println("Found record for " + searchType + ": " + searchKey + " Movie ID: " + movieIdFromFile + " Title: " + titleFromFile + " from movie.bin");
                                 System.out.println("searchKey idx" + searchKey);
                                 System.out.println("titleFromFile " + titleFromFile);
@@ -134,7 +134,7 @@ public class Caller {
             bufferManager.force();
             System.out.println("========================== PASS TEST: INITIALIZING BUFFER MANAGER ==========================");
 
-            // Create B+ Tree indexes for title and movieId
+  
             BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
             BplusTreeImplem<String> movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager);
 
@@ -144,15 +144,16 @@ public class Caller {
             if (r1 == 1) {
                 System.out.println("========================== FAIL TEST C1 & C2 ==========================");
             } else {
+                System.out.println("Created Index on Movie Title Successfully...");
+                System.out.println("Created Index on Movie ID Successfully...");
                 System.out.println("========================== PASS TEST C1 & C2 ==========================");
             }
 
             // Running Test C3 for movieId
             System.out.println("========================== STARTING TEST C3 ==========================");
-            // int r3MovieId = testC3(bufferManager, movieIdIndex, "movieId");
+            int r3MovieId = testC3(bufferManager, movieIdIndex, "movieId");
             int r3Title = testC3(bufferManager, titleIndex, "title");
-            // if (r3MovieId == 1 || r3Title == 1) {
-            if (r3Title == 1) {
+            if (r3MovieId == 1 || r3Title == 1) {
                 System.out.println("========================== FAIL TEST C3 ==========================");
             } else {
                 System.out.println("========================== PASS TEST C3 ==========================");
