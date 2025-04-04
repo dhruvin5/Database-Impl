@@ -30,6 +30,10 @@ public abstract class BufferManager {
      */
     public abstract Page createPage(String fileName);
 
+    /*
+     * Creates a new index page.
+     * Use boolean isLeaf to determine if the page is a leaf page or not.
+     */
     public abstract Page createIndexPage(String fileName, boolean isLeaf);
 
     /**
@@ -51,5 +55,11 @@ public abstract class BufferManager {
      * Flushes all dirty pages from the buffer pool to disk.
      */
     public abstract void force();
+
+    /**
+     * Clears the buffer pool completely, removing all pages from memory.
+     * Only used for performance testing.
+     */
+    public abstract void clearCache();
 
 }

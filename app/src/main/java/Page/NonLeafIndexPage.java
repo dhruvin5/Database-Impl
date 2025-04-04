@@ -9,8 +9,10 @@ import java.util.Arrays;
 
 public class NonLeafIndexPage implements Page {
 
+    // 4 bytes for the row count
     private static final int ROW_COUNT_SIZE = 4;
 
+    // the first byte is used to store the boolean value of isLeaf
     private static final int BOOL_SIZE = 1;
 
     // fixed row size
@@ -32,13 +34,13 @@ public class NonLeafIndexPage implements Page {
     public NonLeafIndexPage(int currentPageId, byte boolValue, int keySize, int pidSize) {
         this.currentPageId = currentPageId;
         this.rows = new byte[Config.PAGE_SIZE];
-        setRowCount(0);
-        setBoolValue(boolValue);
+        setRowCount(0); // set rowcount to 0
+        setBoolValue(boolValue); // set isLeaf to 0 for non-leaf page
 
         this.keySize = keySize;
         this.pidSize = pidSize;
-        this.ROW_SIZE = keySize + pidSize;
-        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE) / ROW_SIZE;
+        this.ROW_SIZE = keySize + pidSize;// size of the row
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - ROW_COUNT_SIZE - BOOL_SIZE) / ROW_SIZE; // max row count in the page
     }
 
     // if loading an existing page in Buffer
@@ -77,7 +79,7 @@ public class NonLeafIndexPage implements Page {
     public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
 
-        if (row == null  || row.pid == null
+        if (row == null || row.pid == null
                 || row.slotid != null || row.title != null) {
             return -1;
         }
@@ -94,19 +96,15 @@ public class NonLeafIndexPage implements Page {
         // copy the data to the page
         copyAndPaste(row.key, this.keySize, offset);
 
-
         offset += this.keySize;
         copyAndPaste(row.pid, this.pidSize, offset);
-
-
-
-
 
         setRowCount(rowCount + 1);
         return rowCount;
     }
 
     private void copyAndPaste(byte[] data, int size, int offset) {
+        // Copy the fixed_copy into the rows array starting at the given offset.
         byte[] fixed_copy = new byte[size];
 
         if (data != null) {
@@ -115,11 +113,9 @@ public class NonLeafIndexPage implements Page {
         for (int i = 0; i < size; i++) {
             this.rows[offset + i] = fixed_copy[i];
         }
-
-        // Copy the fixed_copy into the rows array starting at the given offset.
-
     }
 
+    // check if the page is full
     public boolean isFull() {
         int rowCount = getRowCount();
         if (rowCount >= MAX_ROW_COUNT) {
@@ -139,8 +135,7 @@ public class NonLeafIndexPage implements Page {
         return this.rows;
     }
 
-    // get the rowcount by accessing the first 4 bytes
-
+    // get the rowcount by accessing the first (1-4) bytes
     public int getRowCount() {
         return ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).getInt();
     }
@@ -150,18 +145,22 @@ public class NonLeafIndexPage implements Page {
         ByteBuffer.wrap(rows, 1, ROW_COUNT_SIZE).putInt(count);
     }
 
+    // get the boolean value of isLeaf
     public boolean getBoolValue() {
         return this.rows[0] != 0;
     }
 
+    // set the page isLeaf status in the first byte of the page
     private void setBoolValue(byte boolValue) {
         this.rows[0] = boolValue;
     }
 
+    // Since the page is non-leaf, we don't need to set the next pointer
     public void setNextPointer(int nextPointer) {
         return;
     }
 
+    // since the page is non-leaf, we don't need to get the next pointer
     public int getNextPointer() {
         return -1;
     }

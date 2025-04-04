@@ -210,10 +210,10 @@ public class BufferManagerImplem extends BufferManager {
             return page;
         } else { // load page from disk
                  // Check if the page exists on disk
-//            if (!isPageOnDisk(pageId, FILE_NAME)) {
-//                System.out.println("Error: Page " + pageId + " does not exist on disk.");
-//                return null; // Page not found on disk
-//            }
+            // if (!isPageOnDisk(pageId, FILE_NAME)) {
+            // System.out.println("Error: Page " + pageId + " does not exist on disk.");
+            // return null; // Page not found on disk
+            // }
 
             // get page from disk
             Page page = getPageFromDisk(pageId, FILE_NAME);
@@ -247,7 +247,7 @@ public class BufferManagerImplem extends BufferManager {
             metadata.setDirtyBit(true);
             // System.out.println("Page " + pageId + " is marked as dirty.");
         } else {
-           // System.out.println("THIS MARK DIRTY IS CALLED!!");
+            // System.out.println("THIS MARK DIRTY IS CALLED!!");
             System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
@@ -263,7 +263,7 @@ public class BufferManagerImplem extends BufferManager {
                 System.out.println("Error: Page " + pageId + " already has pin count 0. Cannot unpin further.");
             }
         } else { // Page not in the buffer pool
-           System.out.println("Error: Page " + pageId + " not found in buffer.");
+            System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
 
@@ -285,19 +285,23 @@ public class BufferManagerImplem extends BufferManager {
             // reads 4KB of data
             fileReader.readFully(buffer);
 
+            // Get the column sizes for the file
             HashMap<String, Integer> columnSize = getColumnSizes(FILE_NAME);
 
+            // check if the page is a index page or not
             if (this.catalog.isIndexFile(FILE_NAME)) {
+                // check if the page is a leaf page or not
                 boolean isLeaf = ispageLeaf(FILE_NAME, buffer);
                 if (isLeaf) {
-
+                    // Leaf index page
                     return new LeafIndexPageImpl(pageId, buffer, columnSize.get("key"), columnSize.get("pid"),
                             columnSize.get("slotID"));
                 } else {
+                    // Non-leaf index page
                     return new NonLeafIndexPage(pageId, buffer, columnSize.get("key"), columnSize.get("pid"));
-
                 }
             } else {
+                // Regular Data page
                 return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title"));
             }
 
@@ -312,7 +316,8 @@ public class BufferManagerImplem extends BufferManager {
 
         // get the page Id
         int pageId = page.getPid();
-        //System.out.println("Writing page of " + FILE_NAME + " with this PID: " + page.getPid());
+        // System.out.println("Writing page of " + FILE_NAME + " with this PID: " +
+        // page.getPid());
 
         // open the disk file in read write mode
         try (RandomAccessFile fileWriter = new RandomAccessFile(FILE_NAME, "rw")) {
@@ -372,6 +377,7 @@ public class BufferManagerImplem extends BufferManager {
         }
     }
 
+    // check if the page is a leaf page or not
     private boolean ispageLeaf(String FILE_NAME, byte[] buffer) {
         int is_Leaf_Offset = 0;
         return this.catalog.isIndexFile(FILE_NAME) && (buffer[is_Leaf_Offset] == 1);
@@ -389,4 +395,21 @@ public class BufferManagerImplem extends BufferManager {
         return -1; // Return -1 if the page is not found in the cache
     }
 
+    // Clear the buffer pool and reset all data structures used for performance
+    // testing only
+    public void clearCache() {
+        force();
+        for (int i = 0; i < this.bufferPool.length; i++)
+            this.bufferPool[i] = null;
+
+        // Clear the page table and free frame list
+        this.freeFrameList.clear();
+        for (int i = 0; i < this.bufferPool.length; i++)
+            this.freeFrameList.add(i);
+
+        // Reeset the LRU cache and page table
+        this.lruCache.clear();
+        this.pageTable.clear();
+        this.pageInfo.clear();
+    }
 }

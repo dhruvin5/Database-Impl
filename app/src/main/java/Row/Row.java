@@ -3,7 +3,7 @@ package Row;
 public abstract class Row {
     /*
      * 
-     * Empty Marker Interface For Row
+     * Generalize Row class for all pages
      */
     public byte[] key;
     public byte[] pid;

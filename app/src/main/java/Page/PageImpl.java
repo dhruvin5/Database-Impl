@@ -37,7 +37,7 @@ public class PageImpl implements Page {
         this.offSet2 = offSet2;
         this.ROW_SIZE = offSet1 + offSet2;
         this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
-        //System.out.println("Max row count- " + this.MAX_ROW_COUNT);
+        // System.out.println("Max row count- " + this.MAX_ROW_COUNT);
     }
 
     // if loading an existing page in Buffer
@@ -81,7 +81,6 @@ public class PageImpl implements Page {
                 || row.pid != null || row.slotid != null) {
             return -1;
         }
-
 
         if (isFull()) {
             return -1;
@@ -133,11 +132,11 @@ public class PageImpl implements Page {
     }
 
     // get the rowcount by accessing the first 4 bytes
-
     public int getRowCount() {
         return ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).getInt();
     }
 
+    // since this is data page, we dont have bool value
     public boolean getBoolValue() {
         return false;
     }
@@ -147,10 +146,12 @@ public class PageImpl implements Page {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
     }
 
+    // since it is a data page, we dont have next pointer
     public void setNextPointer(int nextPointer) {
         return;
     }
 
+    // since it is a data page, we dont have next pointer
     public int getNextPointer() {
         return -1;
     }

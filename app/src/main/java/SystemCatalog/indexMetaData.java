@@ -11,14 +11,17 @@ public class indexMetaData {
         this.file = file;
     }
 
+    // Get the table the index is associated with
     public String getTableName() {
         return table.getTableName(); // Returns the name of the table associated with this index
     }
 
+    // Get the key name of the index
     public String getKey() {
         return Key;
     }
 
+    // Get the file name of the index
     public String getFile() {
         return file;
     }
