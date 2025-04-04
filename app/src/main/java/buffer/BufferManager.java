@@ -52,4 +52,6 @@ public abstract class BufferManager {
      */
     public abstract void force();
 
+    public abstract void clearCache();
+
 }
