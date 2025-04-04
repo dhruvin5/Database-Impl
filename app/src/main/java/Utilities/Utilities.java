@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.io.File;
 
 import Page.Page;
 import Row.movieRow;
 import buffer.BufferManager;
+import configs.Config;
 
 public class Utilities {
 
@@ -71,7 +73,7 @@ public class Utilities {
 
                 //System.out.println("Page Id : - "  + currentPageId);
                 count++;
-                if (count % 40 == 0) {
+                if (count % 100 == 0) {
                     System.out.println("Inserted " + count + " rows into the page with ID: " + currentPageId);
                     break; // For testing, break after 5000 rows
                 }
@@ -100,6 +102,16 @@ public class Utilities {
         System.arraycopy(originalString, 0, fixedByteArray, 0, Math.min(originalString.length, length));
 
         return fixedByteArray;
+    }
+
+    public static int getNumberOfPages(String fileName) {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            System.out.println("Error: File "+ fileName+ " does not exist.");
+            return -1;
+        }
+        long fileSize = file.length();  // Get file size in bytes
+        return (int) Math.ceil((double) fileSize / Config.PAGE_SIZE);
     }
 
 }
