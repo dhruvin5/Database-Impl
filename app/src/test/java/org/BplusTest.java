@@ -115,14 +115,14 @@ class BplusTest {
     @Test
     void testRangeSearchMovieId() {
         try {
-            movieIdIndex.insert("tt1375666", new Rid(1, 0)); // Inception
-            movieIdIndex.insert("tt0120338", new Rid(2, 0)); // Titanic
-            movieIdIndex.insert("tt0109830", new Rid(3, 0)); // Forrest Gump
+            movieIdIndex.insert("tt1375666", new Rid(1, 0));
+            movieIdIndex.insert("tt0120338", new Rid(2, 0));
+            movieIdIndex.insert("tt0109830", new Rid(3, 0));
             Iterator<Rid> rangeResults = movieIdIndex.rangeSearch("tt0100000", "tt0125000");
             int count = 0;
             List<Rid> foundRids = new ArrayList<>();
             Rid rid;
-            while ((rid = rangeResults.next()) != null) {  // Use next() and check if it returns null
+            while ((rid = rangeResults.next()) != null) {
                 foundRids.add(rid);
                 count++;
             }
@@ -170,7 +170,7 @@ class BplusTest {
             Iterator<Rid> result = titleIndex.search("Interstellar");
             List<Rid> foundRids = new ArrayList<>();
             Rid rid;
-            while ((rid = result.next()) != null) {  // Use next() and check if it returns null
+            while ((rid = result.next()) != null) {
                 foundRids.add(rid);
             }
             assertEquals(1, foundRids.size(), "There should be 1 result for 'Interstellar'.");
