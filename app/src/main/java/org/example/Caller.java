@@ -65,12 +65,10 @@ public class Caller {
                     // Insert movieId and title into B+ Tree indexes
                     String movieId = new String(movieIdStr, StandardCharsets.UTF_8);
                     String title = new String(titleStr, StandardCharsets.UTF_8);
-                    // System.out.println(movieId);
-                    // movieIdIndex.insert(movieId, movieRid);
-                    // System.out.println("INSERTED " + movieId);
 
-                    // titleIndex.insert(title, movieRid);
+                    titleIndex.insert(title, movieRid);
                     movieIdIndex.insert(movieId, movieRid);
+
                     // System.out.println("Inserted key: " + movieId);
 
                     // System.out.println("**********************************");
@@ -89,7 +87,8 @@ public class Caller {
 
             }
             performanceTestingModule test = new performanceTestingModule(bufferManager, movieIdIndex, titleIndex);
-            test.performanceTesting_MovieID();
+            test.performanceTesting_MovieID(true);
+            test.performanceTesting_Title(true);
             // bufferManager.force();
             // System.out.println("printing whole tree again");
             // titleIndex.printTree();

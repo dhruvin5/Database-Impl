@@ -250,12 +250,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
     public void insert(K key, Rid rid) {
         try {
 
-            // Iterator<Rid> it = search(key);
-            // if (it.hasNext()) {
-            // // System.out.println("KEY ALREADY PRESENT! " + key);
-            // return;
-            // }
-
             SplitResult<K> result = insertRecursiveFunc(rootPageId, key, rid);
             if (result != null) {
                 BplusTreeNode<K> newRoot = new BplusTreeNode<>(false);
