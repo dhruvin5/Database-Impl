@@ -41,8 +41,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
         this.catalog = new systemCatalog();
         this.indexFile = indexFile;
         this.bm = bm;
-        this.leafOrder = 4;
-        this.order = 4;
+        this.leafOrder = maxOrderSize(true);
+        this.order = maxOrderSize(false);
         this.maxKeys = order - 1;
 
         //this.index_info_page_id = 0;
@@ -268,12 +268,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BplusTree<K, Ri
     @Override
     public void insert(K key, Rid rid) {
         try {
-
-            Iterator<Rid> it = search(key);
-            if (it.hasNext()) {
-                System.out.println("KEY ALREADY PRESENT! " + key);
-                return;
-            }
 
             SplitResult<K> result = insertRecursiveFunc(rootPageId, key, rid);
             if (result != null) {
