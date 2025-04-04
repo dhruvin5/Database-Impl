@@ -81,6 +81,7 @@ public class BufferManagerImplem extends BufferManager {
             HashMap<String, Integer> columnSize = getColumnSizes(FILE_NAME); // Get the column sizes for the file
             byte boolValue = (byte) (isLeaf ? 1 : 0);
 
+            // creates a new page based on the file type
             if (this.catalog.isIndexFile(FILE_NAME) && isLeaf) {
                 page = new LeafIndexPageImpl(newID, boolValue, columnSize.get("key"), columnSize.get("pid"),
                         columnSize.get("slotID"));
@@ -234,6 +235,7 @@ public class BufferManagerImplem extends BufferManager {
         return createAndLoadPageHelper(null, false, FILE_NAME, false);
     }
 
+    // Used by the b+ tree to create a new index page
     public Page createIndexPage(String FILE_NAME, boolean isLeaf) {
         return createAndLoadPageHelper(null, false, FILE_NAME, isLeaf);
     }
@@ -254,6 +256,8 @@ public class BufferManagerImplem extends BufferManager {
 
     @Override
     public void unpinPage(int pageId, String FILE_NAME) {
+        // Check if the page on a specific file exists in the buffer pool and gets
+        // metadata
         PageMetaData metadata = pageInfo.getOrDefault(FILE_NAME, new HashMap<>()).get(pageId);
 
         if (metadata != null) { // page exists in buffer pool

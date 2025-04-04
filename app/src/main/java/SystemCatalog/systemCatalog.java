@@ -86,6 +86,7 @@ public class systemCatalog {
         return true;
     }
 
+    // Returns the file name of a table given its name
     public String getTableFile(String tableName) {
         if (!tables.containsKey(tableName)) {
             return null;
@@ -100,6 +101,7 @@ public class systemCatalog {
         return offsets.get(filename);
     }
 
+    // Returns the metadata of an index given its name
     public indexMetaData getIndex(String indexName) {
         if (!indexes.containsKey(indexName)) {
             return null;
@@ -117,20 +119,19 @@ public class systemCatalog {
         return indexes.keySet().toArray(new String[0]);
     }
 
+    // Returns the metadata of a table given its name
     public tableMetaData getTableMetaData(String tableName) {
         return tables.get(tableName);
     }
 
     public int getPageOffset(boolean isLeaf) {
-        if(isLeaf)
-        {
+        if (isLeaf) {
             return leafPageOffset;
         }
         return nonLeafPageOffset;
     }
 
-
-
+    // Returns the metadata of a table given its file name
     public boolean isIndexFile(String fileName) {
         return isIndex.getOrDefault(fileName, false);
     }
