@@ -25,6 +25,7 @@ public class Caller {
             int pageCount = Utilities.getNumberOfPages("movies.bin");
             int randomPage = rand.nextInt(pageCount);
             Page p = bufferManager.getPage(randomPage, "movies.bin");
+            bufferManager.unpinPage(randomPage,"movies.bin");
             if (p != null) {
                 //create two random rows
                 int randomRow1 = rand.nextInt(p.getRowCount());
@@ -90,6 +91,7 @@ public class Caller {
                         int pageId = rid.getPageId();
                         int rowId = rid.getSlotId();
                         Page pageFromFile = bufferManager.getPage(pageId, "movies.bin");
+                        bufferManager.unpinPage(pageId,"movies.bin");
                         if (pageFromFile != null) {
                             Row rowFromFile = pageFromFile.getRow(rowId);
                             if (rowFromFile != null) {
@@ -136,6 +138,7 @@ public class Caller {
             int pageCount = Utilities.getNumberOfPages("movies.bin");
             int randomPage = rand.nextInt(pageCount);
             Page p = bufferManager.getPage(randomPage, "movies.bin");
+            bufferManager.unpinPage(randomPage,"movies.bin");
             if (p != null) {
                 // create random record
                 int totalRowPerPage = p.getRowCount();
@@ -161,6 +164,7 @@ public class Caller {
                         int pageId = rid.getPageId();
                         int rowId = rid.getSlotId();
                         Page page_single_key_search = bufferManager.getPage(pageId, "movies.bin");
+                        bufferManager.unpinPage(pageId, "movies.bin");
                         if (page_single_key_search != null) {
                             Row rowFromFile = page_single_key_search.getRow(rowId);
                             if (rowFromFile != null) {
@@ -175,6 +179,7 @@ public class Caller {
                                 }
                             }
                         }
+                       // bufferManager.unpinPage(pageId, "movies.bin");
                     }
                 } else {
                     stat = false;
@@ -199,6 +204,7 @@ public class Caller {
             int pageCount = Utilities.getNumberOfPages("movies.bin");
             for (int currPID = 0; currPID < pageCount; currPID++) {
                 Page p = bufferManager.getPage(currPID, "movies.bin");
+                bufferManager.unpinPage(currPID, "movies.bin");
                 if (p == null) {
                     stat = false;
                     break;
@@ -220,7 +226,7 @@ public class Caller {
                     String movieId = new String(movieIdStr, StandardCharsets.UTF_8);
                     movieIdIndex.insert(movieId, movieRid);
                 }
-                bufferManager.unpinPage(currPID, "movies.bin");
+
             }
             bufferManager.force();
             if (!stat) {
@@ -238,7 +244,7 @@ public class Caller {
             // Initialize Buffer Manager
             System.out.println("========================== STARTING TEST: INITIALIZING BUFFER MANAGER ==========================");
             BufferManager bufferManager = new BufferManagerImplem(7);
-            Utilities.loadDataset(bufferManager, "C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\src\\title.basics.tsv");
+            Utilities.loadDataset(bufferManager, "/Users/Admin/Desktop/645/lab/title.basics.tsv");
             bufferManager.force();
             System.out.println("========================== PASS TEST: INITIALIZING BUFFER MANAGER ==========================");
 
@@ -279,9 +285,9 @@ public class Caller {
 
             // Performance Testing
             System.out.println("========================== STARTING PERFORMANCE TESTS ==========================");
-            performanceTestingModule performance_test = new performanceTestingModule(bufferManager, movieIdIndex, titleIndex);
-            performance_test.performanceTesting_MovieID(false);
-            performance_test.performanceTesting_Title(false);
+           // performanceTestingModule performance_test = new performanceTestingModule(bufferManager, movieIdIndex, titleIndex);
+           // performance_test.performanceTesting_MovieID(false);
+           // performance_test.performanceTesting_Title(false);
 
         } catch (Exception e) {
             System.err.println("Caught exception: " + e.getMessage());

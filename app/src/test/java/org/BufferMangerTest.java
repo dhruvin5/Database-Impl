@@ -60,7 +60,8 @@ class BufferManagerImplemTest {
 
             BufferManagerImplem test = new BufferManagerImplem(10);
 
-            Page page = test.getPage(58, FILE_NAME);  
+            Page page = test.getPage(58, FILE_NAME);
+
             assertNull(page, "Fetched page should be null as it does not exist in buffer or on disk.");
         } catch (Exception e) {
             e.printStackTrace();

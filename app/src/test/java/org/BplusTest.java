@@ -48,6 +48,8 @@ class BplusTest {
             Rid foundRid = result.next();
             assertEquals(movieRid.toString(), foundRid.toString(), "The Rid from the index should match the inserted Rid.");
             Page page = bufferManager.getPage(foundRid.getPageId(), "movies.bin");
+            bufferManager.unpinPage(foundRid.getPageId(),"movies.bin");
+
             Row rowFromFile = page.getRow(foundRid.getSlotId());
             String titleFromFile = new String(rowFromFile.title, StandardCharsets.UTF_8);
             assertEquals(movieTitle, titleFromFile, "The title retrieved from the index should match the title in the file.");
@@ -69,6 +71,8 @@ class BplusTest {
             Rid foundRid = result.next();
             assertEquals(movieRid.toString(), foundRid.toString(), "The Rid from the index should match the inserted Rid.");
             Page page = bufferManager.getPage(foundRid.getPageId(), "movies.bin");
+            bufferManager.unpinPage(foundRid.getPageId(), "movies.bin");
+
             Row rowFromFile = page.getRow(foundRid.getSlotId());
             String movieIdFromFile = new String(rowFromFile.movieId, StandardCharsets.UTF_8);
             assertEquals(movieId, movieIdFromFile, "The movieId retrieved from the index should match the movieId in the file.");            
@@ -143,6 +147,7 @@ class BplusTest {
             assertEquals(ridInterstellar.toString(), foundRids.get(1).toString(), "Second Rid should match the inserted one for 'Interstellar'");
             for (int i = 0; i < foundRids.size(); i++) {
                 Page page = bufferManager.getPage(foundRids.get(i).getPageId(), "movies.bin");
+                bufferManager.unpinPage(foundRids.get(i).getPageId(), "movies.bin");
                 Row rowFromFile = page.getRow(foundRids.get(i).getSlotId());
                 String titleFromFile = new String(rowFromFile.title, StandardCharsets.UTF_8);
                 assertEquals(i == 0 ? "Inception" : "Interstellar", titleFromFile, "The title from the file should match the title in the index.");
@@ -177,6 +182,7 @@ class BplusTest {
             assertEquals(rid2.toString(), foundRids.get(1).toString(), "Second Rid should match the inserted one for 'tt0120338'");
             for (int i = 0; i < foundRids.size(); i++) {
                 Page page = bufferManager.getPage(foundRids.get(i).getPageId(), "movies.bin");
+                bufferManager.unpinPage(foundRids.get(i).getPageId(), "movies.bin");
                 Row rowFromFile = page.getRow(foundRids.get(i).getSlotId());
                 String movieIdFromFile = new String(rowFromFile.movieId, StandardCharsets.UTF_8);
                 assertEquals(i == 0 ? "tt0100012" : "tt0120338", movieIdFromFile, "The movie ID from the file should match the movie ID in the index.");
@@ -239,6 +245,7 @@ class BplusTest {
             assertEquals(1, foundRids.size(), "There should be 1 result for 'Interstellar'.");
             assertEquals(rid2.toString(), foundRids.get(0).toString(), "The Rid should match the inserted one for 'Interstellar'");
             Page page = bufferManager.getPage(foundRids.get(0).getPageId(), "movies.bin");
+            bufferManager.unpinPage(foundRids.get(0).getPageId(), "movies.bin");
             Row rowFromFile = page.getRow(foundRids.get(0).getSlotId());
             String titleFromFile = new String(rowFromFile.title, StandardCharsets.UTF_8);
             assertEquals("Interstellar", titleFromFile, "The title retrieved from the index should match the title in the file.");
@@ -267,6 +274,7 @@ class BplusTest {
             assertEquals(1, foundRids.size(), "There should be 1 result for 'tt0120338'");
             assertEquals(rid2.toString(), foundRids.get(0).toString(), "The Rid should match the inserted one for 'tt0120338'");
             Page page = bufferManager.getPage(foundRids.get(0).getPageId(), "movies.bin");
+            bufferManager.unpinPage(foundRids.get(0).getPageId(), "movies.bin");
             Row rowFromFile = page.getRow(foundRids.get(0).getSlotId());
             String movieIdFromFile = new String(rowFromFile.movieId, StandardCharsets.UTF_8);
             assertEquals("tt0120338", movieIdFromFile, "The movie ID retrieved from the file should match the movie ID in the index.");
