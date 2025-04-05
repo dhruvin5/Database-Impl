@@ -243,7 +243,7 @@ public class Caller {
         try {
             // Initialize Buffer Manager
             System.out.println("========================== STARTING TEST: INITIALIZING BUFFER MANAGER ==========================");
-            BufferManager bufferManager = new BufferManagerImplem(7);
+            BufferManager bufferManager = new BufferManagerImplem(1000);
             Utilities.loadDataset(bufferManager, "/Users/Admin/Desktop/645/lab/title.basics.tsv");
             bufferManager.force();
             System.out.println("========================== PASS TEST: INITIALIZING BUFFER MANAGER ==========================");
