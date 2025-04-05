@@ -7,6 +7,13 @@
 - Gradle 8.13
 - Git Bash
 
+## Inserting in B+ Tree
+- Currently all the rows are being inserted in the movie Indexes which takes a significant amount of time
+- Correctness Tests (C1, C2, C3, C4) can be performed on a smaller subset of data
+
+  ## Performance tests
+- If you want to see the performance tests:- In `app\src\org\java\example\Caller.java` please uncomment the lines 288, 289, 290
+
 ## Changes that Need to be Made
 - Download the IMDB dataset (unzipped)
 - In `app\src\org\java\example\Caller.java` please update the location of the dataset when calling `Utilities.loadDataset`
