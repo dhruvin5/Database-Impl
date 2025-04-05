@@ -100,11 +100,11 @@ public class Caller {
                              //   System.out.println("movieIdFromFile: "+movieIdFromFile+" titleFromFile: "+titleFromFile);
                                 if ( searchType.equals("movieId") && (movieIdFromFile.compareTo(movieId1) < 0 || movieIdFromFile.compareTo(movieId2) > 0) ){
                                     stat=false;
-                                //    System.out.println("movie id" + movieIdFromFile + " obtained is out of range.");
+                                    System.out.println("movie id" + movieIdFromFile + " obtained is out of range.");
                                 }
                                 else if( searchType.equals("title") && (titleFromFile.compareTo(movieTitle1) < 0 || titleFromFile.compareTo(movieTitle2) > 0) ) {
                                     stat = false;
-                                //    System.out.println("title " + titleFromFile + " obtained is out of range");
+                                    System.out.println("title " + titleFromFile + " obtained is out of range");
                                 }
                             }
                         }

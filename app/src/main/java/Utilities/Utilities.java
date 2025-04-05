@@ -71,6 +71,7 @@ public class Utilities {
                 bf.markDirty(currentPageId, "movies.bin");
                 bf.unpinPage(currentPageId, "movies.bin");
 
+                //System.out.println("Page Id : - "  + currentPageId);
                 count++;
 
             }
