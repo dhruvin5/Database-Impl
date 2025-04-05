@@ -147,7 +147,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
         //reading metadata of internal node page and updating child pointers
         if(!isLeaf)
         {
-
             byte[] colBytes = Arrays.copyOfRange(data, offset + catalog.getOffsets(indexFile),
                     offset + catalog.getOffsets(indexFile) + 4);
             int pid = ByteBuffer.wrap(colBytes).getInt();
@@ -201,7 +200,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
     @Override
     public void insert(K key, Rid rid) {
         try {
-
             InternalNodeSplit<K> result = insertRecursiveFunc(rootPageId, key, rid);
             //if split occurs, creating a new internal node
             if (result != null) {
@@ -253,15 +251,11 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
             }
         }
     }
-
     //method for splitting leaf into 2,and returns promoted the median key, with corresponding page id to next internal node
     private InternalNodeSplit<K> splitLeafNode(BplusTreeNode<K> leaf, int leafPageId) throws IOException {
-
         BplusTreeNode<K> newLeaf = new BplusTreeNode<>(true);
         int newLeafPageId = bm.createIndexPage(indexFile, true).getPid();
-
         // Calculate the 'mid' position where we split
-
         if(leaf.next == -1)
         {
             newLeaf.next = null;
@@ -280,11 +274,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
 
         writeNode(leaf, leafPageId);
         writeNode(newLeaf, newLeafPageId);
-
-
         K splitKey = newLeaf.keys.get(0);
-
-
         bm.unpinPage(newLeafPageId,indexFile);
 
         return new InternalNodeSplit<>(splitKey, newLeafPageId);
@@ -317,8 +307,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
         List<Rid> matchingRids = new ArrayList<>();
         try {
             BplusTreeNode<K> node = readNode(rootPageId);
-            //System.out.println("Searching for key: " + key);
-
             // Traverse to the correct leaf node
             while (!node.isLeaf) {
                 int i = binarySearch(node.keys, key, true);
@@ -396,8 +384,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
         List<Rid> results = new ArrayList<>();
         try {
             BplusTreeNode<K> node = readNode(rootPageId);
-           //System.out.println("Starting range search: [" + startKey + ", " + endKey + "]");
-
             // Traverse to the first leaf node that might contain startKey (using search logic).
             while (!node.isLeaf) {
                 int i = binarySearch(node.keys, startKey, true);
@@ -406,26 +392,16 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
                 if (i < node.keys.size() && node.keys.get(i).compareTo(startKey) == 0){
                     i++;
                 }
-
                 int childPageId = node.children.get(i);
-               // System.out.println("Descending to child page: " + childPageId);
                 node = readNode(childPageId);
             }
-
-            //System.out.println("Reached initial leaf node: " + node.keys);
-
             // Find the starting position within the leaf node.
             int pos = binarySearch(node.keys, startKey, true);
-
-            //System.out.println("Starting position in leaf: " + pos);
-
             // Scan through leaf nodes until endKey is exceeded.
             while (node != null) {
                 //System.out.println("Scanning leaf node: " + node.keys);
                 for (; pos < node.keys.size(); pos++) {
                     K currentKey = node.keys.get(pos);
-                    //System.out.println("Checking key: " + currentKey);
-
                     if (currentKey.compareTo(endKey) > 0) {
                         //System.out.println("End key reached, finishing range search.");
                         if(isSwapped)
@@ -438,27 +414,18 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
                     }
 
                     if (currentKey.compareTo(startKey) >= 0 && currentKey.compareTo(endKey) <= 0) {
-                      //  System.out.println("Found Rid in range: " + node.values.get(pos));
                         results.add(node.values.get(pos));
                     }
                 }
-
                 if (node.next == -1) {
-                    //System.out.println("End of leaf chain reached.");
                     break;
                 }
-
-                //System.out.println("Moving to next leaf node: " + node.next);
                 node = readNode(node.next);
                 pos = 0;
             }
-
-            //System.out.println("Range search completed.");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         if(isSwapped)
         {
             List<Rid> reversedResults = new ArrayList<>(results);
