@@ -1,11 +1,11 @@
 package Page;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
 import Row.Row;
+import Row.movieRow;
 import configs.Config;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class PageImpl implements Page {
 
@@ -13,10 +13,10 @@ public class PageImpl implements Page {
     private static final int ROW_COUNT_SIZE = 4;
 
     // fixed row size
-    private static final int ROW_SIZE = 39;
+    private final int ROW_SIZE;
 
-    // this is calculated by pagesize - 4 / 39
-    private static final int MAX_ROW_COUNT = 104;
+    // this is calculated by pagesize - 4 / rowSize
+    private final int MAX_ROW_COUNT;
 
     // the pageId should be final. Once assigned cannot be changed
     private final int pageId;
@@ -24,29 +24,39 @@ public class PageImpl implements Page {
     // the actual data
     private final byte[] rows;
 
+    private int offSet1;
 
-    // if the page is being created
-    // initialize with page size
-    // set row count as 0
-    public PageImpl(int pageId) {
+    private int offSet2;
+
+    public PageImpl(int pageId, int offSet1, int offSet2) {
         this.pageId = pageId;
         this.rows = new byte[Config.PAGE_SIZE];
         setRowCount(0);
+
+        this.offSet1 = offSet1;
+        this.offSet2 = offSet2;
+        this.ROW_SIZE = offSet1 + offSet2;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
+        // System.out.println("Max row count- " + this.MAX_ROW_COUNT);
     }
 
     // if loading an existing page in Buffer
-    public PageImpl(int pageId, byte[] existingRows) {
+    public PageImpl(int pageId, byte[] existingRows, int offSet1, int offSet2) {
         if (existingRows.length != Config.PAGE_SIZE) {
             throw new IllegalArgumentException("Page size must be 4KB!");
         }
         this.pageId = pageId;
         this.rows = existingRows;
+
+        this.offSet1 = offSet1;
+        this.offSet2 = offSet2;
+        this.ROW_SIZE = offSet1 + offSet2;
+        this.MAX_ROW_COUNT = (Config.PAGE_SIZE - 4) / ROW_SIZE;
     }
 
     // gets the row using the rowId
     @Override
-    public Row getRow(int rowId)
-    {
+    public Row getRow(int rowId) {
         int rowCount = getRowCount();
 
         // if less than 0 or greater than rowCount. Invalid rowId
@@ -56,18 +66,19 @@ public class PageImpl implements Page {
 
         // go to the offset
         int offset = ROW_COUNT_SIZE + rowId * ROW_SIZE;
-        byte[] movieId = Arrays.copyOfRange(rows, offset, offset + 9);
-        byte[] title = Arrays.copyOfRange(rows, offset + 9, offset + 39);
+        byte[] column1 = Arrays.copyOfRange(rows, offset, offset + this.offSet1);
+        byte[] column2 = Arrays.copyOfRange(rows, offset + this.offSet1, offset + this.offSet1 + this.offSet2);
 
         // create a row with the data
-        return new Row(movieId, title);
+        return new movieRow(column1, column2);
     }
 
     @Override
-    public int insertRow(Row row)
-    {
+    public int insertRow(Row row) {
         // rigorous check on the data to avoid null entries
-        if (row == null || row.movieId == null || row.title == null) {
+
+        if (row == null || row.movieId == null || row.title == null || row.key != null
+                || row.pid != null || row.slotid != null) {
             return -1;
         }
 
@@ -75,25 +86,24 @@ public class PageImpl implements Page {
             return -1;
         }
 
-        byte[] movieIdFixed = new byte[9];
-        byte[] titleFixed = new byte[30];
+        byte[] movieIdFixed = new byte[this.offSet1];
+        byte[] titleFixed = new byte[this.offSet2];
 
-        // movieId should be of size 9
-        // truncate longer title to 30. pad if less
-        System.arraycopy(row.movieId, 0, movieIdFixed, 0, Math.min(row.movieId.length, 9));
-        System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length, 30));
-        
+        System.arraycopy(row.movieId, 0, movieIdFixed, 0,
+                Math.min(row.movieId.length, this.offSet1));
+        System.arraycopy(row.title, 0, titleFixed, 0, Math.min(row.title.length,
+                this.offSet2));
 
         int rowCount = getRowCount();
         int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
         // copy the row into the page data
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < this.offSet1; i++) {
             this.rows[offset + i] = movieIdFixed[i];
         }
 
-        for (int i = 0; i < 30; i++) {
-            this.rows[offset + 9 + i] = titleFixed[i];
+        for (int i = 0; i < this.offSet2; i++) {
+            this.rows[offset + this.offSet1 + i] = titleFixed[i];
         }
 
         setRowCount(rowCount + 1);
@@ -102,40 +112,47 @@ public class PageImpl implements Page {
 
     // if row count >= max row count than page is full
     @Override
-    public boolean isFull()
-    {
+    public boolean isFull() {
         int rowCount = getRowCount();
-        if(rowCount >= MAX_ROW_COUNT)
-        {
+        if (rowCount >= MAX_ROW_COUNT) {
             return true;
         }
         return false;
     }
 
     @Override
-    public int getPid()
-    {
+    public int getPid() {
         return this.pageId;
     }
 
     // get the data of the rows
     @Override
-    public byte[] getRows()
-    {
+    public byte[] getRows() {
         return this.rows;
     }
 
-    //get the rowcount by accessing the first 4 bytes
-
-    private int getRowCount() {
+    // get the rowcount by accessing the first 4 bytes
+    public int getRowCount() {
         return ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).getInt();
     }
 
+    // since this is data page, we dont have bool value
+    public boolean getBoolValue() {
+        return false;
+    }
+
     // set the row count in first 4 bytes
-    private void setRowCount(int count) {
+    public void setRowCount(int count) {
         ByteBuffer.wrap(rows, 0, ROW_COUNT_SIZE).putInt(count);
     }
 
+    // since it is a data page, we dont have next pointer
+    public void setNextPointer(int nextPointer) {
+        return;
+    }
 
-
+    // since it is a data page, we dont have next pointer
+    public int getNextPointer() {
+        return -1;
+    }
 }

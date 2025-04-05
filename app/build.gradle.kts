@@ -42,27 +42,27 @@ java {
 application {
     // Define the main class for the application.
     mainClass = "org.example.Caller"
-    
+
 }
 
 
 // Register a task to run the test script
-tasks.register<Exec>("runQueryTestScript") {
-    workingDir = file("src/test/java/org/example")  // Make sure this is the correct directory
-    commandLine = listOf("./test_script.sh")  
-}
+//tasks.register<Exec>("runQueryTestScript") {
+//    workingDir = file("src/test/java/org/example")  // Make sure this is the correct directory
+//    commandLine = listOf("./test_script.sh")
+//}
 
 tasks.named<Test>("test") {
-    // dependsOn("runQueryTestScript")  // Ensure the script runs before unit tests
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-
-    // Enable logging for standard output and error streams.
-    testLogging {
-        events("passed", "failed", "skipped", "standard_out", "standard_error")
-        showStandardStreams = true // This ensures standard streams are displayed in the console.
-    }
+   // dependsOn("runQueryTestScript")  // Ensure the script runs before unit tests
+   // Use JUnit Platform for unit tests.
+   useJUnitPlatform()
 }
+//    // Enable logging for standard output and error streams.
+//    testLogging {
+//        events("passed", "failed", "skipped", "standard_out", "standard_error")
+//        showStandardStreams = true // This ensures standard streams are displayed in the console.
+//    }
+//}
 
 tasks.jar {
     manifest {
