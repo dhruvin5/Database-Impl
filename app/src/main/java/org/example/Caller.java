@@ -78,7 +78,7 @@ public class Caller {
                 while (rangeResults.hasNext()) {
                     Rid rid = rangeResults.next();
                     searchResultsList.add(rid);
-                    System.out.println("Found Rid -> PageID: " + rid.getPageId() + ", SlotID: " + rid.getSlotId() + " from the " + searchType + " index.");
+                  //  System.out.println("Found Rid -> PageID: " + rid.getPageId() + ", SlotID: " + rid.getSlotId() + " from the " + searchType + " index.");
                 }
     
                 // System.out.println("movieId1 "+ movieId1+ " movieId2 "+ movieId2);
@@ -97,14 +97,14 @@ public class Caller {
                             if (rowFromFile != null) {
                                 String movieIdFromFile = new String(rowFromFile.movieId, StandardCharsets.UTF_8);
                                 String titleFromFile = new String(rowFromFile.title, StandardCharsets.UTF_8);
-                                System.out.println("movieIdFromFile: "+movieIdFromFile+" titleFromFile: "+titleFromFile);
+                             //   System.out.println("movieIdFromFile: "+movieIdFromFile+" titleFromFile: "+titleFromFile);
                                 if ( searchType.equals("movieId") && (movieIdFromFile.compareTo(movieId1) < 0 || movieIdFromFile.compareTo(movieId2) > 0) ){
                                     stat=false;
-                                    System.out.println("movie id" + movieIdFromFile + " obtained is out of range.");
+                                //    System.out.println("movie id" + movieIdFromFile + " obtained is out of range.");
                                 }
                                 else if( searchType.equals("title") && (titleFromFile.compareTo(movieTitle1) < 0 || titleFromFile.compareTo(movieTitle2) > 0) ) {
                                     stat = false;
-                                    System.out.println("title " + titleFromFile + " obtained is out of range");
+                                //    System.out.println("title " + titleFromFile + " obtained is out of range");
                                 }
                             }
                         }
