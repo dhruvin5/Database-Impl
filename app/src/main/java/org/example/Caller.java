@@ -170,9 +170,9 @@ public class Caller {
                             if (rowFromFile != null) {
                                 String movieIdFromFile = new String(rowFromFile.movieId, StandardCharsets.UTF_8);
                                 String titleFromFile = new String(rowFromFile.title, StandardCharsets.UTF_8);
-                                System.out.println("Found record for " + searchType + ": " + searchKey + " Movie ID: " + movieIdFromFile + " Title: " + titleFromFile + " from movie.bin");
-                                System.out.println("searchKey idx" + searchKey);
-                                System.out.println("titleFromFile " + titleFromFile);
+                              //  System.out.println("Found record for " + searchType + ": " + searchKey + " Movie ID: " + movieIdFromFile + " Title: " + titleFromFile + " from movie.bin");
+                               // System.out.println("searchKey idx" + searchKey);
+                               // System.out.println("titleFromFile " + titleFromFile);
                                 if ((searchType.equals("movieId") && !searchKey.equals(movieIdFromFile)) || (searchType.equals("title") && !searchKey.equals(titleFromFile))) {
                                     stat = false;
                                     System.out.println("Mismatch in data for " + searchType + ": " + searchKey);
