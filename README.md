@@ -8,7 +8,7 @@
 - Git Bash
 
 ## Inserting in B+ Tree
-- Currently all the rows are being inserted in the movie Indexes which takes a significant amount of time
+- Currently all the rows are being inserted in the indexes one by one which takes a significant amount of time
 - Correctness Tests (C1, C2, C3, C4) can be performed on a smaller subset of data
 
   ## Performance tests
