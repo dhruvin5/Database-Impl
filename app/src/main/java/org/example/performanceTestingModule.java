@@ -78,14 +78,14 @@ public class performanceTestingModule {
 
             // Saves the results to a file every 500 iterations
             if (i % 500 == 0) {
-                writeResultsToFile("bonus_movieid_linearScanResults.txt", linearScanResult);
-                writeResultsToFile("bonus_movieid_bPlusTreeResults.txt", bPlusTreeResult);
+                writeResultsToFile("movieid_linearScanResults.txt", linearScanResult);
+                writeResultsToFile("movieid_bPlusTreeResults.txt", bPlusTreeResult);
             }
         }
 
         // Write results to file
-        writeResultsToFile("bonus_movieid_linearScanResults.txt", linearScanResult);
-        writeResultsToFile("bonus_movieid_bPlusTreeResults.txt", bPlusTreeResult);
+        writeResultsToFile("movieid_linearScanResults.txt", linearScanResult);
+        writeResultsToFile("movieid_bPlusTreeResults.txt", bPlusTreeResult);
     }
 
     // Performs performance testing for the title
@@ -148,14 +148,14 @@ public class performanceTestingModule {
 
             // Saves the results to a file every 100 iterations
             if (i % 100 == 0) {
-                writeResultsToFile("bonus_title_linearScanResults.txt", linearScanResult);
-                writeResultsToFile("bonous_title_bPlusTreeResults.txt", bPlusTreeResult);
+                writeResultsToFile("title_linearScanResults.txt", linearScanResult);
+                writeResultsToFile("title_bPlusTreeResults.txt", bPlusTreeResult);
             }
         }
 
         // Write results to file
-        writeResultsToFile("bonus_title_linearScanResults.txt", linearScanResult);
-        writeResultsToFile("bonus_title_bPlusTreeResults.txt", bPlusTreeResult);
+        writeResultsToFile("title_linearScanResults.txt", linearScanResult);
+        writeResultsToFile("title_bPlusTreeResults.txt", bPlusTreeResult);
     }
 
     private int directScan(BufferManager manager, String rangeStart, String rangeEnd, boolean isTitle) {

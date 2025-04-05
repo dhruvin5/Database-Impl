@@ -4,11 +4,13 @@ public class indexMetaData {
     private tableMetaData table; // Reference to the table metadata
     private String Key;
     private String file;
+    private String indexType;
 
-    public indexMetaData(tableMetaData table, String Key, String file) {
+    public indexMetaData(tableMetaData table, String Key, String file, String indexType) {
         this.table = table;
         this.Key = Key;
         this.file = file;
+        this.indexType = indexType;
     }
 
     // Get the table the index is associated with

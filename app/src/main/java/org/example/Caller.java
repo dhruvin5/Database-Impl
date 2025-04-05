@@ -7,7 +7,7 @@ import Row.Row;
 import Utilities.Utilities;
 import buffer.BufferManager;
 import buffer.BufferManagerImplem;
-
+import org.example.performanceTestingModule;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -276,6 +276,12 @@ public class Caller {
             } else {
                 System.out.println("========================== PASS TEST C4 ==========================");
             }
+
+            // Performance Testing
+            System.out.println("========================== STARTING PERFORMANCE TESTS ==========================");
+            performanceTestingModule performance_test = new performanceTestingModule(bufferManager, movieIdIndex, titleIndex);
+            performance_test.performanceTesting_MovieID(false);
+            performance_test.performanceTesting_Title(false);
 
         } catch (Exception e) {
             System.err.println("Caught exception: " + e.getMessage());

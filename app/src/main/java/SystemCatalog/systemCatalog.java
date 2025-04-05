@@ -52,8 +52,8 @@ public class systemCatalog {
 
         // Adds the Movie table to the catalog
         addTable("Movies", "movies.bin", columns); // Adds the Movie table to the catalog
-        addIndex("Movie_Index", "movies.bin", "movieId", "movie_Id_index.bin"); // Adds an index on the movieId column
-        addIndex("Movies_title", "movies.bin", "title", "title_index.bin"); // Adds an index on the title column
+        addIndex("Movie_Index", "movies.bin", "movieId", "movie_Id_index.bin", "b+ tree"); // Adds an index on the movieId column
+        addIndex("Movies_title", "movies.bin", "title", "title_index.bin", "b+ tree"); // Adds an index on the title column
 
         addTable("Movie_ID_Index", "movie_Id_index.bin", movie_index_columns);
         addTable("Title_Index", "title_index.bin", title_index_columns);
@@ -76,12 +76,12 @@ public class systemCatalog {
     }
 
     // Returns a boolean if a index was added successfully to the table
-    private boolean addIndex(String indexName, String tablefile, String key, String indexFile) {
+    private boolean addIndex(String indexName, String tablefile, String key, String indexFile, String indexType) {
         tableMetaData table = tables.get(tablefile);
         if (table == null || !table.getColumnNames().contains(key) || indexes.containsKey(indexName)) {
             return false;
         }
-        indexes.put(indexFile, new indexMetaData(table, key, indexFile));
+        indexes.put(indexFile, new indexMetaData(table, key, indexFile, indexType));
         isIndex.put(indexFile, true); // Mark the file as an index
         return true;
     }
