@@ -7,7 +7,10 @@ import java.nio.charset.StandardCharsets;
 import java.io.File;
 
 import Page.Page;
+import Row.Row;
 import Row.movieRow;
+import Row.peopleRow;
+import Row.workRow;
 import buffer.BufferManager;
 import configs.Config;
 
@@ -16,69 +19,31 @@ public class Utilities {
     // loads the dataset into a disk file
     // takes the bufferManagaer and the filePath as the input.
     public static void loadDataset(BufferManager bf, String filepath) {
+        generalLoadDataset(bf, filepath, "movies.bin",
+                columns -> {
+                    byte[] movieId = toFixedByteArray(columns[0], 9);
+                    byte[] title = toFixedByteArray(columns[2], 30);
+                    return new movieRow(movieId, title);
+                });
+    }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+    public static void loadWorkDataset(BufferManager bf, String filepath) {
+        generalLoadDataset(bf, filepath, "work.bin",
+                columns -> {
+                    byte[] movieId = toFixedByteArray(columns[0], 9);
+                    byte[] personId = toFixedByteArray(columns[2], 9);
+                    byte[] category = toFixedByteArray(columns[3], 20);
+                    return new workRow(movieId, personId, category);
+                });
+    }
 
-            // initially there is no page
-            int count = 0;
-            int currentPageId = -1;
-            boolean pageExists = false;
-
-            String dataLine;
-
-            while ((dataLine = reader.readLine()) != null) {
-
-                // split by tab
-                String[] cols = dataLine.split("\t");
-
-                // get the idColumn and the title Column
-                String idStr = cols[0];
-                String titleStr = cols[2];
-
-                // discard if the movieId is not of size 9
-                if (idStr.length() != 9) {
-                    continue;
-                }
-
-                // convert the string to fixed size byte arrays
-                byte[] idBytes = toFixedByteArray(idStr, 9);
-                byte[] titleBytes = toFixedByteArray(titleStr, 30);
-
-                // create a new Row Object
-                movieRow row = new movieRow(idBytes, titleBytes);
-
-                // if no page currently, create a page first
-                if (!pageExists) {
-                    Page newPage = bf.createPage("movies.bin");
-                    currentPageId = newPage.getPid();
-                    bf.unpinPage(currentPageId, "movies.bin");
-                    pageExists = true;
-                }
-
-                // get the page after creating using the currentPageId
-                Page p = bf.getPage(currentPageId, "movies.bin");
-
-                // check if the page is already full
-                // if full unpin it and tell the buffer to create a new page
-                if (p.isFull()) {
-                    bf.unpinPage(currentPageId, "movies.bin");
-                    p = bf.createPage("movies.bin");
-                    currentPageId = p.getPid();
-                }
-
-                // insert the rows in the page
-                p.insertRow(row);
-                bf.markDirty(currentPageId, "movies.bin");
-                bf.unpinPage(currentPageId, "movies.bin");
-
-                //System.out.println("Page Id : - "  + currentPageId);
-                count++;
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    public static void loadPeopleDataset(BufferManager bf, String filepath) {
+        generalLoadDataset(bf, filepath, "people.bin",
+                columns -> {
+                    byte[] personId = toFixedByteArray(columns[0], 9);
+                    byte[] name = toFixedByteArray(columns[1], 105);
+                    return new peopleRow(personId, name);
+                });
     }
 
     // Utility to convert a string to a fixed byte array of a particular length
@@ -104,11 +69,69 @@ public class Utilities {
     public static int getNumberOfPages(String fileName) {
         File file = new File(fileName);
         if (!file.exists()) {
-            System.out.println("Error: File "+ fileName+ " does not exist.");
+            System.out.println("Error: File " + fileName + " does not exist.");
             return -1;
         }
-        long fileSize = file.length();  // Get file size in bytes
+        long fileSize = file.length(); // Get file size in bytes
         return (int) Math.ceil((double) fileSize / Config.PAGE_SIZE);
     }
 
+    public static void generalLoadDataset(BufferManager bf, String filepath, String binFileName,
+            createRow createRow) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            int currentPageId = -1;
+            boolean pageExists = false;
+            int count = 0;
+
+            String dataLine = reader.readLine(); // Skip the first line if needed
+            if (dataLine == null) {
+                System.out.println("Error: Empty file");
+                return;
+            }
+            while ((dataLine = reader.readLine()) != null) {
+                String[] cols = dataLine.split("\t");
+
+                // Validate column lengths for specific files
+                if (binFileName.equals("movies.bin") && cols[0].length() != 9) {
+                    continue;
+                } else if (binFileName.equals("work.bin") && cols[0].length() != 9 && cols[2].length() != 9) {
+                    continue;
+                }
+
+                // Create a new Row object using the provided RowCreator
+                Row row = createRow.createRow(cols);
+                System.out.println("Movie ID: " + new String(row.movieId) + ", Title: " + new String(row.title));
+                // Create a new page if none exists
+                if (!pageExists) {
+                    Page newPage = bf.createPage(binFileName);
+                    currentPageId = newPage.getPid();
+                    bf.unpinPage(currentPageId, binFileName);
+                    pageExists = true;
+                }
+
+                // Get the page and insert the row
+                Page p = bf.getPage(currentPageId, binFileName);
+                if (p.isFull()) {
+                    bf.unpinPage(currentPageId, binFileName);
+                    p = bf.createPage(binFileName);
+                    currentPageId = p.getPid();
+                }
+                p.insertRow(row);
+                bf.markDirty(currentPageId, binFileName);
+                bf.unpinPage(currentPageId, binFileName);
+                count++;
+                if (count % 1000 == 0) {
+                    System.out.println("Inserted " + count + " rows into " + binFileName);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FunctionalInterface
+    public interface createRow {
+        Row createRow(String[] columns);
+    }
 }

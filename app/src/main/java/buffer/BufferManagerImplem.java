@@ -87,6 +87,10 @@ public class BufferManagerImplem extends BufferManager {
                         columnSize.get("slotID"));
             } else if (this.catalog.isIndexFile(FILE_NAME) && !isLeaf) {
                 page = new NonLeafIndexPage(newID, boolValue, columnSize.get("key"), columnSize.get("pid"));
+            } else if (FILE_NAME.equals("people.bin")) {
+                page = new peoplePageImpl(newID);
+            } else if (FILE_NAME.equals("work.bin")) {
+                page = new workPageImpl(newID);
             } else {
                 page = new PageImpl(newID, columnSize.get("movieId"), columnSize.get("title"));
             }
@@ -247,9 +251,7 @@ public class BufferManagerImplem extends BufferManager {
         if (metadata != null) {
             // Page is in the buffer, marking it as dirty
             metadata.setDirtyBit(true);
-            // System.out.println("Page " + pageId + " is marked as dirty.");
         } else {
-            // System.out.println("THIS MARK DIRTY IS CALLED!!");
             System.out.println("Error: Page " + pageId + " not found in buffer.");
         }
     }
@@ -294,8 +296,7 @@ public class BufferManagerImplem extends BufferManager {
 
             // check if the page is a index page or not
             if (this.catalog.isIndexFile(FILE_NAME)) {
-                // check if the page is a leaf page or not
-                boolean isLeaf = ispageLeaf(FILE_NAME, buffer);
+                boolean isLeaf = ispageLeaf(FILE_NAME, buffer); // check if the page is a leaf page or not
                 if (isLeaf) {
                     // Leaf index page
                     return new LeafIndexPageImpl(pageId, buffer, columnSize.get("key"), columnSize.get("pid"),
@@ -304,9 +305,12 @@ public class BufferManagerImplem extends BufferManager {
                     // Non-leaf index page
                     return new NonLeafIndexPage(pageId, buffer, columnSize.get("key"), columnSize.get("pid"));
                 }
+            } else if (FILE_NAME.equals("people.bin")) {
+                return new peoplePageImpl(pageId, buffer); // People page
+            } else if (FILE_NAME.equals("work.bin")) {
+                return new workPageImpl(pageId, buffer); // Work page
             } else {
-                // Regular Data page
-                return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title"));
+                return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title")); // movie data
             }
 
         } catch (IOException e) {
