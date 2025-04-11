@@ -6,6 +6,7 @@ import operators.Operator;
 import buffer.BufferManager;
 import operators.selectionOperator.WorkSelectionOperator;
 import Row.Row;
+import Row.materializedRow;
 import Page.Page;
 
 public class WorkProjectionOperator implements Operator {
@@ -14,15 +15,21 @@ public class WorkProjectionOperator implements Operator {
     private Operator workSelectionOperator;
     private Page currentPage;
     private boolean firstCall;
+    private int currentRowIndex;
+    private int currentPageId;
 
     public void open(BufferManager bufferManager, String startRange, String endRange) {
         return;
     }
 
     public void open(BufferManager bufferManager) {
-        this.fileName = "projection.bin";
+        this.fileName = "materialized.bin";
         this.bufferManager = bufferManager;
         this.currentPage = bufferManager.createPage(fileName);
+        this.currentPageId = currentPage.getPid();
+        bufferManager.markDirty(currentPageId, fileName);
+
+        this.currentRowIndex = 0;
 
         this.workSelectionOperator = new WorkSelectionOperator();
         this.workSelectionOperator.open(bufferManager);
@@ -34,13 +41,32 @@ public class WorkProjectionOperator implements Operator {
             return null;
         }
 
-        // Perform Materialization
-        if (this.firstCall) {
+        if (this.firstCall)
             materialize();
+
+        // get the next row from the current
+        if (currentRowIndex < currentPage.getRowCount()) {
+            Row row = currentPage.getRow(currentRowIndex);
+            currentRowIndex++;
+            return row;
         }
 
-        return null;
-
+        // go to the next page
+        bufferManager.unpinPage(currentPageId, fileName);
+        currentPage = bufferManager.getPage(++currentPageId, fileName);
+        currentRowIndex = 0;
+        if (currentPage != null) {
+            Row row = currentPage.getRow(currentRowIndex);
+            currentRowIndex++;
+            return row;
+        } else {
+            // No more pages to read so we need to reset the current page and row index
+            bufferManager.unpinPage(currentPageId, fileName);
+            currentPageId = 0;
+            currentRowIndex = 0;
+            currentPage = bufferManager.getPage(currentPageId, fileName);
+            return null;
+        }
     }
 
     // Needs to also delete the FILE
@@ -56,18 +82,16 @@ public class WorkProjectionOperator implements Operator {
     }
 
     private void materialize() {
-
         Row row = null;
         while ((row = workSelectionOperator.next()) != null) {
             if (currentPage.isFull()) {
                 bufferManager.unpinPage(currentPage.getPid(), fileName);
                 currentPage = bufferManager.createPage(fileName);
             }
-            // Write the row to the current page
-            currentPage.insertRow(row);
+            currentPage.insertRow(new materializedRow(row.movieId, row.personId));
         }
-
         this.firstCall = false;
+        this.bufferManager.unpinPage(currentPage.getPid(), fileName);
+        this.currentPage = this.bufferManager.getPage(currentPageId, fileName);
     }
-
 }

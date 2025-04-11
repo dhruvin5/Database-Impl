@@ -62,4 +62,11 @@ public abstract class BufferManager {
      */
     public abstract void clearCache();
 
+    /**
+     * Deletes a file from the disk
+     * 
+     * @param fileName
+     */
+    // public abstract void deleteFile(String fileName);
+
 }

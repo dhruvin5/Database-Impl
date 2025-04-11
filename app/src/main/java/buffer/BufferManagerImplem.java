@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.AbstractMap;
 
 import Page.*;
+import Row.materializedRow;
 import configs.Config;
 import SystemCatalog.systemCatalog;
 import SystemCatalog.tableMetaData;
@@ -94,6 +95,8 @@ public class BufferManagerImplem extends BufferManager {
                 page = new peoplePageImpl(newID);
             } else if (FILE_NAME.equals("work.bin")) {
                 page = new workPageImpl(newID);
+            } else if (FILE_NAME.equals("materialized.bin")) {
+                page = new MaterializedPageImpl(newID);
             } else {
                 page = new PageImpl(newID, columnSize.get("movieId"), columnSize.get("title"));
             }
@@ -313,6 +316,8 @@ public class BufferManagerImplem extends BufferManager {
                 return new peoplePageImpl(pageId, buffer); // People page
             } else if (FILE_NAME.equals("work.bin")) {
                 return new workPageImpl(pageId, buffer); // Work page
+            } else if (FILE_NAME.equals("materialized.bin")) {
+                return new MaterializedPageImpl(pageId, buffer); // Materialized page
             } else {
                 return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title")); // movie data
             }
