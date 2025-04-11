@@ -114,7 +114,8 @@ public class BufferManagerImplem extends BufferManager {
         }
         // Store the metadata in the pageInfo map
         if (pageInfo.containsKey(FILE_NAME) && pageInfo.get(FILE_NAME).containsKey(page.getPid())) {
-            System.out.println("Error: Page " + page.getPid() + " already exists in the buffer.");
+            // System.out.println("Error: Page " + page.getPid() + " already exists in the
+            // buffer.");
             return null; // Page already exists, cannot create again
         }
 
