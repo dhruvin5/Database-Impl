@@ -9,3 +9,6 @@ build
 .idea/
 
 imdb.bin
+
+*.bin
+

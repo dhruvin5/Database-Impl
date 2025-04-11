@@ -100,7 +100,6 @@ public class Utilities {
 
                 // Create a new Row object using the provided RowCreator
                 Row row = createRow.createRow(cols);
-                System.out.println("Movie ID: " + new String(row.movieId) + ", Title: " + new String(row.title));
                 // Create a new page if none exists
                 if (!pageExists) {
                     Page newPage = bf.createPage(binFileName);
@@ -116,6 +115,7 @@ public class Utilities {
                     p = bf.createPage(binFileName);
                     currentPageId = p.getPid();
                 }
+
                 p.insertRow(row);
                 bf.markDirty(currentPageId, binFileName);
                 bf.unpinPage(currentPageId, binFileName);

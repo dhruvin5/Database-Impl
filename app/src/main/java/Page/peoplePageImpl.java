@@ -85,8 +85,8 @@ public class peoplePageImpl implements Page {
         int offset = ROW_COUNT_SIZE + rowCount * ROW_SIZE;
 
         // copy the data to the page
-        copyAndPaste(row.personId, this.personIdSize, (offset += this.personIdSize));
-        copyAndPaste(row.name, this.nameSize, (offset += this.nameSize));
+        copyAndPaste(row.personId, this.personIdSize, offset);
+        copyAndPaste(row.name, this.nameSize, (offset += this.personIdSize));
         setRowCount(rowCount + 1);
         return rowCount;
     }

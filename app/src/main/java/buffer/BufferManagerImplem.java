@@ -59,6 +59,9 @@ public class BufferManagerImplem extends BufferManager {
     private HashMap<String, Integer> getColumnSizes(String FILE_NAME) {
 
         tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata
+        if (table == null) {
+            return null;
+        }
         ArrayList<String> columnNames = table.getColumnNames(); // Get the table name
         HashMap<String, Integer> columnSizes = new HashMap<>(); // Initialize the
 
