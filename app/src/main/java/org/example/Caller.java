@@ -28,19 +28,6 @@ public class Caller {
         // Utilities.loadPeopleDataset(bufferManager,
         // "C:/Users/bhaga/Downloads/name.basics.tsv"); // Load people dataset
 
-        // Create a bnl operator
-        // BNLOperator2 bnlOperator = new BNLOperator2();
-        // bnlOperator.open(bufferManager, "A", "Z"); // Open the operator with a range
-        // Row row = null;
-        // while ((row = bnlOperator.next()) != null) {
-        // System.out
-        // .println("Movie: " + new String(row.movieId) + ", People: " + new
-        // String(row.personId) + ", Title: "
-        // + new String(row.title) + ", Name: " + new String(row.name));
-        // }
-        // bnlOperator.close(); // Close the operator
-
-        // }
         // Create a top projection operator
         TopProjectionOperator topProjectionOperator = new TopProjectionOperator();
         topProjectionOperator.open(bufferManager, "A", "Z"); // Open the operator with a range

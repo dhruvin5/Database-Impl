@@ -137,8 +137,16 @@ public class Utilities {
         // Takes rows (title and name) and writes to a csv file
         StringBuilder sb = new StringBuilder();
         for (Row row : output) {
-            String title = new String(row.title, StandardCharsets.UTF_8).replace('\0', ' ');
-            String name = new String(row.name, StandardCharsets.UTF_8).replace('\0', ' ');
+            String title = new String(row.title, StandardCharsets.UTF_8).replace('\0', ' ').trim();
+            String name = new String(row.name, StandardCharsets.UTF_8).replace('\0', ' ').trim();
+
+            // Ensure title is exactly 30 characters long
+            title = String.format("%-30s", title);
+            name = String.format("%-105s", name);
+
+            if (title.length() != 30) {
+                System.out.println("Error: " + title.length() + " " + title + " " + row.title.length);
+            }
             sb.append(title).append(",").append(name).append("\n");
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
