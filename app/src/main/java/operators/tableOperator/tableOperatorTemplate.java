@@ -14,6 +14,8 @@ public class tableOperatorTemplate implements Operator {
 
     public void open(BufferManager bufferManager) {
         this.fileName = "";
+        this.currentPageId = 0;
+        this.currentRow = 0;
         this.bufferManager = bufferManager;
         this.currentPageObject = fileName != null ? bufferManager.getPage(currentPageId, fileName) : null;
     }
@@ -43,6 +45,7 @@ public class tableOperatorTemplate implements Operator {
     public void close() {
         if (currentPageObject != null) {
             bufferManager.unpinPage(currentPageId, fileName);
+            currentPageObject = null;
         }
     }
 

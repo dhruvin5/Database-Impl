@@ -1,5 +1,6 @@
 package buffer;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -97,6 +98,8 @@ public class BufferManagerImplem extends BufferManager {
                 page = new workPageImpl(newID);
             } else if (FILE_NAME.equals("materialized.bin")) {
                 page = new MaterializedPageImpl(newID);
+            } else if (FILE_NAME.equals("-2")) {
+                page = new JoinPageImpl(newID);
             } else {
                 page = new PageImpl(newID, columnSize.get("movieId"), columnSize.get("title"));
             }
@@ -231,7 +234,8 @@ public class BufferManagerImplem extends BufferManager {
             Page page = getPageFromDisk(pageId, FILE_NAME);
 
             if (page == null) {
-                System.out.println("Error: Failed to load page" + pageId + "from disk. " + FILE_NAME);
+                // System.out.println("Error: Failed to load page" + pageId + "from disk. " +
+                // FILE_NAME);
                 return null; // failed to load page from disk
             }
 
@@ -258,9 +262,20 @@ public class BufferManagerImplem extends BufferManager {
         if (metadata != null) {
             // Page is in the buffer, marking it as dirty
             metadata.setDirtyBit(true);
-        } else {
-            System.out.println("Error: Page " + pageId + " not found in buffer.");
-        }
+        } // else {
+          // System.out.println("Error: Page " + pageId + " not found in buffer.");
+          // }
+    }
+
+    public void markUndirty(int pageId, String FILE_NAME) {
+        PageMetaData metadata = pageInfo.getOrDefault(FILE_NAME, new HashMap<>()).get(pageId);
+
+        if (metadata != null) {
+            // Page is in the buffer, marking it as dirty
+            metadata.setDirtyBit(false);
+        } // else {
+          // System.out.println("Error: Page " + pageId + " not found in buffer.");
+          // }
     }
 
     @Override
@@ -275,9 +290,9 @@ public class BufferManagerImplem extends BufferManager {
             } else { // Pin count is already 0
                 System.out.println("Error: Page " + pageId + " already has pin count 0. Cannot unpin further.");
             }
-        } else { // Page not in the buffer pool
-            System.out.println("Error: Page " + pageId + " not found in buffer.");
-        }
+        } // else { // Page not in the buffer pool
+          // System.out.println("Error: Page " + pageId + " not found in buffer.");
+          // }
     }
 
     // get Page from the disk
@@ -318,6 +333,8 @@ public class BufferManagerImplem extends BufferManager {
                 return new workPageImpl(pageId, buffer); // Work page
             } else if (FILE_NAME.equals("materialized.bin")) {
                 return new MaterializedPageImpl(pageId, buffer); // Materialized page
+            } else if (FILE_NAME.equals("-2")) {
+                return new JoinPageImpl(pageId, buffer); // Join page
             } else {
                 return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title")); // movie data
             }
@@ -429,4 +446,34 @@ public class BufferManagerImplem extends BufferManager {
         this.pageTable.clear();
         this.pageInfo.clear();
     }
+
+    public void deleteFile(String FILE_NAME) {
+        try {
+            File file = new File(FILE_NAME);
+            if (file.exists()) {
+                if (file.delete()) {
+                    System.out.println("File Deleted");
+                    clearFileData(FILE_NAME);
+                } else {
+                    System.out.println("File not deleted");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error deleting the file: " + e.getMessage());
+        }
+    }
+
+    private void clearFileData(String FILE_NAME) {
+        HashMap<Integer, Integer> file_pageTable = pageTable.get(FILE_NAME);
+        if (file_pageTable != null) {
+            for (int pageId : file_pageTable.keySet()) {
+                bufferPool[file_pageTable.get(pageId)] = null;
+            }
+            pageTable.remove(FILE_NAME); // remove the file from the page table
+        }
+        pageInfo.remove(FILE_NAME); // remove the file from the page info
+        FileToPID.remove(FILE_NAME); // remove the file from the FileToPID mapping
+        lruCache.removeIf(entry -> entry.getKey().equals(FILE_NAME));
+    }
+
 }

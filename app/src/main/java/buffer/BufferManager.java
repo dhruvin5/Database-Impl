@@ -45,6 +45,13 @@ public abstract class BufferManager {
     public abstract void markDirty(int pageId, String fileName);
 
     /**
+     * Marks a page as clean, indicating it doesn't need to be written to disk.
+     * 
+     * @param pageId The ID of the page to mark as clean.
+     */
+    public abstract void markUndirty(int pageId, String fileName);
+
+    /**
      * Unpins a page in the buffer pool, allowing it to be evicted if necessary.
      * 
      * @param pageId The ID of the page to unpin.
@@ -67,6 +74,12 @@ public abstract class BufferManager {
      * 
      * @param fileName
      */
-    // public abstract void deleteFile(String fileName);
+    public abstract void deleteFile(String fileName);
+
+    /**
+     * 
+     * @return The number of pages in the buffer pool.
+     */
+    public abstract int getBufferCapacity();
 
 }

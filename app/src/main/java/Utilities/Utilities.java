@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 import Page.Page;
 import Row.Row;
@@ -120,7 +123,7 @@ public class Utilities {
                 bf.markDirty(currentPageId, binFileName);
                 bf.unpinPage(currentPageId, binFileName);
                 count++;
-                if (count % 1000 == 0) {
+                if (count % 20000 == 0) {
                     System.out.println("Inserted " + count + " rows into " + binFileName);
                     break;
                 }
@@ -130,8 +133,24 @@ public class Utilities {
         }
     }
 
+    public static void writeCSV(ArrayList<Row> output, String fileName) {
+        // Takes rows (title and name) and writes to a csv file
+        StringBuilder sb = new StringBuilder();
+        for (Row row : output) {
+            String title = new String(row.title, StandardCharsets.UTF_8).replace('\0', ' ');
+            String name = new String(row.name, StandardCharsets.UTF_8).replace('\0', ' ');
+            sb.append(title).append(",").append(name).append("\n");
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(sb.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FunctionalInterface
     public interface createRow {
         Row createRow(String[] columns);
     }
+
 }

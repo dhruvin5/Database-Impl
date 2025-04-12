@@ -10,32 +10,46 @@ import operators.tableOperator.WorkOperator;
 import operators.selectionOperator.MovieSelectionOperator;
 import operators.selectionOperator.WorkSelectionOperator;
 import operators.projectionOperator.WorkProjectionOperator;
+import operators.joinOperator.BNLOperator1;
+import operators.joinOperator.BNLOperator2;
+import operators.projectionOperator.TopProjectionOperator;
+
+import java.util.ArrayList;
+
 import Row.Row;
 
 public class Caller {
     public static void main(String[] args) {
         BufferManager bufferManager = new BufferManagerImplem(10);
-        Utilities.loadDataset(bufferManager, "C:/Users/bhaga/Downloads/title.basics.tsv"); // Load movies dataset
-        Utilities.loadWorkDataset(bufferManager, "C:/Users/bhaga/Downloads/title.principals.tsv"); // Load work dataset
-        Utilities.loadPeopleDataset(bufferManager, "C:/Users/bhaga/Downloads/name.basics.tsv"); // Load people dataset
+        // Utilities.loadDataset(bufferManager,
+        // "C:/Users/bhaga/Downloads/title.basics.tsv"); // Load movies dataset
+        // Utilities.loadWorkDataset(bufferManager,
+        // "C:/Users/bhaga/Downloads/title.principals.tsv"); // Load work dataset
+        // Utilities.loadPeopleDataset(bufferManager,
+        // "C:/Users/bhaga/Downloads/name.basics.tsv"); // Load people dataset
 
-        // Create a work projection operator
-        WorkProjectionOperator workProjectionOperator = new WorkProjectionOperator();
-        workProjectionOperator.open(bufferManager); // Open the projection operator with the specified range
+        // Create a bnl operator
+        // BNLOperator2 bnlOperator = new BNLOperator2();
+        // bnlOperator.open(bufferManager, "A", "Z"); // Open the operator with a range
+        // Row row = null;
+        // while ((row = bnlOperator.next()) != null) {
+        // System.out
+        // .println("Movie: " + new String(row.movieId) + ", People: " + new
+        // String(row.personId) + ", Title: "
+        // + new String(row.title) + ", Name: " + new String(row.name));
+        // }
+        // bnlOperator.close(); // Close the operator
 
+        // }
+        // Create a top projection operator
+        TopProjectionOperator topProjectionOperator = new TopProjectionOperator();
+        topProjectionOperator.open(bufferManager, "A", "Z"); // Open the operator with a range
+        ArrayList<Row> rows = new ArrayList<>();
         Row row = null;
-        int count = 0;
-        while ((row = workProjectionOperator.next()) != null) {
-            count++;
-            System.out.println("MoiveId" + " " + new String(row.movieId) + " " + "PersonId" + " "
-                    + new String(row.personId) + " " + count);
+        while ((row = topProjectionOperator.next()) != null) {
+            rows.add(row);
         }
-
-        while ((row = workProjectionOperator.next()) != null) {
-            count++;
-            System.out.println("MoiveId" + " " + new String(row.movieId) + " " + "PersonId" + " "
-                    + new String(row.personId) + " " + count);
-        }
-
+        topProjectionOperator.close(); // Close the operator
+        Utilities.writeCSV(rows, "output.csv"); // Write the output to a file
     }
 }

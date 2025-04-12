@@ -79,6 +79,7 @@ public class WorkProjectionOperator implements Operator {
             workSelectionOperator.close();
             workSelectionOperator = null;
         }
+        this.bufferManager.deleteFile(fileName);
     }
 
     private void materialize() {
