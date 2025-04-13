@@ -11,4 +11,8 @@ public class MovieOperator extends tableOperatorTemplate {
         this.bufferManager = bufferManager;
         this.currentPageObject = fileName != null ? bufferManager.getPage(currentPageId, fileName) : null;
     }
+
+    public void open(BufferManager bufferManager, String startRange, String endRange) {
+        open(bufferManager);
+    }
 }

@@ -19,7 +19,7 @@ public class WorkProjectionOperator implements Operator {
     private int currentPageId;
 
     public void open(BufferManager bufferManager, String startRange, String endRange) {
-        return;
+        open(bufferManager);
     }
 
     public void open(BufferManager bufferManager) {

@@ -123,10 +123,10 @@ public class Utilities {
                 bf.markDirty(currentPageId, binFileName);
                 bf.unpinPage(currentPageId, binFileName);
                 count++;
-                if (count % 20000 == 0) {
-                    System.out.println("Inserted " + count + " rows into " + binFileName);
-                    break;
-                }
+                // if (count % 20000 == 0) {
+                // System.out.println("Inserted " + count + " rows into " + binFileName);
+                // break;
+                // }
             }
         } catch (IOException e) {
             e.printStackTrace();

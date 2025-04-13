@@ -468,6 +468,7 @@ public class BufferManagerImplem extends BufferManager {
         if (file_pageTable != null) {
             for (int pageId : file_pageTable.keySet()) {
                 bufferPool[file_pageTable.get(pageId)] = null;
+                freeFrameList.add(file_pageTable.get(pageId));
             }
             pageTable.remove(FILE_NAME); // remove the file from the page table
         }

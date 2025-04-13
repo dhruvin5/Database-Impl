@@ -7,10 +7,10 @@ import Row.Row;
 
 public class WorkSelectionOperator implements Operator {
 
-    private WorkOperator workOperator;
+    private Operator workOperator;
 
     public void open(BufferManager bufferManager, String startRange, String endRange) {
-        return;
+        open(bufferManager);
     }
 
     public void open(BufferManager bufferManager) {

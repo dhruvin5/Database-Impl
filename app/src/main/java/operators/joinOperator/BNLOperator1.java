@@ -108,13 +108,14 @@ public class BNLOperator1 implements Operator {
 
         int currIndex = 0;
         Page currentPage = bufferManager.getPage(blockIds[currIndex], fileName);
-
+        bufferManager.unpinPage(currentPage.getPid(), fileName);
         while (currIndex < blockIds.length) {
             if (currentPage.isFull()) {
                 currIndex++;
                 if (currIndex >= blockIds.length)
                     break;
                 currentPage = bufferManager.getPage(blockIds[currIndex], fileName);
+                bufferManager.unpinPage(currentPage.getPid(), fileName);
             }
 
             Row row = outer.next();
