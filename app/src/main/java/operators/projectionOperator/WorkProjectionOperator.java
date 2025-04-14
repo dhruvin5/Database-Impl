@@ -18,7 +18,7 @@ public class WorkProjectionOperator implements Operator {
     private int currentRowIndex;
     private int currentPageId;
 
-    public void open(BufferManager bufferManager, String startRange, String endRange) {
+    public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         open(bufferManager);
     }
 

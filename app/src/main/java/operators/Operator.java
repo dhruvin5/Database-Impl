@@ -8,7 +8,7 @@ public interface Operator {
     /**
      * Opens the operator, preparing it for data retrieval.
      */
-    public void open(BufferManager bufferManager, String startRange, String endRange);
+    public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex);
 
     public void open(BufferManager bufferManager);
 

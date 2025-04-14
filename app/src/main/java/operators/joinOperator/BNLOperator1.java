@@ -4,6 +4,7 @@ import buffer.BufferManager;
 import operators.Operator;
 import operators.selectionOperator.MovieSelectionOperator;
 import operators.projectionOperator.WorkProjectionOperator;
+import operators.indexOperator.titleIndexOperator;
 
 import Row.Row;
 import Row.joinRow1;
@@ -31,9 +32,10 @@ public class BNLOperator1 implements Operator {
         return;
     }
 
-    public void open(BufferManager bufferManager, String startRange, String endRange) {
-        initialize(bufferManager, "-1", new MovieSelectionOperator(), new WorkProjectionOperator());
-        this.outer.open(bufferManager, startRange, endRange);
+    public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
+        Operator temp = useIndex ? new titleIndexOperator() : new MovieSelectionOperator();
+        initialize(bufferManager, "-1", temp, new WorkProjectionOperator());
+        this.outer.open(bufferManager, startRange, endRange, useIndex);
         this.inner.open(bufferManager);
     }
 

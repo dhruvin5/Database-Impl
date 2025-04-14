@@ -16,10 +16,10 @@ public class TopProjectionOperator implements Operator {
         return;
     }
 
-    public void open(BufferManager bufferManager, String startRange, String endRange) {
+    public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         this.bufferManager = bufferManager;
         this.operator = new BNLOperator2();
-        this.operator.open(bufferManager, startRange, endRange);
+        this.operator.open(bufferManager, startRange, endRange, useIndex);
     }
 
     public Row next() {

@@ -9,7 +9,7 @@ public class WorkSelectionOperator implements Operator {
 
     private Operator workOperator;
 
-    public void open(BufferManager bufferManager, String startRange, String endRange) {
+    public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         open(bufferManager);
     }
 

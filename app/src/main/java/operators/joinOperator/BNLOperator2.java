@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class BNLOperator2 extends BNLOperator1 {
 
     @Override
-    public void open(BufferManager bufferManager, String startRange, String endRange) {
+    public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         initialize(bufferManager, "-2", new BNLOperator1(), new PeopleOperator());
-        outer.open(bufferManager, startRange, endRange);
+        outer.open(bufferManager, startRange, endRange, useIndex);
         inner.open(bufferManager);
     }
 

@@ -3,7 +3,7 @@ package org.example;
 import Utilities.Utilities;
 import buffer.BufferManager;
 import buffer.BufferManagerImplem;
-
+import operators.Operator;
 import operators.projectionOperator.TopProjectionOperator;
 
 import java.io.File;
@@ -34,8 +34,8 @@ public class Caller {
         System.out.println("Data loaded successfully.");
 
         // Create a top projection operator
-        TopProjectionOperator topProjectionOperator = new TopProjectionOperator();
-        topProjectionOperator.open(bufferManager, "Al", "Ay"); // Open the operator
+        Operator topProjectionOperator = new TopProjectionOperator();
+        topProjectionOperator.open(bufferManager, "Al", "Ay", false); // Open the operator
 
         ArrayList<Row> rows = new ArrayList<>();
         Row row = null;
@@ -43,7 +43,7 @@ public class Caller {
             rows.add(row);
         }
         topProjectionOperator.close(); // Close the operator
-        Utilities.writeCSV(rows, "output.csv"); // Write the output to a file
+        Utilities.writeCSV(rows, "output2.csv"); // Write the output to a file
 
     }
 }

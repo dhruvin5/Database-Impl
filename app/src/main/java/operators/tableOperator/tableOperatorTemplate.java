@@ -20,7 +20,7 @@ public class tableOperatorTemplate implements Operator {
         this.currentPageObject = fileName != null ? bufferManager.getPage(currentPageId, fileName) : null;
     }
 
-    public void open(BufferManager bufferManager, String startRange, String endRange) {
+    public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         this.fileName = "";
         this.bufferManager = bufferManager;
         this.currentPageObject = fileName != null ? bufferManager.getPage(currentPageId, fileName) : null;

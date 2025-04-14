@@ -10,7 +10,7 @@ public class MovieSelectionOperator implements Operator {
     private String startRange;
     private String endRange;
 
-    public void open(BufferManager bufferManager, String startRange, String endRange) {
+    public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         this.startRange = startRange;
         this.endRange = endRange;
 
