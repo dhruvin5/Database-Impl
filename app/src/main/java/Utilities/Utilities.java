@@ -30,6 +30,7 @@ public class Utilities {
                 });
     }
 
+    // loads the work dataset into a disk file
     public static void loadWorkDataset(BufferManager bf, String filepath) {
         generalLoadDataset(bf, filepath, "work.bin",
                 columns -> {
@@ -40,6 +41,7 @@ public class Utilities {
                 });
     }
 
+    // loads the people dataset into a disk file
     public static void loadPeopleDataset(BufferManager bf, String filepath) {
         generalLoadDataset(bf, filepath, "people.bin",
                 columns -> {
@@ -79,6 +81,7 @@ public class Utilities {
         return (int) Math.ceil((double) fileSize / Config.PAGE_SIZE);
     }
 
+    // General method to load datasets into a specified binary file
     public static void generalLoadDataset(BufferManager bf, String filepath, String binFileName,
             createRow createRow) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {

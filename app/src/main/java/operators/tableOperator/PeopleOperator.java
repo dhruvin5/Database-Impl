@@ -2,6 +2,7 @@ package operators.tableOperator;
 
 import buffer.BufferManager;
 
+// Pull data from the people dataset
 public class PeopleOperator extends tableOperatorTemplate {
     public void open(BufferManager bufferManager) {
         this.fileName = "people.bin";
@@ -9,9 +10,5 @@ public class PeopleOperator extends tableOperatorTemplate {
         this.currentRow = 0;
         this.bufferManager = bufferManager;
         this.currentPageObject = fileName != null ? bufferManager.getPage(currentPageId, fileName) : null;
-    }
-
-    public void open(BufferManager bufferManager, String startRange, String endRange) {
-        open(bufferManager);
     }
 }

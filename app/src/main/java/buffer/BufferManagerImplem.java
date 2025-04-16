@@ -463,6 +463,7 @@ public class BufferManagerImplem extends BufferManager {
         }
     }
 
+    // Clear the file data from the buffer pool and remove it from the page table
     private void clearFileData(String FILE_NAME) {
         HashMap<Integer, Integer> file_pageTable = pageTable.get(FILE_NAME);
         if (file_pageTable != null) {
@@ -476,5 +477,4 @@ public class BufferManagerImplem extends BufferManager {
         FileToPID.remove(FILE_NAME); // remove the file from the FileToPID mapping
         lruCache.removeIf(entry -> entry.getKey().equals(FILE_NAME));
     }
-
 }

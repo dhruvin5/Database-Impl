@@ -5,14 +5,15 @@ import operators.Operator;
 import operators.tableOperator.WorkOperator;
 import Row.Row;
 
+// Pull data from the work dataset and filter by category = director
 public class WorkSelectionOperator implements Operator {
-
-    private Operator workOperator;
+    private Operator workOperator; // Operator Pull data from the work dataset
 
     public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         open(bufferManager);
     }
 
+    // initializes the workOperator to pull data from the work dataset
     public void open(BufferManager bufferManager) {
         workOperator = new WorkOperator();
         workOperator.open(bufferManager);
