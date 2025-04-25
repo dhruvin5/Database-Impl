@@ -1,11 +1,11 @@
 package Page;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 import Row.Row;
 import Row.peopleRow;
 import configs.Config;
-
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class peoplePageImpl implements Page {
     // has the row count
@@ -23,7 +23,7 @@ public class peoplePageImpl implements Page {
     // the actual data
     private final byte[] rows;
 
-    private final int personIdSize = 9;
+    private final int personIdSize = 10;
 
     private final int nameSize = 105;
 

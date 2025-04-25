@@ -1,11 +1,11 @@
 package Page;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 import Row.Row;
 import Row.movieRow;
 import configs.Config;
-
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class PageImpl implements Page {
 

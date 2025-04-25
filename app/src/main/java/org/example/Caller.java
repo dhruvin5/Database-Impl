@@ -1,15 +1,14 @@
 package org.example;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import Row.Row;
 import Utilities.Utilities;
 import buffer.BufferManager;
 import buffer.BufferManagerImplem;
 import operators.Operator;
 import operators.projectionOperator.TopProjectionOperator;
-
-import java.io.File;
-import java.util.ArrayList;
-
-import Row.Row;
 
 public class Caller {
     public static void main(String[] args) {
@@ -21,21 +20,21 @@ public class Caller {
 
         if (!movieFile.exists())
             Utilities.loadDataset(bufferManager,
-                    "C:/Users/bhaga/Downloads/title.basics.tsv"); // Load movies dataset
+                    "/Users/simranmalik/Desktop/title.basics.tsv"); // Load movies dataset
 
         if (!workFile.exists())
             Utilities.loadWorkDataset(bufferManager,
-                    "C:/Users/bhaga/Downloads/title.principals.tsv"); // Load work dataset
+                    "/Users/simranmalik/Desktop/title.principals.tsv"); // Load work dataset
         if (!peopleFile.exists())
             Utilities.loadPeopleDataset(bufferManager,
-                    "C:/Users/bhaga/Downloads/name.basics.tsv"); // Load people dataset
+                    "/Users/simranmalik/Desktop/name.basics.tsv"); // Load people dataset
 
         bufferManager.force();
         System.out.println("Data loaded successfully.");
 
         // Create a top projection operator
         Operator topProjectionOperator = new TopProjectionOperator();
-        topProjectionOperator.open(bufferManager, "Al", "Ay", false); // Open the operator
+        topProjectionOperator.open(bufferManager, "Alaa", "Alab", false); // Open the operator
 
         ArrayList<Row> rows = new ArrayList<>();
         Row row = null;
@@ -43,7 +42,7 @@ public class Caller {
             rows.add(row);
         }
         topProjectionOperator.close(); // Close the operator
-        Utilities.writeCSV(rows, "output2.csv"); // Write the output to a file
+        Utilities.writeCSV(rows, "output_sim1.csv"); // Write the output to a file
 
     }
 }

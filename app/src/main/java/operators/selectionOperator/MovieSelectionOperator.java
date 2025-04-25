@@ -1,9 +1,9 @@
 package operators.selectionOperator;
 
-import operators.Operator;
-import buffer.BufferManager;
-import operators.tableOperator.MovieOperator;
 import Row.Row;
+import buffer.BufferManager;
+import operators.Operator;
+import operators.tableOperator.MovieOperator;
 
 // Filters the data from the movies dataset based on a range of movie names
 public class MovieSelectionOperator implements Operator {
@@ -32,10 +32,16 @@ public class MovieSelectionOperator implements Operator {
             return null;
         }
         Row row;
+        int count=0;
         while ((row = movieOperator.next()) != null) {
             String movieName = new String(row.title);
             if (movieName.compareTo(startRange) >= 0 && movieName.compareTo(endRange) <= 0) {
+                
+                count++;
+                System.out.println("printing count:"+count);
+                System.out.println("moviename:"+movieName);
                 return row;
+
             }
         }
         return null;

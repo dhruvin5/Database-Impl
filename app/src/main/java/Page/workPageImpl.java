@@ -1,11 +1,11 @@
 package Page;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 import Row.Row;
 import Row.workRow;
 import configs.Config;
-
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class workPageImpl implements Page {
     // has the row count
@@ -25,7 +25,7 @@ public class workPageImpl implements Page {
 
     private final int movieIdSize = 9;
 
-    private final int personIdSize = 9;
+    private final int personIdSize = 10;
 
     private final int categorySize = 20;
 

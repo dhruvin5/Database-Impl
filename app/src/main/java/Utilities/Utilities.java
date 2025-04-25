@@ -1,13 +1,13 @@
 package Utilities;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.io.File;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 
 import Page.Page;
 import Row.Row;
@@ -35,7 +35,7 @@ public class Utilities {
         generalLoadDataset(bf, filepath, "work.bin",
                 columns -> {
                     byte[] movieId = toFixedByteArray(columns[0], 9);
-                    byte[] personId = toFixedByteArray(columns[2], 9);
+                    byte[] personId = toFixedByteArray(columns[2], 10);
                     byte[] category = toFixedByteArray(columns[3], 20);
                     return new workRow(movieId, personId, category);
                 });
@@ -45,7 +45,7 @@ public class Utilities {
     public static void loadPeopleDataset(BufferManager bf, String filepath) {
         generalLoadDataset(bf, filepath, "people.bin",
                 columns -> {
-                    byte[] personId = toFixedByteArray(columns[0], 9);
+                    byte[] personId = toFixedByteArray(columns[0], 10);
                     byte[] name = toFixedByteArray(columns[1], 105);
                     return new peopleRow(personId, name);
                 });

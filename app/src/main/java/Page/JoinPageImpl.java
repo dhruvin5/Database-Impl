@@ -25,7 +25,7 @@ public class JoinPageImpl implements Page {
 
     private int movieIdSize = 9;
 
-    private int personIdSize = 9;
+    private int personIdSize = 10;
 
     private int titleSize = 30;
 

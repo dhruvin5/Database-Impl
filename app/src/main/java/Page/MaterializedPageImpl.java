@@ -25,7 +25,7 @@ public class MaterializedPageImpl implements Page {
 
     private final int movieIdSize = 9;
 
-    private final int personIdSize = 9;
+    private final int personIdSize = 10;
 
     public MaterializedPageImpl(int pageId) {
         this.pageId = pageId;
