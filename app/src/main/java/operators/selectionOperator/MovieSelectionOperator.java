@@ -1,5 +1,10 @@
 package operators.selectionOperator;
 
+//new code start
+import java.text.Collator; //added to handle special chars
+import java.util.Locale;    // added to handle special chars
+//new code end
+
 import Row.Row;
 import buffer.BufferManager;
 import operators.Operator;
@@ -10,9 +15,17 @@ public class MovieSelectionOperator implements Operator {
     private Operator movieOperator; // Operator Pull data from the movies dataset
     private String startRange;
     private String endRange;
+    private Collator collator; //new line:  declared collater to handle special chars
 
-    // Initalizes the MovieSelectionOperator with the given start and end range for
-    // movie names
+    // Constructor to initialize collator
+    //new code start
+    public MovieSelectionOperator() {
+        collator = Collator.getInstance(Locale.US);
+        collator.setStrength(Collator.SECONDARY); // Ignore accents and case differences
+    }
+    //new code end
+
+    // Initalizes the MovieSelectionOperator with the given start and end range for movie names
     public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         this.startRange = startRange;
         this.endRange = endRange;
@@ -32,17 +45,22 @@ public class MovieSelectionOperator implements Operator {
             return null;
         }
         Row row;
-        int count=0;
         while ((row = movieOperator.next()) != null) {
             String movieName = new String(row.title);
+            /* 
             if (movieName.compareTo(startRange) >= 0 && movieName.compareTo(endRange) <= 0) {
                 
-                count++;
-                System.out.println("printing count:"+count);
                 System.out.println("moviename:"+movieName);
                 return row;
 
             }
+            */
+            //new code start
+            if (collator.compare(movieName, startRange) >= 0 && collator.compare(movieName, endRange) <= 0) {
+                System.out.println("moviename:"+movieName);
+                return row;
+            }
+            //new code end
         }
         return null;
     }

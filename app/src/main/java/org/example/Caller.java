@@ -42,7 +42,7 @@ public class Caller {
             rows.add(row);
         }
         topProjectionOperator.close(); // Close the operator
-        Utilities.writeCSV(rows, "output_sim1.csv"); // Write the output to a file
+        Utilities.writeCSV(rows, "output_sim4.csv"); // Write the output to a file
 
     }
 }
