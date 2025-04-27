@@ -20,14 +20,14 @@ public class Caller {
 
         if (!movieFile.exists())
             Utilities.loadDataset(bufferManager,
-                    "/Users/simranmalik/Desktop/title.basics.tsv"); // Load movies dataset
+                    "/Users/Admin/Desktop/645/lab/title.basics.tsv"); // Load movies dataset
 
         if (!workFile.exists())
             Utilities.loadWorkDataset(bufferManager,
-                    "/Users/simranmalik/Desktop/title.principals.tsv"); // Load work dataset
+                    "/Users/Admin/Desktop/645/lab/title.principals.tsv"); // Load work dataset
         if (!peopleFile.exists())
             Utilities.loadPeopleDataset(bufferManager,
-                    "/Users/simranmalik/Desktop/name.basics.tsv"); // Load people dataset
+                    "/Users/Admin/Desktop/645/lab/name.basics.tsv"); // Load people dataset
 
         bufferManager.force();
         System.out.println("Data loaded successfully.");
@@ -42,7 +42,7 @@ public class Caller {
             rows.add(row);
         }
         topProjectionOperator.close(); // Close the operator
-        Utilities.writeCSV(rows, "output_sim3.csv"); // Write the output to a file
+        Utilities.writeCSV(rows, "output_dg3.csv"); // Write the output to a file
 
     }
 }

@@ -94,13 +94,15 @@ public class Utilities {
                 System.out.println("Error: Empty file");
                 return;
             }
+
             while ((dataLine = reader.readLine()) != null) {
                 String[] cols = dataLine.split("\t");
 
                 // Validate column lengths for specific files
-                if (binFileName.equals("movies.bin") && cols[0].length() != 9) {
-                    continue;
-                } else if (binFileName.equals("work.bin") && cols[0].length() != 9) {
+
+
+                if ((binFileName.equals("movies.bin") && cols[0].length() != 9) || (binFileName.equals("work.bin") && cols[0].length() != 9)) {
+                   // System.out.println("skipping work " + cols[0]);
                     continue;
                 }
 

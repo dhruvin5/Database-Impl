@@ -1,6 +1,8 @@
 package operators.selectionOperator;
 
 //new code start
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.text.Collator; //added to handle special chars
 import java.util.Locale;    // added to handle special chars
 //new code end
@@ -20,8 +22,16 @@ public class MovieSelectionOperator implements Operator {
     // Constructor to initialize collator
     //new code start
     public MovieSelectionOperator() {
-        collator = Collator.getInstance(Locale.US);
-        collator.setStrength(Collator.SECONDARY); // Ignore accents and case differences
+
+        collator = Collator.getInstance(Locale.forLanguageTag("es-ES"));
+// or whatever locale your Postgres is using
+        collator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
+// Tell it to pay attention to accents (but still ignore case), i.e. secondary strength:
+        collator.setStrength(Collator.IDENTICAL);
+// And normalize to canonical form so that "á" and "á" compare the same way:
+
+//        collator = Collator.getInstance(Locale.US);
+//        collator.setStrength(Collator.SECONDARY); // Ignore accents and case differences
     }
     //new code end
 
@@ -36,6 +46,12 @@ public class MovieSelectionOperator implements Operator {
 
     public void open(BufferManager bufferManager) {
         return;
+    }
+    static String stripAccents(String s) {
+        // 1) decompose: "á" → "a\u0301"
+        String n = Normalizer.normalize(s, Normalizer.Form.NFD);
+        // 2) remove all combining marks (the \p{M} class)
+        return n.replaceAll("\\p{M}", "");
     }
 
     // Retrieves the next row of data from the movieOperator, filtering based on the
@@ -54,9 +70,18 @@ public class MovieSelectionOperator implements Operator {
                 return row;
 
             }
+
             */
             //new code start
-            if (collator.compare(movieName, startRange) >= 0 && collator.compare(movieName, endRange) <= 0) {
+            String lo = stripAccents(startRange)
+                    .toLowerCase(Locale.ROOT);
+            String hi = stripAccents(endRange)
+                    .toLowerCase(Locale.ROOT);
+            String nm = stripAccents(movieName)
+                    .toLowerCase(Locale.ROOT)
+                    .trim();
+
+            if (nm.compareTo(lo) >= 0 && nm.compareTo(hi) <= 0) {
                 System.out.println("moviename:"+movieName);
                 return row;
             }
