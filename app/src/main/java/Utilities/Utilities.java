@@ -100,7 +100,7 @@ public class Utilities {
                 // Validate column lengths for specific files
                 if (binFileName.equals("movies.bin") && cols[0].length() != 9) {
                     continue;
-                } else if (binFileName.equals("work.bin") && cols[0].length() != 9 && cols[2].length() != 9) {
+                } else if (binFileName.equals("work.bin") && cols[0].length() != 9) {
                     continue;
                 }
 

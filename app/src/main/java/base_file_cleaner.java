@@ -24,7 +24,7 @@ public class base_file_cleaner {
         }
     }
 
-    private static void processTSV(String inputPath, String outputPath, List<ColumnSpec> specs) throws IOException {
+    private static void TsvClean(String inputPath, String outputPath, List<ColumnSpec> specs,  boolean checkMovieId) throws IOException {
         try (
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                 new FileInputStream(inputPath), StandardCharsets.UTF_8
@@ -46,6 +46,14 @@ public class base_file_cleaner {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split("\t", -1);
+                if (checkMovieId) {
+                    String movieId = specs.get(0).index < tokens.length ? tokens[specs.get(0).index].trim() : "";
+                    if (movieId.length() != 9) {
+                        continue;  // Skip this row
+                    }
+                }
+                
+                
                 StringBuilder sb = new StringBuilder();
 
                 for (int i = 0; i < specs.size(); i++) {
@@ -88,30 +96,33 @@ public class base_file_cleaner {
     public static void main(String[] args) {
         String basePath = "/Users/simranmalik/Desktop/";
         try {
-            processTSV(
+            TsvClean(
                 basePath + "title.basics.tsv",
                 basePath + "cleaned_movies.tsv",
                 Arrays.asList(
                     new ColumnSpec(0, 9, "movieId"),
                     new ColumnSpec(2, 30, "title")
-                )
+                ),
+                true
             );
-            processTSV(
+            TsvClean(
                 basePath + "title.principals.tsv",
                 basePath + "cleaned_workedon.tsv",
                 Arrays.asList(
                     new ColumnSpec(0, 9, "movieId"),
                     new ColumnSpec(2, 10, "personId"),
                     new ColumnSpec(3, 20, "category")
-                )
+                ),
+                true
             );
-            processTSV(
+            TsvClean(
                 basePath + "name.basics.tsv",
                 basePath + "cleaned_people.tsv",
                 Arrays.asList(
                     new ColumnSpec(0, 10, "personId"),
                     new ColumnSpec(1, 105, "name")
-                )
+                ),
+                false
             );
             
             System.out.println("Cleaned files created.");
