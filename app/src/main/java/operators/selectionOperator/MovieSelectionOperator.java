@@ -1,9 +1,8 @@
 package operators.selectionOperator;
 
+import java.text.Collator; //added to handle special chars
 //new code start
 import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.text.Collator; //added to handle special chars
 import java.util.Locale;    // added to handle special chars
 //new code end
 

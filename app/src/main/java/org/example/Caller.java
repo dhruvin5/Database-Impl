@@ -20,21 +20,21 @@ public class Caller {
 
         if (!movieFile.exists())
             Utilities.loadDataset(bufferManager,
-                    "/Users/Admin/Desktop/645/lab/title.basics.tsv"); // Load movies dataset
+                    "/Users/simranmalik/Desktop/title.basics.tsv"); // Load movies dataset
 
         if (!workFile.exists())
             Utilities.loadWorkDataset(bufferManager,
-                    "/Users/Admin/Desktop/645/lab/title.principals.tsv"); // Load work dataset
+                    "/Users/simranmalik/Desktop/title.principals.tsv"); // Load work dataset
         if (!peopleFile.exists())
             Utilities.loadPeopleDataset(bufferManager,
-                    "/Users/Admin/Desktop/645/lab/name.basics.tsv"); // Load people dataset
+                    "/Users/simranmalik/Desktop/name.basics.tsv"); // Load people dataset
 
         bufferManager.force();
         System.out.println("Data loaded successfully.");
 
         // Create a top projection operator
         Operator topProjectionOperator = new TopProjectionOperator();
-        topProjectionOperator.open(bufferManager, "Alaa", "Alab", false); // Open the operator
+        topProjectionOperator.open(bufferManager, "Caa", "Cab", false); // Open the operator
 
         ArrayList<Row> rows = new ArrayList<>();
         Row row = null;
@@ -42,7 +42,7 @@ public class Caller {
             rows.add(row);
         }
         topProjectionOperator.close(); // Close the operator
-        Utilities.writeCSV(rows, "output_dg3.csv"); // Write the output to a file
+        Utilities.writeCSV(rows, "output_sim8.csv"); // Write the output to a file
 
     }
 }
