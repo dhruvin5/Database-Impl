@@ -19,56 +19,43 @@ import configs.Config;
 
 public class Utilities {
 
-    // loads the dataset into a disk file
-    // takes the bufferManagaer and the filePath as the input.
     public static void loadDataset(BufferManager bf, String filepath) {
         generalLoadDataset(bf, filepath, "movies.bin",
-                columns -> {
-                    byte[] movieId = toFixedByteArray(columns[0], 9);
-                    byte[] title = toFixedByteArray(columns[2], 30);
-                    return new movieRow(movieId, title);
-                });
+            columns -> {
+                byte[] movieId = toFixedByteArray(columns[0], 9);
+                byte[] title   = toFixedByteArray(columns[2], 30);
+                return new movieRow(movieId, title);
+            });
     }
 
-    // loads the work dataset into a disk file
     public static void loadWorkDataset(BufferManager bf, String filepath) {
         generalLoadDataset(bf, filepath, "work.bin",
-                columns -> {
-                    byte[] movieId = toFixedByteArray(columns[0], 9);
-                    byte[] personId = toFixedByteArray(columns[2], 10);
-                    byte[] category = toFixedByteArray(columns[3], 20);
-                    return new workRow(movieId, personId, category);
-                });
+            columns -> {
+                byte[] movieId  = toFixedByteArray(columns[0], 9);
+                byte[] personId = toFixedByteArray(columns[2], 10);
+                byte[] category = toFixedByteArray(columns[3], 20);
+                return new workRow(movieId, personId, category);
+            });
     }
 
-    // loads the people dataset into a disk file
     public static void loadPeopleDataset(BufferManager bf, String filepath) {
         generalLoadDataset(bf, filepath, "people.bin",
-                columns -> {
-                    byte[] personId = toFixedByteArray(columns[0], 10);
-                    byte[] name = toFixedByteArray(columns[1], 105);
-                    return new peopleRow(personId, name);
-                });
+            columns -> {
+                byte[] personId = toFixedByteArray(columns[0], 10);
+                byte[] name     = toFixedByteArray(columns[1], 105);
+                return new peopleRow(personId, name);
+            });
     }
 
-    // Utility to convert a string to a fixed byte array of a particular length
     public static byte[] toFixedByteArray(String inputString, int length) {
-        if (inputString == null) {
-            inputString = "";
-        }
+        if (inputString == null) inputString = "";
         if (inputString.length() > length) {
-            inputString = inputString.substring(0, length); // truncate
+            inputString = inputString.substring(0, length);
         }
-
-        // get the bytes from the string
-        byte[] originalString = inputString.getBytes(StandardCharsets.UTF_8);
-
-        byte[] fixedByteArray = new byte[length];
-
-        // min truncates if the size is greaterthan the specified length
-        System.arraycopy(originalString, 0, fixedByteArray, 0, Math.min(originalString.length, length));
-
-        return fixedByteArray;
+        byte[] original = inputString.getBytes(StandardCharsets.UTF_8);
+        byte[] fixed    = new byte[length];
+        System.arraycopy(original, 0, fixed, 0, Math.min(original.length, length));
+        return fixed;
     }
 
     public static int getNumberOfPages(String fileName) {
@@ -77,38 +64,56 @@ public class Utilities {
             System.out.println("Error: File " + fileName + " does not exist.");
             return -1;
         }
-        long fileSize = file.length(); // Get file size in bytes
+        long fileSize = file.length();
         return (int) Math.ceil((double) fileSize / Config.PAGE_SIZE);
     }
 
-    // General method to load datasets into a specified binary file
-    public static void generalLoadDataset(BufferManager bf, String filepath, String binFileName,
-            createRow createRow) {
+    public static void generalLoadDataset(BufferManager bf,
+                                          String filepath,
+                                          String binFileName,
+                                          createRow rowCreator) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
-            int currentPageId = -1;
-            boolean pageExists = false;
-            int count = 0;
-
-            String dataLine = reader.readLine(); // Skip the first line if needed
-            if (dataLine == null) {
+            String header = reader.readLine();
+            if (header == null) {
                 System.out.println("Error: Empty file");
                 return;
             }
 
+            int currentPageId = -1;
+            boolean pageExists = false;
+            String dataLine;
+
             while ((dataLine = reader.readLine()) != null) {
-                String[] cols = dataLine.split("\t");
+                String[] cols = dataLine.split("\t", -1);
 
-                // Validate column lengths for specific files
+                // Only movies.bin and work.bin have extra validation
+                if (binFileName.equals("movies.bin") || binFileName.equals("work.bin")) {
+                    boolean invalidMovieID = false;
+                    boolean invalidTitle   = false;
 
+                    // Movie ID must be exactly 9 chars
+                    if (cols.length < 1 || cols[0].length() != 9) {
+                        System.out.println("Invalid movie ID length: " + (cols.length > 0 ? cols[0] : "<missing>"));
+                        invalidMovieID = true;
+                    }
 
-                if ((binFileName.equals("movies.bin") && cols[0].length() != 9) || (binFileName.equals("work.bin") && cols[0].length() != 9)) {
-                   // System.out.println("skipping work " + cols[0]);
-                    continue;
+                    // For movies.bin also check the title field
+                    if (binFileName.equals("movies.bin")) {
+                        if (containsInvalidChars(cols[2])) {
+                            System.out.println("Invalid title: " + cols[2]);
+                            invalidTitle = true;
+                        }
+                    }
+
+                    if (invalidMovieID || invalidTitle) {
+                        System.out.println("Skipping row with ivalid movieid/title");
+                        continue;
+                    }
                 }
 
-                // Create a new Row object using the provided RowCreator
-                Row row = createRow.createRow(cols);
-                // Create a new page if none exists
+                // Create the row and write it into pages
+                Row row = rowCreator.createRow(cols);
+
                 if (!pageExists) {
                     Page newPage = bf.createPage(binFileName);
                     currentPageId = newPage.getPid();
@@ -116,42 +121,40 @@ public class Utilities {
                     pageExists = true;
                 }
 
-                // Get the page and insert the row
                 Page p = bf.getPage(currentPageId, binFileName);
                 if (p.isFull()) {
                     bf.unpinPage(currentPageId, binFileName);
                     p = bf.createPage(binFileName);
                     currentPageId = p.getPid();
                 }
-
                 p.insertRow(row);
                 bf.markDirty(currentPageId, binFileName);
                 bf.unpinPage(currentPageId, binFileName);
-                count++;
-                // if (count % 20000 == 0) {
-                // System.out.println("Inserted " + count + " rows into " + binFileName);
-                // break;
-                // }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /** returns true if s contains a comma, any quote, or any non-ASCII char */
+    private static boolean containsInvalidChars(String s) {
+        for (char c : s.toCharArray()) {
+            if (c == ',' || c == '"' || c == '\'' || c > 127) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void writeCSV(ArrayList<Row> output, String fileName) {
-        // Takes rows (title and name) and writes to a csv file
         StringBuilder sb = new StringBuilder();
         for (Row row : output) {
-            String title = new String(row.title, StandardCharsets.UTF_8).replace('\0', ' ').trim();
-            String name = new String(row.name, StandardCharsets.UTF_8).replace('\0', ' ').trim();
-
-            // Ensure title is exactly 30 characters long
+            String title = new String(row.title, StandardCharsets.UTF_8)
+                               .replace('\0',' ').trim();
+            String name  = new String(row.name,  StandardCharsets.UTF_8)
+                               .replace('\0',' ').trim();
             title = String.format("%-30s", title);
-            name = String.format("%-105s", name);
-
-            if (title.length() != 30) {
-                System.out.println("Error: " + title.length() + " " + title + " " + row.title.length);
-            }
+            name  = String.format("%-105s", name);
             sb.append(title).append(",").append(name).append("\n");
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
@@ -165,5 +168,4 @@ public class Utilities {
     public interface createRow {
         Row createRow(String[] columns);
     }
-
 }

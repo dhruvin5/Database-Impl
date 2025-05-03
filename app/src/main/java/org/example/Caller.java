@@ -34,7 +34,7 @@ public class Caller {
 
         // Create a top projection operator
         Operator topProjectionOperator = new TopProjectionOperator();
-        topProjectionOperator.open(bufferManager, "Caa", "Cab", false); // Open the operator
+        topProjectionOperator.open(bufferManager, "Ba", "Bm", false); // Open the operator
 
         ArrayList<Row> rows = new ArrayList<>();
         Row row = null;
@@ -42,7 +42,7 @@ public class Caller {
             rows.add(row);
         }
         topProjectionOperator.close(); // Close the operator
-        Utilities.writeCSV(rows, "output_sim8.csv"); // Write the output to a file
+        Utilities.writeCSV(rows, "output_sim13.csv"); // Write the output to a file
 
     }
 }
