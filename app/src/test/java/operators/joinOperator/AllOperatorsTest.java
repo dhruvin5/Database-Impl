@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
 
 public class AllOperatorsTest {
-    // --- Fake Page and BufferManager for testing ---
+
     static class FakePage implements Page {
         private final int pid;
         private final List<Row> rows = new ArrayList<>();
@@ -83,8 +83,6 @@ public class AllOperatorsTest {
             this.name     = name.getBytes();
         }
     }
-
-    // --- Testable join operators ---
     static class TestableBNLOperator1 extends BNLOperator1 {
         public void init(BufferManager bm, String fn, Operator out, Operator in) {
             super.initialize(bm, fn, out, in);
@@ -99,52 +97,75 @@ public class AllOperatorsTest {
     @Test
     public void testBNLOperator1_singleMatch() {
         FakeBufferManager fbm = new FakeBufferManager(10);
-        FakeMovieRow m = new FakeMovieRow("000000001", "MovieA");
-        FakeWorkRow w  = new FakeWorkRow("000000001", "P1", "director");
+        FakeMovieRow m = new FakeMovieRow("000000001", "Movie Name A");
+        FakeWorkRow w  = new FakeWorkRow("000000001", "Person A", "director");
         TestableBNLOperator1 op = new TestableBNLOperator1();
-        op.init(fbm, "f", new FakeOperator(List.of(m)), new FakeOperator(List.of(w)));
+        op.init(fbm, "random", new FakeOperator(List.of(m)), new FakeOperator(List.of(w)));
 
         Row result = op.next();
         assertNotNull(result);
         assertEquals("000000001", new String(result.movieId));
-        assertEquals("MovieA", new String(result.title));
-        assertEquals("P1", new String(result.personId));
+        assertEquals("Movie Name A", new String(result.title));
+        assertEquals("Person A", new String(result.personId));
         assertNull(op.next());
     }
 
     @Test
     public void testBNLOperator1_multipleMatches() {
         FakeBufferManager fbm = new FakeBufferManager(12);
-        FakeMovieRow m = new FakeMovieRow("X", "M");
-        FakeWorkRow w1 = new FakeWorkRow("X", "A", "director");
-        FakeWorkRow w2 = new FakeWorkRow("X", "B", "director");
+        FakeMovieRow m = new FakeMovieRow("000000002", "Movie Name B");
+        FakeWorkRow w1 = new FakeWorkRow("000000002", "Person B", "director");
+        FakeWorkRow w2 = new FakeWorkRow("000000002", "Person C", "director");
         TestableBNLOperator1 op = new TestableBNLOperator1();
-        op.init(fbm, "f", new FakeOperator(List.of(m)), new FakeOperator(List.of(w1, w2)));
+        op.init(fbm, "random", new FakeOperator(List.of(m)), new FakeOperator(List.of(w1, w2)));
 
         Row r1 = op.next();
         Row r2 = op.next();
         assertNotNull(r1); assertNotNull(r2);
-        assertEquals("A", new String(r1.personId));
-        assertEquals("B", new String(r2.personId));
+        assertEquals("Person B", new String(r1.personId));
+        assertEquals("Person C", new String(r2.personId));
+        assertNull(op.next());
+    }
+
+    @Test
+    public void testBNLOperator1_multipleRowMatches() {
+        FakeBufferManager fbm = new FakeBufferManager(12);
+        FakeMovieRow m = new FakeMovieRow("000000002", "Movie Name B");
+        FakeWorkRow w1 = new FakeWorkRow("000000002", "Person B", "director");
+        FakeWorkRow w2 = new FakeWorkRow("000000002", "Person C", "director");
+        FakeMovieRow m1 = new FakeMovieRow("000000009", "Movie Name H");
+        FakeWorkRow w3 = new FakeWorkRow("000000009", "Person H", "director");
+        TestableBNLOperator1 op = new TestableBNLOperator1();
+        op.init(fbm, "random", new FakeOperator(List.of(m,m1)), new FakeOperator(List.of(w1, w2,w3)));
+
+        Row r1 = op.next();
+        Row r2 = op.next();
+        Row r3 = op.next();
+
+        assertNotNull(r1); assertNotNull(r2);
+        assertNotNull(r3);
+        assertEquals("Person B", new String(r1.personId));
+        assertEquals("Person C", new String(r2.personId));
+        assertEquals("Person H", new String(r3.personId));
         assertNull(op.next());
     }
 
     @Test
     public void testBNLOperator1_noMatch() {
         FakeBufferManager fbm = new FakeBufferManager(8);
-        FakeMovieRow m = new FakeMovieRow("1", "T");
-        FakeWorkRow w  = new FakeWorkRow("2", "P", "director");
+        FakeMovieRow m = new FakeMovieRow("000000003", "Movie Name D");
+        FakeWorkRow w  = new FakeWorkRow("000000004", "Person D", "director");
         TestableBNLOperator1 op = new TestableBNLOperator1();
-        op.init(fbm, "f", new FakeOperator(List.of(m)), new FakeOperator(List.of(w)));
+        op.init(fbm, "random", new FakeOperator(List.of(m)), new FakeOperator(List.of(w)));
         assertNull(op.next());
     }
 
     @Test
     public void testBNLOperator2_joinTwoLevels() {
         FakeBufferManager fbm = new FakeBufferManager(10);
-        joinRow1 jw = new joinRow1("M1".getBytes(), "T1".getBytes(), "P1".getBytes());
+        joinRow1 jw = new joinRow1("000000005".getBytes(), "Movie Name E".getBytes(), "Person E".getBytes());
         FakeOperator outer = new FakeOperator(List.of(jw));
-        FakeOperator inner = new FakeOperator(List.of(new FakePersonRow("P1", "Alice")));
+        FakeOperator inner = new FakeOperator(List.of(new FakePersonRow("Person E", "Dhruvin")));
         TestableBNLOperator2 op2 = new TestableBNLOperator2();
         op2.init(fbm, "f2", outer, inner);
 
@@ -152,10 +173,10 @@ public class AllOperatorsTest {
         assertNotNull(r);
         assertTrue(r instanceof joinRow2);
         joinRow2 jr2 = (joinRow2) r;
-        assertEquals("M1", new String(jr2.movieId));
-        assertEquals("T1", new String(jr2.title));
-        assertEquals("P1", new String(jr2.personId));
-        assertEquals("Alice", new String(jr2.name));
+        assertEquals("000000005", new String(jr2.movieId));
+        assertEquals("Movie Name E", new String(jr2.title));
+        assertEquals("Person E", new String(jr2.personId));
+        assertEquals("Dhruvin", new String(jr2.name));
         assertNull(op2.next());
     }
 
@@ -185,8 +206,8 @@ public class AllOperatorsTest {
     public void testWorkSelectionOperator_filtersDirector() {
         FakeBufferManager fbm = new FakeBufferManager(5);
         FakePage page = (FakePage)fbm.createPage("test-work.bin");
-        FakeWorkRow d = new FakeWorkRow("2", "P","director");
-        FakeWorkRow a = new FakeWorkRow("3", "Q","actor");
+        FakeWorkRow d = new FakeWorkRow("000000006", "Person F","director");
+        FakeWorkRow a = new FakeWorkRow("000000007", "Person G","actor");
         page.insertRow(d);
         page.insertRow(a);
 
