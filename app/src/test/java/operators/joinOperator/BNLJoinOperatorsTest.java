@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
 
 public class BNLJoinOperatorsTest {
-    // --- Fake Page matching Page interface ---
+
     static class FakePage implements Page {
         private final int pid;
         private final List<Row> rows = new ArrayList<>();
@@ -135,11 +135,11 @@ public class BNLJoinOperatorsTest {
     }
 
     // --- Stub Operator and Row implementations ---
-    static class StubOperator implements Operator {
+    static class FakeOperator implements Operator {
         private final List<Row> rows;
         private int idx = 0;
 
-        StubOperator(List<Row> rows) {
+        FakeOperator(List<Row> rows) {
             this.rows = rows;
         }
 
@@ -158,28 +158,28 @@ public class BNLJoinOperatorsTest {
         public void close() {}
     }
 
-    static class StubMovieRow extends Row {
-        StubMovieRow(String id, String title) {
+    static class FakeMovieRow extends Row {
+        FakeMovieRow(String id, String title) {
             this.movieId = id.getBytes();
             this.title = title.getBytes();
         }
     }
 
-    static class StubWorkRow extends Row {
-        StubWorkRow(String movieId, String personId) {
+    static class FakeWorkRow extends Row {
+        FakeWorkRow(String movieId, String personId) {
             this.movieId = movieId.getBytes();
             this.personId = personId.getBytes();
         }
     }
 
-    static class StubPersonRow extends Row {
-        StubPersonRow(String personId, String name) {
+    static class FakePersonRow extends Row {
+        FakePersonRow(String personId, String name) {
             this.personId = personId.getBytes();
             this.name = name.getBytes();
         }
     }
 
-    // --- Expose initialize for testing ---
+
     static class TestableBNLOperator1 extends BNLOperator1 {
         public void init(BufferManager bm, String fn, Operator out, Operator in) {
             super.initialize(bm, fn, out, in);
@@ -192,48 +192,47 @@ public class BNLJoinOperatorsTest {
         }
     }
 
-    // --- Tests for BNLOperator1 ---
     @Test
     public void testBNLOperator1_singleMatch() {
         FakeBufferManager fbm = new FakeBufferManager(10);
-        StubMovieRow m = new StubMovieRow("001", "MovieA");
-        StubWorkRow w = new StubWorkRow("001", "P1");
+        FakeMovieRow m = new FakeMovieRow("000000001", "Dhruvin's Movie");
+        FakeWorkRow w = new FakeWorkRow("000000001", "A");
         TestableBNLOperator1 op = new TestableBNLOperator1();
-        op.init(fbm, "f", new StubOperator(List.of(m)), new StubOperator(List.of(w)));
+        op.init(fbm, "f", new FakeOperator(List.of(m)), new FakeOperator(List.of(w)));
 
         Row result = op.next();
         assertNotNull(result);
-        assertEquals("001", new String(result.movieId));
-        assertEquals("MovieA", new String(result.title));
-        assertEquals("P1", new String(result.personId));
+        assertEquals("000000001", new String(result.movieId));
+        assertEquals("Dhruvin's Movie", new String(result.title));
+        assertEquals("A", new String(result.personId));
         assertNull(op.next());
     }
 
     @Test
     public void testBNLOperator1_multipleMatches() {
         FakeBufferManager fbm = new FakeBufferManager(12);
-        StubMovieRow m = new StubMovieRow("X", "M");
-        StubWorkRow w1 = new StubWorkRow("X", "A");
-        StubWorkRow w2 = new StubWorkRow("X", "B");
+        FakeMovieRow m = new FakeMovieRow("000000002", "Dhruvin's Movie");
+        FakeWorkRow w1 = new FakeWorkRow("000000002", "B");
+        FakeWorkRow w2 = new FakeWorkRow("000000002", "C");
         TestableBNLOperator1 op = new TestableBNLOperator1();
-        op.init(fbm, "f", new StubOperator(List.of(m)), new StubOperator(List.of(w1, w2)));
+        op.init(fbm, "f", new FakeOperator(List.of(m)), new FakeOperator(List.of(w1, w2)));
 
         Row r1 = op.next();
         Row r2 = op.next();
         assertNotNull(r1);
         assertNotNull(r2);
-        assertEquals("A", new String(r1.personId));
-        assertEquals("B", new String(r2.personId));
+        assertEquals("B", new String(r1.personId));
+        assertEquals("C", new String(r2.personId));
         assertNull(op.next());
     }
 
     @Test
     public void testBNLOperator1_noMatch() {
         FakeBufferManager fbm = new FakeBufferManager(8);
-        StubMovieRow m = new StubMovieRow("1", "T");
-        StubWorkRow w = new StubWorkRow("2", "P");
+        FakeMovieRow m = new FakeMovieRow("1", "T");
+        FakeWorkRow w = new FakeWorkRow("2", "P");
         TestableBNLOperator1 op = new TestableBNLOperator1();
-        op.init(fbm, "f", new StubOperator(List.of(m)), new StubOperator(List.of(w)));
+        op.init(fbm, "f", new FakeOperator(List.of(m)), new FakeOperator(List.of(w)));
 
         assertNull(op.next());
     }
@@ -243,8 +242,8 @@ public class BNLJoinOperatorsTest {
     public void testBNLOperator2_joinTwoLevels() {
         FakeBufferManager fbm = new FakeBufferManager(10);
         joinRow1 jw = new joinRow1("M1".getBytes(), "T1".getBytes(), "P1".getBytes());
-        StubOperator outer = new StubOperator(List.of(jw));
-        StubOperator inner = new StubOperator(List.of(new StubPersonRow("P1", "Alice")));
+        FakeOperator outer = new FakeOperator(List.of(jw));
+        FakeOperator inner = new FakeOperator(List.of(new FakePersonRow("P1", "Alice")));
         TestableBNLOperator2 op2 = new TestableBNLOperator2();
         op2.init(fbm, "f2", outer, inner);
 

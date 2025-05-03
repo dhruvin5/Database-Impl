@@ -55,22 +55,26 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
         File file = new File(indexFile);
         if(file.exists())
         {
-            if (file.delete()) {
-               System.out.println("Index File deleted successfully.");
-            }
+            index_info_page_id = 0;
+
+            rootPageId = readRootNodeInfo(index_info_page_id);
+
+            //System.out.println("ROOT PAGE ID: " + rootPageId);
         }
+        else {
 
-        // creating a page to store a pointer to the root node
-        index_info_page_id = bm.createIndexPage(indexFile, false).getPid();
+            // creating a page to store a pointer to the root node
+            index_info_page_id = bm.createIndexPage(indexFile, false).getPid();
 
-        //creating root node.
-        this.rootPageId = bm.createIndexPage(indexFile, true).getPid();
-        BplusTreeNode<K> rootNode = new BplusTreeNode<>(true);
-        writeNode(rootNode, rootPageId);
+            //creating root node.
+            this.rootPageId = bm.createIndexPage(indexFile, true).getPid();
+            BplusTreeNode<K> rootNode = new BplusTreeNode<>(true);
+            writeNode(rootNode, rootPageId);
 
-        bm.unpinPage(this.rootPageId, this.indexFile);
-        writeRootNodeInfo(index_info_page_id, rootPageId);
-        bm.unpinPage(this.index_info_page_id, this.indexFile);
+            bm.unpinPage(this.rootPageId, this.indexFile);
+            writeRootNodeInfo(index_info_page_id, rootPageId);
+            bm.unpinPage(this.index_info_page_id, this.indexFile);
+        }
 
     }
     //storing info of root
@@ -81,6 +85,19 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
         page.insertRow(new nonLeafRow(null, rootPointer));
         bm.markDirty(pageId, indexFile);
         bm.unpinPage(pageId, indexFile);
+    }
+
+    private int readRootNodeInfo(int pageId) throws IOException {
+        Page page = bm.getPage(pageId, this.indexFile);
+        byte[] data = page.getRows();
+        int offset = catalog.getPageOffset(false);
+
+        byte[] colBytes = Arrays.copyOfRange(data, offset + 9, offset  + 13);
+        int new_rootPageId = ByteBuffer.wrap(colBytes).getInt();
+
+        bm.unpinPage(pageId, this.indexFile);
+
+        return new_rootPageId ;
     }
 
     //writing serialised node data to disk index file
