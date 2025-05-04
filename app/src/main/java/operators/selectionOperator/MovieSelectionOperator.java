@@ -1,10 +1,8 @@
 package operators.selectionOperator;
 
-import java.text.Collator; //added to handle special chars
-//new code start
+import java.text.Collator;
 import java.text.Normalizer;
-import java.util.Locale;    // added to handle special chars
-//new code end
+import java.util.Locale;
 
 import Row.Row;
 import buffer.BufferManager;
@@ -16,23 +14,15 @@ public class MovieSelectionOperator implements Operator {
     private Operator movieOperator; // Operator Pull data from the movies dataset
     private String startRange;
     private String endRange;
-    private Collator collator; //new line:  declared collater to handle special chars
-
-    // Constructor to initialize collator
-    //new code start
+    private Collator collator; //using collator for comparing strings
+    //Initialising collator constructor for comparing strings
     public MovieSelectionOperator() {
 
         collator = Collator.getInstance(Locale.forLanguageTag("es-ES"));
-// or whatever locale your Postgres is using
-        collator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
-// Tell it to pay attention to accents (but still ignore case), i.e. secondary strength:
+        collator.setDecomposition(Collator.CANONICAL_DECOMPOSITION); // Normalising to Canonical Form
         collator.setStrength(Collator.IDENTICAL);
-// And normalize to canonical form so that "á" and "á" compare the same way:
-
-//        collator = Collator.getInstance(Locale.US);
-//        collator.setStrength(Collator.SECONDARY); // Ignore accents and case differences
+    
     }
-    //new code end
 
     // Initalizes the MovieSelectionOperator with the given start and end range for movie names
     public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
@@ -62,16 +52,6 @@ public class MovieSelectionOperator implements Operator {
         Row row;
         while ((row = movieOperator.next()) != null) {
             String movieName = new String(row.title);
-            /* 
-            if (movieName.compareTo(startRange) >= 0 && movieName.compareTo(endRange) <= 0) {
-                
-                System.out.println("moviename:"+movieName);
-                return row;
-
-            }
-
-            */
-            //new code start
             String lo = stripAccents(startRange)
                     .toLowerCase(Locale.ROOT);
             String hi = stripAccents(endRange)
@@ -84,7 +64,6 @@ public class MovieSelectionOperator implements Operator {
                 System.out.println("moviename:"+movieName);
                 return row;
             }
-            //new code end
         }
         return null;
     }

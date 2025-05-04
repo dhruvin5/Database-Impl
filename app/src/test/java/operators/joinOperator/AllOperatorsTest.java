@@ -1,21 +1,22 @@
 package operators.joinOperator;
 
-import buffer.BufferManager;
-import operators.Operator;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
+import Page.Page;
 import Row.Row;
 import Row.joinRow1;
 import Row.joinRow2;
-import Page.Page;
-import operators.projectionOperator.TopProjectionOperator;
+import buffer.BufferManager;
+import operators.Operator;
 import operators.selectionOperator.MovieSelectionOperator;
 import operators.selectionOperator.WorkSelectionOperator;
-import operators.projectionOperator.WorkProjectionOperator;
-import Row.materializedRow;
-
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.*;
 
 public class AllOperatorsTest {
 

@@ -86,27 +86,26 @@ public class Utilities {
             while ((dataLine = reader.readLine()) != null) {
                 String[] cols = dataLine.split("\t", -1);
 
-                // Only movies.bin and work.bin have extra validation
+                // Checking if file name is "movies.bin" or "work.bin"
                 if (binFileName.equals("movies.bin") || binFileName.equals("work.bin")) {
-                    boolean invalidMovieID = false;
-                    boolean invalidTitle   = false;
+                    boolean Invalid_MovieId = false;
+                    boolean Invalid_Title   = false;
 
-                    // Movie ID must be exactly 9 chars
+                    // Flagging tuple with invalid MovieID for skipping (size not equal to 9)
                     if (cols.length < 1 || cols[0].length() != 9) {
-                        //System.out.println("Invalid movie ID length: " + (cols.length > 0 ? cols[0] : "<missing>"));
-                        invalidMovieID = true;
+                        Invalid_MovieId = true;
                     }
 
-                    // For movies.bin also check the title field
+                    // If file name="movies.bin", check if title is valid
                     if (binFileName.equals("movies.bin")) {
-                        if (containsInvalidChars(cols[2])) {
-                            //System.out.println("Invalid title: " + cols[2]);
-                            invalidTitle = true;
+                        if (HasInvalidCharacter(cols[2])) {
+                            // Flagging tuple with invalid title (with invalid chars) for skipping
+                            Invalid_Title = true;
                         }
                     }
 
-                    if (invalidMovieID || invalidTitle) {
-                        //System.out.println("Skipping row with ivalid movieid/title");
+                    if (Invalid_MovieId || Invalid_Title) {
+                        //Skipping tuples with invalid MovieId or title
                         continue;
                     }
                 }
@@ -136,9 +135,9 @@ public class Utilities {
         }
     }
 
-    /** returns true if s contains a comma, any quote, or any non-ASCII char */
-    private static boolean containsInvalidChars(String s) {
-        for (char c : s.toCharArray()) {
+    // method to flag titles with invalid characters: comma, quote, Non ASCII characters
+    private static boolean HasInvalidCharacter(String str) {
+        for (char c : str.toCharArray()) {
             if (c == ',' || c == '"' || c == '\'' || c > 127) {
                 return true;
             }

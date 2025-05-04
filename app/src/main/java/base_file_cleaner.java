@@ -10,41 +10,40 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class base_file_cleaner {
 
-    private static class ColumnSpec {
+    private static class Column_Spec {
         int index;
         int length;
         String name;
 
-        ColumnSpec(int index, int length, String name) {
+        Column_Spec(int index, int length, String name) {
             this.index = index;
             this.length = length;
             this.name = name;
         }
     }
 
-    private static void TsvClean(String inputPath,
-                                 String outputPath,
-                                 List<ColumnSpec> specs,
-                                 boolean checkMovieId,
-                                 boolean checkTitle) throws IOException {
+    private static void TsvClean(String InPath,
+                                 String OutPath,
+                                 List<Column_Spec> Specs,
+                                 boolean Check_MovieID,
+                                 boolean Check_Title) throws IOException {
         try (
             BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new FileInputStream(inputPath), StandardCharsets.UTF_8
+                new FileInputStream(InPath), StandardCharsets.UTF_8
             ));
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(outputPath), StandardCharsets.UTF_8
+                new FileOutputStream(OutPath), StandardCharsets.UTF_8
             ))
         ) {
-            // Write headers
-            for (int i = 0; i < specs.size(); i++) {
-                writer.write(specs.get(i).name);
-                if (i < specs.size() - 1) writer.write("\t");
+            // writing headers
+            for (int i = 0; i < Specs.size(); i++) {
+                writer.write(Specs.get(i).name);
+                if (i < Specs.size() - 1) writer.write("\t");
             }
             writer.newLine();
-
-            // Skip original header
             reader.readLine();
 
             String line;
@@ -54,63 +53,59 @@ public class base_file_cleaner {
                 boolean invalid_title=false;
 
 
-                if (checkMovieId) {
-                    // check movieId length
-                    String movieId = specs.get(0).index < tokens.length
-                                     ? tokens[specs.get(0).index].trim()
+                if (Check_MovieID) {
+                    // check if MovieId size is valid
+                    String movieId = Specs.get(0).index < tokens.length
+                                     ? tokens[Specs.get(0).index].trim()
                                      : "";
                     if (movieId.length() != 9) {
-                        invalid_movieId=true;
-                        //System.out.println("invalid movieid");
+                        invalid_movieId=true; //flag row to skip
                     }
-                    // check title in column spec at index 1
-                    if (checkTitle) {
-                        String title = specs.get(1).index < tokens.length
-                                       ? tokens[specs.get(1).index]
+                    // check if title is valid
+                    if (Check_Title) {
+                        String title = Specs.get(1).index < tokens.length
+                                       ? tokens[Specs.get(1).index]
                                        : "";
-                        if (containsInvalidChars(title)) {
-                            invalid_title=true;  // Skip this row
-                            //System.out.println("invalid title");
-
+                        if (HasInvalidCharacter(title)) {
+                            invalid_title=true;  // flag row to skip
                         }
                     }
                     if (invalid_movieId||invalid_title)
                     {
-                        //System.out.println("row with invalid movieId/title is skipped ");
-                        continue; // Skip this row
+                        continue; // Skipping row with invalid MovieID/Title
                     }
                 }
 
                 StringBuilder sb = new StringBuilder();
 
-                for (int i = 0; i < specs.size(); i++) {
-                    ColumnSpec spec = specs.get(i);
-                    String raw = spec.index < tokens.length ? tokens[spec.index] : "";
-                    // Remove newlines and control characters, collapse whitespace
+                for (int i = 0; i < Specs.size(); i++) {
+                    Column_Spec Spec = Specs.get(i);
+                    String raw = Spec.index < tokens.length ? tokens[Spec.index] : "";
+                    // Normalising newline characters, tabs, etc.
                     String value = raw.replaceAll("[\\r\\n]+", " ")
                                        .replaceAll("\\s+", " ")
                                        .replaceAll("[\\p{C}]", "")
                                        .trim();
 
-                    // Truncate and pad bytes
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    int byteCount = 0;
+                    // truncating and padding bytes to match given schema
+                    ByteArrayOutputStream Bos = new ByteArrayOutputStream();
+                    int num_bytes = 0;
                     for (char c : value.toCharArray()) {
                         byte[] cBytes = String.valueOf(c).getBytes(StandardCharsets.UTF_8);
-                        if (byteCount + cBytes.length > spec.length) break;
-                        baos.write(cBytes, 0, cBytes.length);
-                        byteCount += cBytes.length;
+                        if (num_bytes + cBytes.length > Spec.length) break;
+                        Bos.write(cBytes, 0, cBytes.length);
+                        num_bytes += cBytes.length;
                     }
-                    // Pad with ASCII spaces
-                    while (byteCount < spec.length) {
-                        baos.write(' ');
-                        byteCount++;
+                    // padding shorter values with spaces
+                    while (num_bytes < Spec.length) {
+                        Bos.write(' ');
+                        num_bytes++;
                     }
-                    // Preserve bytes exactly
-                    String finalValue = new String(baos.toByteArray(), StandardCharsets.UTF_8);
-                    sb.append(finalValue);
+                    // writing final value
+                    String Final_value = new String(Bos.toByteArray(), StandardCharsets.UTF_8);
+                    sb.append(Final_value);
 
-                    if (i < specs.size() - 1) sb.append("\t");
+                    if (i < Specs.size() - 1) sb.append("\t");
                 }
 
                 String finalLine = sb.toString().replaceAll("[\\r\\n]+", " ").trim();
@@ -120,9 +115,10 @@ public class base_file_cleaner {
         }
     }
 
-    public static boolean containsInvalidChars(String s) {
-        if (s == null) return false;
-        for (char c : s.toCharArray()) {
+    //method to remove invalid chars in title
+    public static boolean HasInvalidCharacter(String str) {
+        if (str == null) return false;
+        for (char c : str.toCharArray()) {
             if (c == ',' || c == '"' || c == '\'' || c > 127) {
                 return true;
             }
@@ -131,41 +127,43 @@ public class base_file_cleaner {
     }
 
     public static void main(String[] args) {
-        String basePath = "/Users/simranmalik/Desktop/";
+        String Base_Path = "/Users/simranmalik/Desktop/";
         try {
             TsvClean(
-                basePath + "title.basics.tsv",
-                basePath + "cleaned_movies.tsv",
+                Base_Path + "name.basics.tsv",
+                Base_Path + "cleaned_people.tsv",
                 Arrays.asList(
-                    new ColumnSpec(0,  9,  "movieId"),
-                    new ColumnSpec(2, 30, "title")
+                    new Column_Spec(0, 10,  "personId"),
+                    new Column_Spec(1,105,  "name")
                 ),
-                true,  // checkMovieId
-                true   // checkTitle
+                false, // Check_MovieID bool set to false
+                false  // Check_Title bool set to false
             );
             TsvClean(
-                basePath + "title.principals.tsv",
-                basePath + "cleaned_workedon.tsv",
+                Base_Path + "title.principals.tsv",
+                Base_Path + "cleaned_workedon.tsv",
                 Arrays.asList(
-                    new ColumnSpec(0,  9,  "movieId"),
-                    new ColumnSpec(2, 10, "personId"),
-                    new ColumnSpec(3, 20, "category")
+                    new Column_Spec(0,  9,  "movieId"),
+                    new Column_Spec(2, 10, "personId"),
+                    new Column_Spec(3, 20, "category")
                 ),
-                true,  // checkMovieId
-                false  // checkTitle
+                true,  // Check_MovieID bool set to true
+                false  // Check_Title bool set to false
             );
             TsvClean(
-                basePath + "name.basics.tsv",
-                basePath + "cleaned_people.tsv",
+                Base_Path + "title.basics.tsv",
+                Base_Path + "cleaned_movies.tsv",
                 Arrays.asList(
-                    new ColumnSpec(0, 10,  "personId"),
-                    new ColumnSpec(1,105,  "name")
+                    new Column_Spec(0,  9,  "movieId"),
+                    new Column_Spec(2, 30, "title")
                 ),
-                false, // checkMovieId
-                false  // checkTitle
+                true,  // Check_MovieID bool set to true
+                true   // Check_Title bool set to true
             );
+            
+            
 
-            System.out.println("Cleaned files created.");
+            System.out.println("Successfully Created Cleaned files!");
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
