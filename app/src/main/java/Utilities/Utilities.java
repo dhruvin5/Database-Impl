@@ -93,20 +93,20 @@ public class Utilities {
 
                     // Movie ID must be exactly 9 chars
                     if (cols.length < 1 || cols[0].length() != 9) {
-                        System.out.println("Invalid movie ID length: " + (cols.length > 0 ? cols[0] : "<missing>"));
+                        //System.out.println("Invalid movie ID length: " + (cols.length > 0 ? cols[0] : "<missing>"));
                         invalidMovieID = true;
                     }
 
                     // For movies.bin also check the title field
                     if (binFileName.equals("movies.bin")) {
                         if (containsInvalidChars(cols[2])) {
-                            System.out.println("Invalid title: " + cols[2]);
+                            //System.out.println("Invalid title: " + cols[2]);
                             invalidTitle = true;
                         }
                     }
 
                     if (invalidMovieID || invalidTitle) {
-                        System.out.println("Skipping row with ivalid movieid/title");
+                        //System.out.println("Skipping row with ivalid movieid/title");
                         continue;
                     }
                 }

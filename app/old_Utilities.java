@@ -17,7 +17,7 @@ import Row.workRow;
 import buffer.BufferManager;
 import configs.Config;
 
-public class Utilities {
+public class old_Utilities {
 
     public static void loadDataset(BufferManager bf, String filepath) {
         generalLoadDataset(bf, filepath, "movies.bin",
@@ -85,7 +85,17 @@ public class Utilities {
 
             while ((dataLine = reader.readLine()) != null) {
                 String[] cols = dataLine.split("\t", -1);
-
+                if ((binFileName.equals("movies.bin") && cols[0].length() != 9) || (binFileName.equals("work.bin") && cols[0].length() != 9)) {
+                    System.out.println("skipping work " + cols[0]);
+                     continue;
+                 }
+                 if (binFileName.equals("movies.bin")) {
+                    if (containsInvalidChars(cols[2])) {
+                        System.out.println("Invalid title: " + cols[2]);
+                        continue;
+                    }
+                }
+                 /* 
                 // Only movies.bin and work.bin have extra validation
                 if (binFileName.equals("movies.bin") || binFileName.equals("work.bin")) {
                     boolean invalidMovieID = false;
@@ -110,6 +120,7 @@ public class Utilities {
                         continue;
                     }
                 }
+                    */
 
                 // Create the row and write it into pages
                 Row row = rowCreator.createRow(cols);

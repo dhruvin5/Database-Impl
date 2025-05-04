@@ -50,6 +50,9 @@ public class base_file_cleaner {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split("\t", -1);
+                boolean invalid_movieId=false;
+                boolean invalid_title=false;
+
 
                 if (checkMovieId) {
                     // check movieId length
@@ -57,7 +60,8 @@ public class base_file_cleaner {
                                      ? tokens[specs.get(0).index].trim()
                                      : "";
                     if (movieId.length() != 9) {
-                        continue;  // Skip this row
+                        invalid_movieId=true;
+                        //System.out.println("invalid movieid");
                     }
                     // check title in column spec at index 1
                     if (checkTitle) {
@@ -65,8 +69,15 @@ public class base_file_cleaner {
                                        ? tokens[specs.get(1).index]
                                        : "";
                         if (containsInvalidChars(title)) {
-                            continue;  // Skip this row
+                            invalid_title=true;  // Skip this row
+                            //System.out.println("invalid title");
+
                         }
+                    }
+                    if (invalid_movieId||invalid_title)
+                    {
+                        //System.out.println("row with invalid movieId/title is skipped ");
+                        continue; // Skip this row
                     }
                 }
 

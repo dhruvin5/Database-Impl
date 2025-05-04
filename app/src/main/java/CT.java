@@ -5,16 +5,16 @@ import java.util.Set;
 
 public class CT {
     public static void main(String[] args) {
-        String file1 = "/Users/simranmalik/645-Lab-32966720340112693401883534060222/app/sim_output_files/Latest_PSQL_Final_output.csv";
-        String file2 = "/Users/simranmalik/645-Lab-32966720340112693401883534060222/app/output_sim9.csv";
+        String file1 = "/Users/simranmalik/645-Lab-32966720340112693401883534060222/app/sim_output_files/Ba_Bm_output.csv";
+        String file2 = "/Users/simranmalik/645-Lab-32966720340112693401883534060222/app/output_sim19.csv";
 
         Set<String> set1 = readNormalizedCSV(file1, true);  // skip header
         Set<String> set2 = readNormalizedCSV(file2, false); // no header
 
         if (set1.equals(set2)) {
-            System.out.println("✅ Files match!");
+            System.out.println("Files match!");
         } else {
-            System.out.println("❌ Files do NOT match.");
+            System.out.println("Files do NOT match.");
 
             Set<String> onlyInFile1 = new HashSet<>(set1);
             onlyInFile1.removeAll(set2);
