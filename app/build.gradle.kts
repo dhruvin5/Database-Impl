@@ -4,7 +4,7 @@
  * This generated file contains a sample Java application project to get you started.
  * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/8.13/userguide/building_java_projects.html in the Gradle documentation.
  */
- /* 
+
 sourceSets {
     test {
         java {
@@ -12,7 +12,7 @@ sourceSets {
         }
     }
 }
-*/
+
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
@@ -52,13 +52,13 @@ application {
 //    workingDir = file("src/test/java/org/example")  // Make sure this is the correct directory
 //    commandLine = listOf("./test_script.sh")
 //}
-/* 
+
 tasks.named<Test>("test") {
    // dependsOn("runQueryTestScript")  // Ensure the script runs before unit tests
    // Use JUnit Platform for unit tests.
    useJUnitPlatform()
 }
-*/
+
 //    // Enable logging for standard output and error streams.
 //    testLogging {
 //        events("passed", "failed", "skipped", "standard_out", "standard_error")
