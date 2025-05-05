@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -ne 3 ]; then
+  echo "Please use the following format to run: run_query <start_range> <end_range> <buffer_size>"
+  exit 1
+fi
+
+start_range="$1"
+end_range="$2"
+buffer_size="$3"
+
+# navigate to app folder
+cd "$(dirname "${BASH_SOURCE[0]}")/../../../../"
+
+find src/main/java -name '*.java' | xargs javac -d .
+
+echo "Running Query with start_range= ${start_range} and end_range= ${end_range} with buffer_size=${buffer_size}"
+java query_executer.runquery "$start_range" "$end_range" "$buffer_size"
