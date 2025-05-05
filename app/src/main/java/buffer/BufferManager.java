@@ -82,4 +82,6 @@ public abstract class BufferManager {
      */
     public abstract int getBufferCapacity();
 
+    public abstract int getIOCount();
+
 }
