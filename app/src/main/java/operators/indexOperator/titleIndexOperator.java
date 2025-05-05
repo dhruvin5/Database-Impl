@@ -27,7 +27,7 @@ public class titleIndexOperator implements Operator {
         this.bufferManager = bufferManager;
         try {
             this.titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
-            this.ridIterator = titleIndex.rangeSearch(startRange, endRange); // Get the iterator for the range of titles
+            this.ridIterator = titleIndex.rangeSearch(startRange, endRange);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to initialize BplusTreeImplem", e);
@@ -39,12 +39,15 @@ public class titleIndexOperator implements Operator {
         if (titleIndex == null || this.ridIterator == null || !this.ridIterator.hasNext()) {
             return null;
         }
+
         // Returns the next row from the title_index as long as there is data
         if (this.ridIterator.hasNext()) {
+
             Rid rid = this.ridIterator.next();
-            Page currentPage = bufferManager.getPage(rid.getPageId(), fileName);
+            Page currentPage = bufferManager.getPage(rid.getPageId(), "movies.bin");
             Row row = currentPage.getRow(rid.getSlotId());
-            bufferManager.unpinPage(currentPage.getPid(), fileName);
+            //System.out.println(new String(row.movieId));
+            bufferManager.unpinPage(currentPage.getPid(), "movies.bin");
             return row;
         }
         return null;

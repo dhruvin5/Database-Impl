@@ -12,25 +12,35 @@ import operators.projectionOperator.TopProjectionOperator;
 
 public class Caller {
     public static void main(String[] args) {
-        BufferManager bufferManager = new BufferManagerImplem(1000);
+        BufferManager bufferManager = new BufferManagerImplem(100);
 
         File movieFile = new File("movies.bin");
         File workFile = new File("work.bin");
         File peopleFile = new File("people.bin");
 
-        if (!movieFile.exists())
+        if (!movieFile.exists()) {
+            System.out.println("loading............");
             Utilities.loadDataset(bufferManager,
-                    "/Users/simranmalik/Desktop/title.basics.tsv"); // Load movies dataset
+                    "/Users/Admin/Desktop/645/lab/title.basics.tsv");
+        }// Load movies dataset
 
         if (!workFile.exists())
             Utilities.loadWorkDataset(bufferManager,
-                    "/Users/simranmalik/Desktop/title.principals.tsv"); // Load work dataset
+                    "/Users/Admin/Desktop/645/lab/title.principals.tsv"); // Load work dataset
         if (!peopleFile.exists())
             Utilities.loadPeopleDataset(bufferManager,
-                    "/Users/simranmalik/Desktop/name.basics.tsv"); // Load people dataset
+                    "/Users/Admin/Desktop/645/lab/name.basics.tsv"); // Load people dataset
 
         bufferManager.force();
+        bufferManager.clearCache();
         System.out.println("Data loaded successfully.");
+
+        Utilities.createTitleIndex(bufferManager);
+
+        System.out.println("Title index created successfully.");
+
+        bufferManager.force();
+        bufferManager.clearCache();
 
         // Create a top projection operator
         Operator topProjectionOperator = new TopProjectionOperator();
@@ -42,7 +52,7 @@ public class Caller {
             rows.add(row);
         }
         topProjectionOperator.close(); // Close the operator
-        Utilities.writeCSV(rows, "output_sim21.csv"); // Write the output to a file
+        Utilities.writeCSV(rows, "output_dg10.csv"); // Write the output to a file
 
     }
 }

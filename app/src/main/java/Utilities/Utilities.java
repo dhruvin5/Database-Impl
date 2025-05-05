@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import Bplus.BplusTreeImplem;
+import Bplus.Rid;
 import Page.Page;
 import Row.Row;
 import Row.movieRow;
@@ -159,6 +161,48 @@ public class Utilities {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(sb.toString());
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createTitleIndex(BufferManager bufferManager) {
+        File file = new File("title_index.bin");
+        if(file.exists()) {
+            return;
+        }
+       // boolean stat = true;
+        try {
+
+            BplusTreeImplem<String> titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
+            int pageCount = Utilities.getNumberOfPages("movies.bin");
+            for (int currPID = 0; currPID < pageCount; currPID++) {
+                Page p = bufferManager.getPage(currPID, "movies.bin");
+                bufferManager.unpinPage(currPID, "movies.bin");
+                if (p == null) {
+                    break;
+                }
+                int totalRowPerPage = p.getRowCount();
+                for (int rowCount = 0; rowCount < totalRowPerPage; rowCount++) {
+                    Row row = p.getRow(rowCount);
+                    if (row == null) {
+
+                        break;
+                    }
+                   // byte[] movieIdStr = row.movieId;
+                    byte[] titleStr = row.title;
+                    Rid movieRid = new Rid(currPID, rowCount);
+                    // Create index on movie title
+                    String movieTitle = new String(titleStr, StandardCharsets.UTF_8);
+                    titleIndex.insert(movieTitle, movieRid);
+                    // Create index on movie id
+                    //String movieId = new String(movieIdStr, StandardCharsets.UTF_8);
+                    //movieIdIndex.insert(movieId, movieRid);
+                }
+
+            }
+            bufferManager.force();
+            bufferManager.clearCache();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
