@@ -51,11 +51,11 @@ public class performanceTesting {
         // System.out.println("Starting Caa to Cab, B=1000");
         // runPerformanceTest("Caa", "Cab", 1000);
 
-        System.out.println("Starting Aa to Ac, B=1000");
-        runPerformanceTest("Aa", "Ac", 1000);
+        // System.out.println("Starting Aa to Ac, B=1000");
+        // runPerformanceTest("Aa", "Ac", 1000);
 
-        System.out.println("Starting Wh to Whe, B=1000");
-        runPerformanceTest("Wh", "Whe", 1000);
+        // System.out.println("Starting Wh to Whe, B=1000");
+        // runPerformanceTest("Wh", "Whe", 1000);
 
         // System.out.println("Starting Hap to Happ, B=1000");
         // runPerformanceTest("Hap", "Happ", 1000);

@@ -9,12 +9,22 @@ import buffer.BufferManager;
 import buffer.BufferManagerImplem;
 import operators.Operator;
 import operators.projectionOperator.TopProjectionOperator;
+import SystemCatalog.systemCatalog;
+import org.example.AnalyticalIO;
 
 public class Caller {
 
     public static void main(String[] args) {
         System.out.println("hi");
-        performanceTesting.main(args);
+        AnalyticalIO.printBaseIOCosts();
+        // performanceTesting.main(args);
+    //     int totalWorkedCost = Utilities.getNumberOfPages("work.bin");
+    //     System.out.println("WorkedOn Base IO Cost: " + totalWorkedCost);
+    //     int moviePages = Utilities.getNumberOfPages("movies.bin");
+    //     System.out.println("Movies Base IO Cost: " + moviePages);
+    //     int peoplePages = Utilities.getNumberOfPages("people.bin");
+    //     System.out.println("People Base IO Cost: " + peoplePages);
+    //     System.out.println("Total Tables cost: "+ (totalWorkedCost + moviePages + peoplePages));
     }
 
     // public static void main(String[] args) {
