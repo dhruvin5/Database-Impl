@@ -10,7 +10,7 @@ import buffer.BufferManagerImplem;
 
 import java.nio.charset.StandardCharsets;
 
-public class PerfTests {
+public class AnalyticalIO {
 
     private static final int MOVIE_ID_SIZE = 9;
     private static final int PERSON_ID_SIZE = 10;
