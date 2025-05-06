@@ -1,0 +1,137 @@
+
+B = 100 Caa to Cab
+
+Analytical IO:
+HP@DESKTOP-4P0P6TP MINGW64 ~/Desktop/ms/645/lab1/645-Lab-32966720340112693401883534060222 (main)
+$ java -jar app/build/libs/app.jar 
+hi
+Movies Base IO Cost: 47859
+People Base IO Cost: 410827
+WorkedOn Base IO Cost: 490936
+Materialized Selectivity: 4168710
+Movies Selectivity: 8
+Materialized I/O Cost: 19390
+Total IO Cost for Base and Materialized Tables: 969012
+Cost Upto First BNL Join: 577575
+BNL1 Selectivity 8
+BNL2 Cost: 410827
+Total Plan Cost: 988402
+
+System IO:
+start_query,end_query,total_IOs
+Caa,Cab,1008502
+
+
+B = 200 Caa to Cab
+
+Analytical IO:
+HP@DESKTOP-4P0P6TP MINGW64 ~/Desktop/ms/645/lab1/645-Lab-32966720340112693401883534060222 (main)
+$ java -jar app/build/libs/app.jar 
+hi
+Movies Base IO Cost: 47859
+People Base IO Cost: 410827
+WorkedOn Base IO Cost: 490936
+Materialized Selectivity: 4168710
+Movies Selectivity: 8
+Materialized I/O Cost: 19390
+Total IO Cost for Base and Materialized Tables: 969012
+Cost Upto First BNL Join: 577575
+BNL1 Selectivity 8
+BNL2 Cost: 410827
+Total Plan Cost: 988402
+
+System IO:
+start_query,end_query,total_IOs
+Caa,Cab,1008152
+
+
+B = 100 W to We
+
+Analytical IO:
+HP@DESKTOP-4P0P6TP MINGW64 ~/Desktop/ms/645/lab1/645-Lab-32966720340112693401883534060222 (main)
+$ java -jar app/build/libs/app.jar 
+hi
+Movies Base IO Cost: 47859
+People Base IO Cost: 410827
+WorkedOn Base IO Cost: 490936
+Materialized Selectivity: 4168710
+Movies Selectivity: 13666
+Materialized I/O Cost: 19390
+Total IO Cost for Base and Materialized Tables: 969012
+Cost Upto First BNL Join: 616355
+BNL1 Selectivity 13666
+BNL2 Cost: 1643308
+Total Plan Cost: 2259663
+
+System IO:
+start_query,end_query,total_IOs
+W,We,2326744
+
+
+B = 200 W to We
+
+Analytical IO:
+HP@DESKTOP-4P0P6TP MINGW64 ~/Desktop/ms/645/lab1/645-Lab-32966720340112693401883534060222 (main)
+$ java -jar app/build/libs/app.jar 
+hi
+Movies Base IO Cost: 47859
+People Base IO Cost: 410827
+WorkedOn Base IO Cost: 490936
+Materialized Selectivity: 4168710
+Movies Selectivity: 13666
+Materialized I/O Cost: 19390
+Total IO Cost for Base and Materialized Tables: 969012
+Cost Upto First BNL Join: 596965
+BNL1 Selectivity 13666
+BNL2 Cost: 821654
+Total Plan Cost: 1418619
+
+System IO:
+start_query,end_query,total_IOs
+W,We,1466568
+
+
+B = 100 Ba to Bc
+
+Analytical IO:
+HP@DESKTOP-4P0P6TP MINGW64 ~/Desktop/ms/645/lab1/645-Lab-32966720340112693401883534060222 (main)
+$ java -jar app/build/libs/app.jar 
+hi
+Movies Base IO Cost: 47859
+People Base IO Cost: 410827
+WorkedOn Base IO Cost: 490936
+Materialized Selectivity: 4168710
+Movies Selectivity: 25533
+Materialized I/O Cost: 19390
+Total IO Cost for Base and Materialized Tables: 969012
+Cost Upto First BNL Join: 674525
+BNL1 Selectivity 25533
+BNL2 Cost: 2875789
+Total Plan Cost: 3550314
+
+System IO:
+start_query,end_query,total_IOs
+Ba,Bc,3661168
+
+
+B = 200 Ba to Bc
+
+Analytical IO:
+HP@DESKTOP-4P0P6TP MINGW64 ~/Desktop/ms/645/lab1/645-Lab-32966720340112693401883534060222 (main)
+$ java -jar app/build/libs/app.jar 
+hi
+Movies Base IO Cost: 47859
+People Base IO Cost: 410827
+WorkedOn Base IO Cost: 490936
+Materialized Selectivity: 4168710
+Movies Selectivity: 25533
+Materialized I/O Cost: 19390
+Total IO Cost for Base and Materialized Tables: 969012
+Cost Upto First BNL Join: 616355
+BNL1 Selectivity 25533
+BNL2 Cost: 1643308
+Total Plan Cost: 2259663
+
+System IO:
+start_query,end_query,total_IOs
+Ba,Bc,2351441

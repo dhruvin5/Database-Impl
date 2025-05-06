@@ -1,0 +1,68 @@
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+
+data_100 = {
+    "Caa‑Cab": {"selectivity": 8,     "system_io": 1008502, "analytical_io": 988402},
+    "W‑We"   : {"selectivity": 13666, "system_io": 2326744, "analytical_io": 2259663},
+    "Ba‑Bc"  : {"selectivity": 25533, "system_io": 3661168, "analytical_io": 3550314},
+}
+
+data_200 = {
+    "Caa‑Cab": {"selectivity": 8,     "system_io": 1008152, "analytical_io": 988402},
+    "W‑We"   : {"selectivity": 13666, "system_io": 1466568, "analytical_io": 1418619},
+    "Ba‑Bc"  : {"selectivity": 25533, "system_io": 2351441, "analytical_io": 2259663},
+}
+
+def plot_for_buffer(data: dict, buffer_size: int) -> None:
+    labels         = list(data.keys())
+    selectivities  = [data[k]["selectivity"]   for k in labels]
+    measured_ios   = [data[k]["system_io"]     for k in labels]
+    estimated_ios  = [data[k]["analytical_io"] for k in labels]
+
+    est_x = [x * 1.02 for x in selectivities]
+
+    fig, ax_meas = plt.subplots(figsize=(8, 5))
+
+    ax_meas.plot(
+        selectivities,
+        measured_ios,
+        marker="o",
+        color="tab:blue",
+        linewidth=2,
+        label="Measured I/O (System)",
+    )
+    for x, y, lbl in zip(selectivities, measured_ios, labels):
+        ax_meas.annotate(lbl, (x, y), textcoords="offset points", xytext=(6, 5))
+
+    ax_meas.set_xlabel("Movies Selectivity (rows passing predicate)")
+    ax_meas.set_ylabel("Measured I/O (millions)", color="tab:blue")
+    ax_meas.tick_params(axis="y", colors="tab:blue")
+    ax_meas.yaxis.set_major_formatter(FuncFormatter(lambda y, _: f"{y/1e6:.1f}"))
+
+    ax_est = ax_meas.twinx()
+    ax_est.plot(
+        est_x,
+        estimated_ios,
+        marker="s",
+        linestyle="--",
+        color="tab:orange",
+        linewidth=2,
+        label="Estimated I/O (Analytical)",
+    )
+    ax_est.set_ylabel("Estimated I/O (millions)", color="tab:orange")
+    ax_est.tick_params(axis="y", colors="tab:orange")
+    ax_est.yaxis.set_major_formatter(FuncFormatter(lambda y, _: f"{y/1e6:.1f}"))
+
+    ax_meas.set_title(f"I/O cost vs. selectivity  (Buffer B = {buffer_size})")
+    ax_meas.grid(True, linestyle=":", linewidth=0.6)
+
+    lines1, labels1 = ax_meas.get_legend_handles_labels()
+    lines2, labels2 = ax_est.get_legend_handles_labels()
+    ax_meas.legend(lines1 + lines2, labels1 + labels2, loc="upper left")
+
+    fig.tight_layout()
+    plt.show()
+
+if __name__ == "__main__":
+    plot_for_buffer(data_100, buffer_size=100)
+    plot_for_buffer(data_200, buffer_size=200)
