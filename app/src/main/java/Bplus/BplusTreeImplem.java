@@ -425,14 +425,12 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
             int pos = binarySearch(node.keys, startKey, true);
             // Scan through leaf nodes until endKey is exceeded.
             while (node != null) {
-                // System.out.println("Scanning leaf node: " + node.keys);
                 for (; pos < node.keys.size(); pos++) {
                     K currentKey = node.keys.get(pos);
                     String cur = stripAccents(currentKey.toString()).toLowerCase(Locale.ROOT).trim();
                     String lo = stripAccents(startKey.toString()).toLowerCase(Locale.ROOT).trim();
                     String hi = stripAccents(endKey.toString()).toLowerCase(Locale.ROOT).trim();
-
-                    // Modified line 424 logic
+                    //collecting matching rids till current key>end range
                     if (cur.compareTo(hi) > 0) {
                         if (isSwapped) {
                             List<Rid> reversedResults = new ArrayList<>(results);
@@ -442,7 +440,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
                         return results.iterator();
                     }
 
-                    // Modified line 435 logic
                     if (cur.compareTo(lo) >= 0 && cur.compareTo(hi) <= 0) {
                         results.add(node.values.get(pos));
                     }
