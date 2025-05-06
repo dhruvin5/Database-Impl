@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.AbstractMap;
 
@@ -38,6 +40,13 @@ public class BufferManagerImplem extends BufferManager {
 
     int totalPages; // total number of pages created
 
+    private int ioCount = 0; // I/O counter
+
+    private final HashSet<String> ioTrackedFiles = new HashSet<>(
+        Arrays.asList("people.bin", "work.bin", "movies.bin", "materialized.bin")
+    );
+
+
     // initialize the buffer pool, page table, free frames list, lru cache, page
     // metadata
     public BufferManagerImplem(int bufferSize) {
@@ -56,6 +65,20 @@ public class BufferManagerImplem extends BufferManager {
         for (int i = 0; i < bufferSize; i++)
             freeFrameList.add(i);
     }
+
+    public void incrementIO(String fileName) {
+        // if (ioTrackedFiles.contains(fileName)) ioCount++;
+        ioCount++;
+    }
+    
+    public void decrementIO(String fileName) {
+        // if (ioTrackedFiles.contains(fileName)) ioCount--;
+        ioCount--;
+    }
+    
+    public int getIOCount() {
+        return ioCount;
+    }    
 
     // get the column sizes for the file
     private HashMap<String, Integer> getColumnSizes(String FILE_NAME) {
@@ -79,6 +102,9 @@ public class BufferManagerImplem extends BufferManager {
 
     // Create new Page
     Page createAndAllocatePage(int frameIndex, Page page, boolean isPageCreated, String FILE_NAME, boolean isLeaf) {
+
+        // Increment I/O only if it's an IO-tracked file
+        incrementIO(FILE_NAME);
 
         if (!isPageCreated) { // Create a new page if doesnt exist
 
@@ -212,6 +238,9 @@ public class BufferManagerImplem extends BufferManager {
         if (pageTable.containsKey(FILE_NAME) && pageTable.get(FILE_NAME).containsKey(pageId)) {
             int frameIndex = pageTable.get(FILE_NAME).get(pageId);
             Page page = bufferPool[frameIndex];
+
+            // Increment I/O only if it's an IO-tracked file
+            incrementIO(FILE_NAME);
 
             // increment the pin count
             PageMetaData metadata = pageInfo.get(FILE_NAME).get(pageId);
