@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#navigating to app folder
+cd "$(dirname "${BASH_SOURCE[0]}")/../../../../"
+
+find src/main/java -name '*.java' | xargs javac -d .
+echo "Performing preprocessing..."
+# running preprocess.java
+java query_executer.preprocess

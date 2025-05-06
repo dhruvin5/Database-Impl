@@ -4,6 +4,7 @@
  * This generated file contains a sample Java application project to get you started.
  * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/8.13/userguide/building_java_projects.html in the Gradle documentation.
  */
+
 sourceSets {
     test {
         java {
@@ -57,6 +58,7 @@ tasks.named<Test>("test") {
    // Use JUnit Platform for unit tests.
    useJUnitPlatform()
 }
+
 //    // Enable logging for standard output and error streams.
 //    testLogging {
 //        events("passed", "failed", "skipped", "standard_out", "standard_error")

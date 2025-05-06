@@ -25,8 +25,8 @@ class BplusTest {
     void setUp() {
         try {
             bufferManager = new BufferManagerImplem(7);
-            titleIndex = new BplusTreeImplem<>("title_index.bin", bufferManager);
-            movieIdIndex = new BplusTreeImplem<>("movie_Id_index.bin", bufferManager);
+            titleIndex = new BplusTreeImplem<>("test-title_index.bin", bufferManager);
+            movieIdIndex = new BplusTreeImplem<>("test-movie_Id_index.bin", bufferManager);
             bufferManager.force();
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,13 +1,17 @@
 package buffer;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.AbstractMap;
 
 import Page.*;
+import Row.materializedRow;
 import configs.Config;
 import SystemCatalog.systemCatalog;
 import SystemCatalog.tableMetaData;
@@ -36,6 +40,13 @@ public class BufferManagerImplem extends BufferManager {
 
     int totalPages; // total number of pages created
 
+    private int ioCount = 0; // I/O counter
+
+    private final HashSet<String> ioTrackedFiles = new HashSet<>(
+        Arrays.asList("people.bin", "work.bin", "movies.bin", "materialized.bin")
+    );
+
+
     // initialize the buffer pool, page table, free frames list, lru cache, page
     // metadata
     public BufferManagerImplem(int bufferSize) {
@@ -55,10 +66,27 @@ public class BufferManagerImplem extends BufferManager {
             freeFrameList.add(i);
     }
 
+    public void incrementIO(String fileName) {
+        // if (ioTrackedFiles.contains(fileName)) ioCount++;
+        ioCount++;
+    }
+    
+    public void decrementIO(String fileName) {
+        // if (ioTrackedFiles.contains(fileName)) ioCount--;
+        ioCount--;
+    }
+    
+    public int getIOCount() {
+        return ioCount;
+    }    
+
     // get the column sizes for the file
     private HashMap<String, Integer> getColumnSizes(String FILE_NAME) {
 
         tableMetaData table = this.catalog.getTableMetaData(FILE_NAME); // Get the table metadata
+        if (table == null) {
+            return null;
+        }
         ArrayList<String> columnNames = table.getColumnNames(); // Get the table name
         HashMap<String, Integer> columnSizes = new HashMap<>(); // Initialize the
 
@@ -75,6 +103,9 @@ public class BufferManagerImplem extends BufferManager {
     // Create new Page
     Page createAndAllocatePage(int frameIndex, Page page, boolean isPageCreated, String FILE_NAME, boolean isLeaf) {
 
+        // Increment I/O only if it's an IO-tracked file
+        incrementIO(FILE_NAME);
+
         if (!isPageCreated) { // Create a new page if doesnt exist
 
             int newID = this.FileToPID.getOrDefault(FILE_NAME, 0); // Get the current page id for the file
@@ -87,6 +118,14 @@ public class BufferManagerImplem extends BufferManager {
                         columnSize.get("slotID"));
             } else if (this.catalog.isIndexFile(FILE_NAME) && !isLeaf) {
                 page = new NonLeafIndexPage(newID, boolValue, columnSize.get("key"), columnSize.get("pid"));
+            } else if (FILE_NAME.equals("people.bin")) {
+                page = new peoplePageImpl(newID);
+            } else if (FILE_NAME.equals("work.bin")) {
+                page = new workPageImpl(newID);
+            } else if (FILE_NAME.equals("materialized.bin")) {
+                page = new MaterializedPageImpl(newID);
+            } else if (FILE_NAME.equals("-2")) {
+                page = new JoinPageImpl(newID);
             } else {
                 page = new PageImpl(newID, columnSize.get("movieId"), columnSize.get("title"));
             }
@@ -107,7 +146,8 @@ public class BufferManagerImplem extends BufferManager {
         }
         // Store the metadata in the pageInfo map
         if (pageInfo.containsKey(FILE_NAME) && pageInfo.get(FILE_NAME).containsKey(page.getPid())) {
-            System.out.println("Error: Page " + page.getPid() + " already exists in the buffer.");
+            // System.out.println("Error: Page " + page.getPid() + " already exists in the
+            // buffer.");
             return null; // Page already exists, cannot create again
         }
 
@@ -199,6 +239,9 @@ public class BufferManagerImplem extends BufferManager {
             int frameIndex = pageTable.get(FILE_NAME).get(pageId);
             Page page = bufferPool[frameIndex];
 
+            // Increment I/O only if it's an IO-tracked file
+            incrementIO(FILE_NAME);
+
             // increment the pin count
             PageMetaData metadata = pageInfo.get(FILE_NAME).get(pageId);
             metadata.incrementPinCount();
@@ -220,7 +263,8 @@ public class BufferManagerImplem extends BufferManager {
             Page page = getPageFromDisk(pageId, FILE_NAME);
 
             if (page == null) {
-                System.out.println("Error: Failed to load page" + pageId + "from disk. " + FILE_NAME);
+                // System.out.println("Error: Failed to load page" + pageId + "from disk. " +
+                // FILE_NAME);
                 return null; // failed to load page from disk
             }
 
@@ -247,11 +291,20 @@ public class BufferManagerImplem extends BufferManager {
         if (metadata != null) {
             // Page is in the buffer, marking it as dirty
             metadata.setDirtyBit(true);
-            // System.out.println("Page " + pageId + " is marked as dirty.");
-        } else {
-            // System.out.println("THIS MARK DIRTY IS CALLED!!");
-            System.out.println("Error: Page " + pageId + " not found in buffer.");
-        }
+        } // else {
+          // System.out.println("Error: Page " + pageId + " not found in buffer.");
+          // }
+    }
+
+    public void markUndirty(int pageId, String FILE_NAME) {
+        PageMetaData metadata = pageInfo.getOrDefault(FILE_NAME, new HashMap<>()).get(pageId);
+
+        if (metadata != null) {
+            // Page is in the buffer, marking it as dirty
+            metadata.setDirtyBit(false);
+        } // else {
+          // System.out.println("Error: Page " + pageId + " not found in buffer.");
+          // }
     }
 
     @Override
@@ -266,9 +319,9 @@ public class BufferManagerImplem extends BufferManager {
             } else { // Pin count is already 0
                 System.out.println("Error: Page " + pageId + " already has pin count 0. Cannot unpin further.");
             }
-        } else { // Page not in the buffer pool
-            System.out.println("Error: Page " + pageId + " not found in buffer.");
-        }
+        } // else { // Page not in the buffer pool
+          // System.out.println("Error: Page " + pageId + " not found in buffer.");
+          // }
     }
 
     // get Page from the disk
@@ -294,8 +347,7 @@ public class BufferManagerImplem extends BufferManager {
 
             // check if the page is a index page or not
             if (this.catalog.isIndexFile(FILE_NAME)) {
-                // check if the page is a leaf page or not
-                boolean isLeaf = ispageLeaf(FILE_NAME, buffer);
+                boolean isLeaf = ispageLeaf(FILE_NAME, buffer); // check if the page is a leaf page or not
                 if (isLeaf) {
                     // Leaf index page
                     return new LeafIndexPageImpl(pageId, buffer, columnSize.get("key"), columnSize.get("pid"),
@@ -304,9 +356,16 @@ public class BufferManagerImplem extends BufferManager {
                     // Non-leaf index page
                     return new NonLeafIndexPage(pageId, buffer, columnSize.get("key"), columnSize.get("pid"));
                 }
+            } else if (FILE_NAME.equals("people.bin")) {
+                return new peoplePageImpl(pageId, buffer); // People page
+            } else if (FILE_NAME.equals("work.bin")) {
+                return new workPageImpl(pageId, buffer); // Work page
+            } else if (FILE_NAME.equals("materialized.bin")) {
+                return new MaterializedPageImpl(pageId, buffer); // Materialized page
+            } else if (FILE_NAME.equals("-2")) {
+                return new JoinPageImpl(pageId, buffer); // Join page
             } else {
-                // Regular Data page
-                return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title"));
+                return new PageImpl(pageId, buffer, columnSize.get("movieId"), columnSize.get("title")); // movie data
             }
 
         } catch (IOException e) {
@@ -415,5 +474,36 @@ public class BufferManagerImplem extends BufferManager {
         this.lruCache.clear();
         this.pageTable.clear();
         this.pageInfo.clear();
+    }
+
+    public void deleteFile(String FILE_NAME) {
+        try {
+            File file = new File(FILE_NAME);
+            if (file.exists()) {
+                if (file.delete()) {
+                    System.out.println("File Deleted");
+                    clearFileData(FILE_NAME);
+                } else {
+                    System.out.println("File not deleted");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error deleting the file: " + e.getMessage());
+        }
+    }
+
+    // Clear the file data from the buffer pool and remove it from the page table
+    private void clearFileData(String FILE_NAME) {
+        HashMap<Integer, Integer> file_pageTable = pageTable.get(FILE_NAME);
+        if (file_pageTable != null) {
+            for (int pageId : file_pageTable.keySet()) {
+                bufferPool[file_pageTable.get(pageId)] = null;
+                freeFrameList.add(file_pageTable.get(pageId));
+            }
+            pageTable.remove(FILE_NAME); // remove the file from the page table
+        }
+        pageInfo.remove(FILE_NAME); // remove the file from the page info
+        FileToPID.remove(FILE_NAME); // remove the file from the FileToPID mapping
+        lruCache.removeIf(entry -> entry.getKey().equals(FILE_NAME));
     }
 }

@@ -10,4 +10,7 @@ public abstract class Row {
     public byte[] slotid;
     public byte[] movieId;
     public byte[] title;
+    public byte[] name;
+    public byte[] personId;
+    public byte[] category;
 }

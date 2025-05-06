@@ -1,11 +1,11 @@
 package Page;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 import Row.Row;
 import Row.movieRow;
 import configs.Config;
-
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class PageImpl implements Page {
 
@@ -78,7 +78,8 @@ public class PageImpl implements Page {
         // rigorous check on the data to avoid null entries
 
         if (row == null || row.movieId == null || row.title == null || row.key != null
-                || row.pid != null || row.slotid != null) {
+                || row.pid != null || row.slotid != null || row.personId != null
+                || row.category != null || row.name != null) {
             return -1;
         }
 

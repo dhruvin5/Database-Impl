@@ -52,9 +52,10 @@ public class systemCatalog {
 
         // Adds the Movie table to the catalog
         addTable("Movies", "movies.bin", columns); // Adds the Movie table to the catalog
-        addIndex("Movie_Index", "movies.bin", "movieId", "movie_Id_index.bin", "b+ tree"); // Adds an index on the movieId column
-        addIndex("Movies_title", "movies.bin", "title", "title_index.bin", "b+ tree"); // Adds an index on the title column
+        addIndex("Movie_Index", "movies.bin", "movieId", "movie_Id_index.bin", "b+ tree"); // Adds an index on the
+        addIndex("Movies_title", "movies.bin", "title", "title_index.bin", "b+ tree"); // Adds an index on the title
 
+        addTable("-1", "-1", columns);
         addTable("Movie_ID_Index", "movie_Id_index.bin", movie_index_columns);
         addTable("Title_Index", "title_index.bin", title_index_columns);
 

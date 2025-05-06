@@ -1,0 +1,24 @@
+Step 1) navigate to the path of this folder app/src/main/java/query_executer
+Step 2) Give execution permissions to both preprocess and run_query scripts in terminal:
+        2.1) chmod +x preprocess
+        2.2) chmod +x run_query
+Step 3) Run preprocess script to prepare all base Table binary files(Movies,Work,People) in terminal:
+        ./preprocess
+Step 4) After prepocessing was successful, you will see the bin files created in the dir
+        and will see this in terminal output:
+        "Preprocessing Completed Successfully! "
+
+Step 5) Update the Query output file name/path in runquery.java before executing your query, and save the file
+Step 6) To run the query, invoke the runquery script in this format in Terminal (update start range end range and buffer size):
+        ./run_query 'Caa' 'Cab' 1000
+
+Step 7) To compare the output files from LAB3 Code and postgres for the selected range:
+        7.1) Update paths for both files in CT.java file and save it.
+        7.2) Paste the following command in terminal and run it (update path if needed):
+        javac app/src/main/java/CT.java
+        java -cp app/src/main/java CT
+
+
+             
+
+

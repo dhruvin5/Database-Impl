@@ -4,14 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
+import java.text.Normalizer;
 import Page.Page;
 import Row.leafRow;
 import Row.nonLeafRow;
@@ -55,32 +49,57 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
         File file = new File(indexFile);
         if(file.exists())
         {
-            if (file.delete()) {
-               System.out.println("Index File deleted successfully.");
-            }
+            this.index_info_page_id = 0;
+
+            this.rootPageId = readRootNodeInfo(this.index_info_page_id);
+
+            System.out.println("ROOT PAGE ID: " + this.rootPageId);
         }
+        else {
 
-        // creating a page to store a pointer to the root node
-        index_info_page_id = bm.createIndexPage(indexFile, false).getPid();
+            // creating a page to store a pointer to the root node
+            index_info_page_id = bm.createIndexPage(indexFile, false).getPid();
 
-        //creating root node.
-        this.rootPageId = bm.createIndexPage(indexFile, true).getPid();
-        BplusTreeNode<K> rootNode = new BplusTreeNode<>(true);
-        writeNode(rootNode, rootPageId);
+            //creating root node.
+            this.rootPageId = bm.createIndexPage(indexFile, true).getPid();
+            BplusTreeNode<K> rootNode = new BplusTreeNode<>(true);
+            writeNode(rootNode, rootPageId);
 
-        bm.unpinPage(this.rootPageId, this.indexFile);
-        writeRootNodeInfo(index_info_page_id, rootPageId);
-        bm.unpinPage(this.index_info_page_id, this.indexFile);
+            bm.unpinPage(this.rootPageId, this.indexFile);
+            writeRootNodeInfo(index_info_page_id, rootPageId);
+            bm.unpinPage(this.index_info_page_id, this.indexFile);
+        }
 
     }
     //storing info of root
     private void writeRootNodeInfo(int pageId, int rootPageId) throws IOException {
+
         Page page = bm.getPage(pageId, indexFile);
         page.setRowCount(0);
         byte[] rootPointer = ByteBuffer.allocate(4).putInt(rootPageId).array();
         page.insertRow(new nonLeafRow(null, rootPointer));
         bm.markDirty(pageId, indexFile);
         bm.unpinPage(pageId, indexFile);
+    }
+
+    private int readRootNodeInfo(int pageId) throws IOException {
+        Page page = bm.getPage(pageId, this.indexFile);
+        byte[] data = page.getRows();
+        int offset = catalog.getPageOffset(false);
+
+        byte[] colBytes = Arrays.copyOfRange(data, offset + 30, offset  + 34);
+        int new_rootPageId = ByteBuffer.wrap(colBytes).getInt();
+
+        bm.unpinPage(pageId, this.indexFile);
+
+        return new_rootPageId ;
+    }
+
+    static String stripAccents(String s) {
+        // 1) decompose: "á" → "a\u0301"
+        String n = Normalizer.normalize(s, Normalizer.Form.NFD);
+        // 2) remove all combining marks (the \p{M} class)
+        return n.replaceAll("\\p{M}", "");
     }
 
     //writing serialised node data to disk index file
@@ -387,7 +406,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
             // Traverse to the first leaf node that might contain startKey (using search logic).
             while (!node.isLeaf) {
                 int i = binarySearch(node.keys, startKey, true);
-               // System.out.println("Binary search result: " + i);
+                // System.out.println("Binary search result: " + i);
 
                 if (i < node.keys.size() && node.keys.get(i).compareTo(startKey) == 0){
                     i++;
@@ -508,6 +527,16 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
                 printNode(childPageId, level + 2);
             }
         }
+    }
+
+    private int compareStrings(K key1, K key2)
+    {
+        String start = stripAccents(key1.toString())
+                .toLowerCase(Locale.ROOT);
+        String end = stripAccents(key2.toString())
+                .toLowerCase(Locale.ROOT);
+
+        return start.compareTo(end);
     }
 
     //binary search method.
