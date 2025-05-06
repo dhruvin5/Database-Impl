@@ -67,7 +67,7 @@ public class Caller {
 
     // public static void main(String[] args) {
     //     System.out.println("hi");
-    //     BufferManager bufferManager = new BufferManagerImplem(1000);
+    //     BufferManager bufferManager = new BufferManagerImplem(100);
 
     //     File movieFile = new File("movies.bin");
     //     File workFile = new File("work.bin");
@@ -100,8 +100,8 @@ public class Caller {
     //     topProjectionOperator.close(); // Close the operator
     //     Utilities.writeCSV(rows, "shreya_op.csv"); // Write the output to a file
 
-    //     // Print the actual I/O count incurred during execution
-    //     System.out.println("Total I/O operations (System calculated): " + bufferManager.getIOCount());
+    //     // // Print the actual I/O count incurred during execution
+    //     // // System.out.println("Total I/O operations (System calculated): " + bufferManager.getIOCount());
 
     // }
 }

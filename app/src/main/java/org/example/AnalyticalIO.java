@@ -33,11 +33,26 @@ public class AnalyticalIO {
         return readMatchCountFromCSV(path);
     }
 
-    // return matching number of rows in range after scanning through all the data
+    // return number of rows in the result data CSV (excluding header)
     public static int getRangeSelectionSelectivity(String start, String end) {
-        String fileName = start + "_" + end + "_analytical_match.csv";
+        String fileName = start + "_" + end + "_data.csv";
         String path = "C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\shreya_perf_op\\" + fileName;
-        return readMatchCountFromCSV(path);
+        return countDataRowsInCSV(path);
+    }
+
+    // helper to count non-header rows
+    private static int countDataRowsInCSV(String filePath) {
+        int count = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            br.readLine(); // skip header
+            while (br.readLine() != null) {
+                count++;
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading data rows from: " + filePath);
+            e.printStackTrace();
+        }
+        return count;
     }
 
     private static int readMatchCountFromCSV(String filePath) {
@@ -93,7 +108,7 @@ public class AnalyticalIO {
         int peoplePages = getBasePeopleIO();
         int workPages = getBaseWorkedOnIO();
         int materializedRows = AnalyticalIO.getMaterializedSelectivity();
-        int titleRangeRows = AnalyticalIO.getRangeSelectionSelectivity("WH", "Whe");
+        int titleRangeRows = AnalyticalIO.getRangeSelectionSelectivity("W", "We");
         int materializedPages = getMaterializedIO(materializedRows);
         int bnl1Cost = getBNL1Cost(moviePages, workPages, materializedPages, titleRangeRows, 200);
         int bnl1Selectivity = getBNL1Selectivity(titleRangeRows, materializedRows);
