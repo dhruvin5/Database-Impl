@@ -1,25 +1,28 @@
-Step 1) navigate to the path of this folder app/src/main/java/query_executer
+To use the application using commandline:
 
-Step 2) Give execution permissions all these scripts in terminal:
+Step 1) Navigate to the path of this folder app/src/main/java/query_executer
+
+Step 2) Give execution permissions to all these scripts in the terminal:
         2.1) chmod +x preprocess
         2.2) chmod +x run_query
         2.3) chmod +x Load_psql
         2.4) chmod +x run_correctness_test
 
-Step 3) Run preprocess script to prepare all base Table binary files(Movies,Work,People) for lab3 code in terminal, UPDATE BASE FILE PATHS AS NEEDED:
+Step 3) Run preprocess script to prepare all base Table binary files(Movies, Work, People) for the lab3 code in the terminal. Before running this, please update the file paths for the tsv files for the tables in preprocess.java
         ./preprocess
 
-Step 4) After prepocessing was successful, you will see the bin files created in the dir
+Step 4) After processing is successful, you will see the bin files created in the dir
         and will see this in terminal output:
         "Preprocessing Completed Successfully! "
 
-Step 5) Update the Query output file name in runquery.java before executing your query, and save the JAVA file
+Step 5) Update the Query output file name in runquery.java before executing your query and save the JAVA file (optional. but the output csv file will be overwritten every time you execute a new query.) To use the index operator (the bonus), please set the boolean to true in `topProjectionOperator`, otherwise it will not use the index operator.
 
-Step 6) To run the query, invoke the runquery script in this format in Terminal (update start range end range and buffer size):
+Step 6) To run the query, invoke the runquery script in this format in Terminal (update start range, end range, and buffer size):
         ./run_query 'Alaa' 'Alab' 6
 
 Step 7) Perform Correctness Test:
         7.1) Load data in postgres:
+             Note: We have sample PostgreSQL outputs in PSQL_Output folders for the ranges (Alaa, Alab), (Ba, Bm), and (Caa, Cab). If you want to use those.
              7.1.1) Perform base file cleanup using this command in terminal- NOTE: update paths for imdb files and cleaned files in base_file_cleaner.java:
              ./run_base_file_cleanup
              7.2.2) load data in postgres by running this command in terminal- NOTE: update cleaned file paths and output result file path(USE RELATIVE PATH HERE) as needed and USE SAME RANGE:
