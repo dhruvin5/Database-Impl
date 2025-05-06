@@ -114,7 +114,7 @@ public class AnalyticalIO {
         int peoplePages = getBasePeopleIO();
         int workPages = getBaseWorkedOnIO();
         int materializedRows = AnalyticalIO.getMaterializedSelectivity();
-        int titleRangeRows = AnalyticalIO.getRangeSelectionSelectivity("W", "We");
+        int titleRangeRows = AnalyticalIO.getRangeSelectionSelectivity("Ba", "Bc");
         int materializedPages = getMaterializedIO(materializedRows);
         int bnl1Cost = getBNL1Cost(moviePages, workPages, materializedPages, titleRangeRows, 200);
         int bnl1Selectivity = getBNL1Selectivity(titleRangeRows, materializedRows);

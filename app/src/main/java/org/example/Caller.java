@@ -100,12 +100,12 @@ public class Caller {
     // }
 
     // Uncomment to run perf tests and find system IOs
-    public static void main(String[] args) {
-        System.out.println("hi");
-        performanceTesting.main(args);
-    }
+    // public static void main(String[] args) {
+    //     System.out.println("hi");
+    //     performanceTesting.main(args);
+    // }
 
-    // // Uncomment to find Analytical IOs
+    // Uncomment to find Analytical IOs
     // public static void main(String[] args) {
     //     System.out.println("hi");
     //     AnalyticalIO.printCosts();
