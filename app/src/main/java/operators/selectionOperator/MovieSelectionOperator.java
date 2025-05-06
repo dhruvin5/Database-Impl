@@ -1,5 +1,6 @@
 package operators.selectionOperator;
-
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.text.Collator;
 import java.text.Normalizer;
 import java.util.Locale;
@@ -14,9 +15,10 @@ public class MovieSelectionOperator implements Operator {
     private Operator movieOperator; // Operator Pull data from the movies dataset
     private String startRange;
     private String endRange;
-    private Collator collator; // using collator for comparing strings
-    // Initialising collator constructor for comparing strings
 
+    private Collator collator; //using collator for comparing strings
+    private int matchCount = 0; // Field to track matched rows
+    //Initialising collator constructor for comparing strings
     public MovieSelectionOperator() {
 
         collator = Collator.getInstance(Locale.forLanguageTag("es-ES"));
@@ -64,19 +66,35 @@ public class MovieSelectionOperator implements Operator {
                     .trim();
 
             if (nm.compareTo(lo) >= 0 && nm.compareTo(hi) <= 0) {
-                System.out.println("moviename:" + movieName);
+                // System.out.println("moviename:"+movieName);
+                matchCount++;
                 return row;
             }
         }
         return null;
     }
 
+    public void dumpMatchStats(String outputDir) {
+        String filename = outputDir + "\\" + startRange + "_" + endRange + "_analytical_match.csv";
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) {
+            pw.println("start_query,end_query,matches");
+            pw.printf("%s,%s,%d\n", startRange, endRange, matchCount);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // Closes the operator and releases any resources it holds
     public void close() {
         if (movieOperator != null) {
+            dumpMatchStats("C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\shreya_perf_op");
             movieOperator.close();
             movieOperator = null;
         }
+    }
+
+    public int getMatchCount() {
+        return matchCount;
     }
 
 }
