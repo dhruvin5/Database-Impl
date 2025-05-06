@@ -14,17 +14,19 @@ public class MovieSelectionOperator implements Operator {
     private Operator movieOperator; // Operator Pull data from the movies dataset
     private String startRange;
     private String endRange;
-    private Collator collator; //using collator for comparing strings
-    //Initialising collator constructor for comparing strings
+    private Collator collator; // using collator for comparing strings
+    // Initialising collator constructor for comparing strings
+
     public MovieSelectionOperator() {
 
         collator = Collator.getInstance(Locale.forLanguageTag("es-ES"));
         collator.setDecomposition(Collator.CANONICAL_DECOMPOSITION); // Normalising to Canonical Form
         collator.setStrength(Collator.IDENTICAL);
-    
+
     }
 
-    // Initalizes the MovieSelectionOperator with the given start and end range for movie names
+    // Initalizes the MovieSelectionOperator with the given start and end range for
+    // movie names
     public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         this.startRange = startRange;
         this.endRange = endRange;
@@ -36,6 +38,7 @@ public class MovieSelectionOperator implements Operator {
     public void open(BufferManager bufferManager) {
         return;
     }
+
     static String stripAccents(String s) {
         // 1) decompose: "á" → "a\u0301"
         String n = Normalizer.normalize(s, Normalizer.Form.NFD);
@@ -61,7 +64,7 @@ public class MovieSelectionOperator implements Operator {
                     .trim();
 
             if (nm.compareTo(lo) >= 0 && nm.compareTo(hi) <= 0) {
-                System.out.println("moviename:"+movieName);
+                System.out.println("moviename:" + movieName);
                 return row;
             }
         }
