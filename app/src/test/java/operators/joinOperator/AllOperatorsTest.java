@@ -53,6 +53,7 @@ public class AllOperatorsTest {
         @Override public void force() {}
         @Override public void clearCache() {}
         @Override public void deleteFile(String fn) {}
+        @Override public int getIOCount() {return 0;}
     }
 
     static class FakeOperator implements Operator {
