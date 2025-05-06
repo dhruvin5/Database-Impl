@@ -355,7 +355,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
             int position = binarySearch(node.keys, key, false);
             // If the key does not exist, exit early.
             if (position < 0) {
-                // System.out.println("Key not found in leaf.");
                 return matchingRids.iterator();
             }
 
@@ -365,9 +364,7 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
             }
 
             // Scan forward to collect all matching Rids.
-            // System.out.println("Starting scan at position: " + pos);
             while (position < node.keys.size() && node.keys.get(position).compareTo(key) == 0) {
-                // System.out.println("Found matching Rid: " + node.values.get(pos));
                 matchingRids.add(node.values.get(position));
                 position++;
             }
@@ -380,9 +377,8 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
                 }
 
                 position = 0;
+                //collecting matching rids
                 while (position < node.keys.size() && node.keys.get(position).compareTo(key) == 0) {
-                    // System.out.println("Found matching Rid in next leaf: " +
-                    // node.values.get(pos));
                     matchingRids.add(node.values.get(position));
                     position++;
                 }
@@ -413,7 +409,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
             // logic).
             while (!node.isLeaf) {
                 int i = binarySearch(node.keys, startKey, true);
-                // System.out.println("Binary search result: " + i);
 
                 if (i < node.keys.size() && node.keys.get(i).compareTo(startKey) == 0) {
                     i++;
