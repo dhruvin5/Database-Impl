@@ -11,6 +11,11 @@
 - Currently all the rows are being inserted in the indexes one by one which takes a significant amount of time
 - Correctness Tests (C1, C2, C3, C4) can be performed on a smaller subset of data
 
+  ## Unit tests
+- For all the labs the unit tests are in the tests folder in app/src.
+- The tests for the LAB3 include checking for one row match, multiple row matches and selctivity operators testing.
+- To run the unit tests - gradle clean test
+
   ## Performance tests
 - To Run the performance tests, please to the following changes first:
   - Make sure you have the .bin files before hand. If you load the dataset as well as part of performance test, it would account for extra IOs and give incorrect result
