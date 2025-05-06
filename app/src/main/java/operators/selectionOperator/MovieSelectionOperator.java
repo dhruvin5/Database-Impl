@@ -24,10 +24,11 @@ public class MovieSelectionOperator implements Operator {
         collator = Collator.getInstance(Locale.forLanguageTag("es-ES"));
         collator.setDecomposition(Collator.CANONICAL_DECOMPOSITION); // Normalising to Canonical Form
         collator.setStrength(Collator.IDENTICAL);
-    
+
     }
 
-    // Initalizes the MovieSelectionOperator with the given start and end range for movie names
+    // Initalizes the MovieSelectionOperator with the given start and end range for
+    // movie names
     public void open(BufferManager bufferManager, String startRange, String endRange, boolean useIndex) {
         this.startRange = startRange;
         this.endRange = endRange;
@@ -39,6 +40,7 @@ public class MovieSelectionOperator implements Operator {
     public void open(BufferManager bufferManager) {
         return;
     }
+
     static String stripAccents(String s) {
         // 1) decompose: "á" → "a\u0301"
         String n = Normalizer.normalize(s, Normalizer.Form.NFD);

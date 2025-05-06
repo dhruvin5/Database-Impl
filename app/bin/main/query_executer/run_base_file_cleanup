@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# getting to path of base_file_cleaner.java
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+# navigating to script path
+cd "$SCRIPT_DIR/.."
+
+# Performing Base file cleanup
+javac base_file_cleaner.java
+echo "Cleaning base files ..."
+java base_file_cleaner

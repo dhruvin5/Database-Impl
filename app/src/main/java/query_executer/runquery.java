@@ -1,4 +1,5 @@
 package query_executer;
+
 import java.util.ArrayList;
 
 import Row.Row;
@@ -7,6 +8,7 @@ import buffer.BufferManager;
 import buffer.BufferManagerImplem;
 import operators.Operator;
 import operators.projectionOperator.TopProjectionOperator;
+
 public class runquery {
     public static void main(String[] args) {
         if (args.length != 3) {
@@ -14,7 +16,7 @@ public class runquery {
             System.exit(1);
         }
         String startRange = args[0];
-        String endRange   = args[1];
+        String endRange = args[1];
 
         int bufferSize;
         try {
@@ -30,7 +32,8 @@ public class runquery {
         // Create a top projection operator
         Operator topProjectionOperator = new TopProjectionOperator();
         // pass the user's range values
-        topProjectionOperator.open(bufferManager, startRange, endRange, false);
+        // FOR TESTING FOR BONUS PART, PLEASE SET useIndex boolean to true
+        topProjectionOperator.open(bufferManager, startRange, endRange, true);
 
         ArrayList<Row> rows = new ArrayList<>();
         Row row = null;
@@ -38,13 +41,15 @@ public class runquery {
             rows.add(row);
         }
         topProjectionOperator.close(); // Close the operator
+        String OutDir = "LAB3_OUTPUT"; // output folder
+        new java.io.File(OutDir).mkdirs(); // Creating output folder if it doesn't exist
+        String outputFileName = OutDir + "/LAB3_OutputFile.csv";// saving result csv in output folder
 
-        String outputFileName = "NEW_Caa_Cab_output_sim22.csv";
         // Write the output to a file
         Utilities.writeCSV(rows, outputFileName);
 
         System.out.println("Query completed: "
-            + rows.size() + " Result tuples written to " + outputFileName);
+                + rows.size() + " Result tuples written to " + outputFileName);
     }
 
 }

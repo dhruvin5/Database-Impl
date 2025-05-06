@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Navigating/ getting paths to bash script and CT.Java file
+ScDir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+ScRoot=$(cd "$ScDir/../../../../../" && pwd)
+cd "$ScRoot"
+
+# Performing correctness test by running CT.java file
+javac app/src/main/java/CT.java
+echo "Performing Correctness Test..."
+java -cp app/src/main/java CT

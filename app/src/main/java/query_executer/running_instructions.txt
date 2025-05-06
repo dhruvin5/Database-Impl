@@ -1,23 +1,34 @@
 Step 1) navigate to the path of this folder app/src/main/java/query_executer
-Step 2) Give execution permissions to both preprocess and run_query scripts in terminal:
+
+Step 2) Give execution permissions all these scripts in terminal:
         2.1) chmod +x preprocess
         2.2) chmod +x run_query
-Step 3) Run preprocess script to prepare all base Table binary files(Movies,Work,People) in terminal:
+        2.3) chmod +x Load_psql
+        2.4) chmod +x run_correctness_test
+
+Step 3) Run preprocess script to prepare all base Table binary files(Movies,Work,People) for lab3 code in terminal, UPDATE BASE FILE PATHS AS NEEDED:
         ./preprocess
+
 Step 4) After prepocessing was successful, you will see the bin files created in the dir
         and will see this in terminal output:
         "Preprocessing Completed Successfully! "
 
-Step 5) Update the Query output file name/path in runquery.java before executing your query, and save the file
+Step 5) Update the Query output file name in runquery.java before executing your query, and save the JAVA file
+
 Step 6) To run the query, invoke the runquery script in this format in Terminal (update start range end range and buffer size):
-        ./run_query 'Caa' 'Cab' 1000
+        ./run_query 'Alaa' 'Alab' 6
 
-Step 7) To compare the output files from LAB3 Code and postgres for the selected range:
-        7.1) Update paths for both files in CT.java file and save it.
-        7.2) Paste the following command in terminal and run it (update path if needed):
-        javac app/src/main/java/CT.java
-        java -cp app/src/main/java CT
-
+Step 7) Perform Correctness Test:
+        7.1) Load data in postgres:
+             7.1.1) Perform base file cleanup using this command in terminal- NOTE: update paths for imdb files and cleaned files in base_file_cleaner.java:
+             ./run_base_file_cleanup
+             7.2.2) load data in postgres by running this command in terminal- NOTE: update cleaned file paths and output result file path(USE RELATIVE PATH HERE) as needed and USE SAME RANGE:
+             ./Load_psql 'Alaa' 'Alab'
+             This will connect to psql, populate the schemas and write query result from psql to csv file
+        
+        7.2) Comparing results
+             7.2) Paste the following command in terminal to perform correctness test. NOTE: update paths of files in CT.java (USE RELATIVE PATHS FOR BOTH FILES):
+             ./run_correctness_test
 
              
 

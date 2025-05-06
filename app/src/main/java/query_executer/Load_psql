@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#navigating to app folder
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+cd "$SCRIPT_DIR/../../.."
+
+if [ "$#" -ne 2 ]; then
+  echo "Please use this format to run: $0 <Start_range> <End_range>"
+  exit 1
+fi
+
+Start="$1"
+End="$2"
+Db="lab3_645"
+
+# Paths for cleaned base files: update if needed
+clean_movies_path="/Users/simranmalik/Desktop/cleaned_movies.tsv"
+clean_workedon_path="/Users/simranmalik/Desktop/cleaned_workedon.tsv"
+clean_people_path="/Users/simranmalik/Desktop/cleaned_people.tsv"
+
+# Path to output file. You can update path/file name as needed
+Output_Folder="../PSQL_Output"
+OutputResultFile="$Output_Folder/PSQL_OutputFile.csv"
+
+# step1) Creating database named "lab3_645" if it doesn't exist and populating tables.
+if ! psql -tAc "SELECT 1 FROM pg_database WHERE datname='$Db'" | grep -q 1; then
+  echo "Db with name: '$Db' doesn't exist. Creating Db and table schemas(Movies,WorkedOn, People)..."
+  createDb "$Db"
+  psql -d "$Db" <<-SQL
+    CREATE TABLE Movies   (movieId CHAR(9),  title CHAR(30));
+    CREATE TABLE WorkedOn (movieId CHAR(9),  personId CHAR(10), category CHAR(20));
+    CREATE TABLE People   (personId CHAR(10), name CHAR(105));
+SQL
+  echo "Populating tuples in tables (Movies,WorkedOn, People) "
+  psql -d "$Db" <<-SQL
+    \copy Movies   (movieId, title)                FROM PROGRAM 'tail -n +2 "$clean_movies_path"'   WITH (FORMAT text);
+    \copy WorkedOn (movieId, personid, category)   FROM PROGRAM 'tail -n +2 "$clean_workedon_path"'  WITH (FORMAT text);
+    \copy People   (personid, name)                FROM PROGRAM 'tail -n +2 "$clean_people_path"'   WITH (FORMAT text);
+SQL
+
+else
+  echo "Database with name '$Db' exists. Validating their tuple counts…"
+  counts=$(psql -d "$Db" -tA -F',' \
+    -c "SELECT (SELECT count(*) FROM Movies), (SELECT count(*) FROM WorkedOn), (SELECT count(*) FROM People);")
+  IFS=',' read -r mcount wcount pcount <<< "$counts"
+
+  correct_movies_size=4978131
+  correct_workedon_size=51040986
+  correct_people_size=14358304
+
+  if [[ "$mcount" -eq "$correct_movies_size" && "$wcount" -eq "$correct_workedon_size" && "$pcount" -eq "$correct_people_size" ]]; then
+    echo "Tuple counts match as expected, skipping reloading of tuples."
+  else
+    echo "Tuple counts DO NOT MATCH (Movies=$mcount/$correct_movies_size, WorkedOn=$wcount/$correct_workedon_size, People=$pcount/$correct_people_size)."
+    echo "Truncating & repopulating  the Tables (Movies,WorkedOn, People)..."
+    psql -d "$Db" -c "TRUNCATE Movies, WorkedOn, People;"
+    psql -d "$Db" <<-SQL
+      \copy Movies   (movieId, title)                FROM PROGRAM 'tail -n +2 "$clean_movies_path"'   WITH (FORMAT text);
+      \copy WorkedOn (movieId, personid, category)   FROM PROGRAM 'tail -n +2 "$clean_workedon_path"'  WITH (FORMAT text);
+      \copy People   (personid, name)                FROM PROGRAM 'tail -n +2 "$clean_people_path"'   WITH (FORMAT text);
+SQL
+  fi
+fi
+
+# step2) running the query
+echo "Running Query for the given title range: '$Start' - '$End' ...."
+mkdir -p "$Output_Folder"
+
+psql -d "$Db" -v ON_ERROR_STOP=1 -c "\copy (\
+SELECT M.title, P.name \
+  FROM Movies   M \
+  JOIN WorkedOn W ON M.movieId = W.movieId \
+  JOIN People   P ON W.personId = P.personId \
+ WHERE M.title >= '$Start' \
+   AND M.title <= '$End' \
+   AND W.category = 'director'\
+) TO '$OutputResultFile' CSV HEADER"
+
+echo "Postgres Query Completed Successfully!!! Results written to $OutputResultFile"
