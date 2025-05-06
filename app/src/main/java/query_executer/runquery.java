@@ -42,7 +42,7 @@ public class runquery {
         }
         topProjectionOperator.close(); // Close the operator
 
-        String outputFileName = "With_Index_NEW_Alaa_Alab_output_sim22.csv";
+        String outputFileName = "With_Index_NEW_Alaa_Alab_output_sim23.csv";
         // Write the output to a file
         Utilities.writeCSV(rows, outputFileName);
 
