@@ -33,7 +33,7 @@ public class runquery {
         Operator topProjectionOperator = new TopProjectionOperator();
         // pass the user's range values
         // FOR TESTING FOR BONUS PART, PLEASE SET useIndex boolean to true
-        topProjectionOperator.open(bufferManager, startRange, endRange, true);
+        topProjectionOperator.open(bufferManager, startRange, endRange, false);
 
         ArrayList<Row> rows = new ArrayList<>();
         Row row = null;
@@ -41,8 +41,10 @@ public class runquery {
             rows.add(row);
         }
         topProjectionOperator.close(); // Close the operator
+        String OutDir = "LAB3_OUTPUT"; // output folder
+        new java.io.File(OutDir).mkdirs(); // Creating output folder if it doesn't exist
+        String outputFileName = OutDir + "/LAB3_OutputFile.csv";// saving result csv in output folder
 
-        String outputFileName = "With_Index_NEW_Alaa_Alab_output_sim23.csv";
         // Write the output to a file
         Utilities.writeCSV(rows, outputFileName);
 

@@ -20,8 +20,8 @@ clean_workedon_path="/Users/simranmalik/Desktop/cleaned_workedon.tsv"
 clean_people_path="/Users/simranmalik/Desktop/cleaned_people.tsv"
 
 # Path to output file. You can update path/file name as needed
-Output_Folder="../PSQL_OutputResultFiles"
-OutputResultFile="$Output_Folder/NEW1_bash_PSQL_OutputResultFile.csv"
+Output_Folder="../PSQL_Output"
+OutputResultFile="$Output_Folder/PSQL_OutputFile.csv"
 
 # step1) Creating database named "lab3_645" if it doesn't exist and populating tables.
 if ! psql -tAc "SELECT 1 FROM pg_database WHERE datname='$Db'" | grep -q 1; then

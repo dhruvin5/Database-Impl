@@ -5,8 +5,8 @@ import java.util.Set;
 
 public class CT {
     public static void main(String[] args) {
-        String Postgres_output = "app/PSQL_OutputResultFiles/NEW_bash_PSQL_OutputResultFile.csv";
-        String LAB3_output = "app/With_Index_NEW_Alaa_Alab_output_sim22.csv";
+        String Postgres_output = "app/PSQL_Output/Sample_Caa_Cab_PSQL_OutputFile.csv";
+        String LAB3_output = "app/LAB3_OUTPUT/Sample_Without_Index_Caa_Cab_LAB3.csv";
 
         Set<String> Set_1 = readnormalisedCSV(Postgres_output, true); // header skipped in postgres output
         Set<String> Set_2 = readnormalisedCSV(LAB3_output, false); // Header not present in LAB3 output

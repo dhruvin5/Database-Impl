@@ -542,16 +542,6 @@ public class BplusTreeImplem<K extends Comparable<K>> implements BTree<K, Rid> {
         }
     }
 
-    /*
-     * private int compareStrings(K key1, K key2) {
-     * String start = stripAccents(key1.toString())
-     * .toLowerCase(Locale.ROOT);
-     * String end = stripAccents(key2.toString())
-     * .toLowerCase(Locale.ROOT);
-     *
-     * return start.compareTo(end);
-     * }
-     */
     // binary search method.
     // when boolean isReturnInsertionPoint is set to true, returns the correct
     // insertion point of key
