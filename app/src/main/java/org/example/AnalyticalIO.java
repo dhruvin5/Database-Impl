@@ -93,11 +93,11 @@ public class AnalyticalIO {
         int peoplePages = getBasePeopleIO();
         int workPages = getBaseWorkedOnIO();
         int materializedRows = AnalyticalIO.getMaterializedSelectivity();
-        int titleRangeRows = AnalyticalIO.getRangeSelectionSelectivity("Caa", "Cab");
+        int titleRangeRows = AnalyticalIO.getRangeSelectionSelectivity("WH", "Whe");
         int materializedPages = getMaterializedIO(materializedRows);
-        int bnl1Cost = getBNL1Cost(moviePages, workPages, materializedPages, titleRangeRows, 1000);
+        int bnl1Cost = getBNL1Cost(moviePages, workPages, materializedPages, titleRangeRows, 200);
         int bnl1Selectivity = getBNL1Selectivity(titleRangeRows, materializedRows);
-        int bnl2Cost = getBNL2Cost(bnl1Selectivity, peoplePages, 1000);
+        int bnl2Cost = getBNL2Cost(bnl1Selectivity, peoplePages, 200);
         int totalPlanCost = getTotalPlanCost(bnl1Cost, bnl2Cost);
 
         System.out.println("Movies Base IO Cost: " + moviePages);

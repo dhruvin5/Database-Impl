@@ -46,14 +46,23 @@ public class performanceTesting {
     public static void main(String[] args) {
 
 
-        System.out.println("Starting Caa to Cab, B=10");
-        runPerformanceTest("Caa", "Cab", 10);
+        // System.out.println("Starting Caa to Cab, B=100");
+        // runPerformanceTest("Caa", "Cab", 100);
 
-        System.out.println("Starting K to L, B=10");
-        runPerformanceTest("K", "L", 10);
+        // System.out.println("Starting WH to Whe, B=100");
+        // runPerformanceTest("WH", "Whe", 100);
 
-        System.out.println("Starting F to H, B=10");
-        runPerformanceTest("F", "H", 10);
+        System.out.println("Starting The to Thei, B=100");
+        runPerformanceTest("The", "Thei", 100);
+
+        // System.out.println("Starting Caa to Cab, B=200");
+        // runPerformanceTest("Caa", "Cab", 200);
+
+        // System.out.println("Starting WH to Whe, B=200");
+        // runPerformanceTest("WH", "Whe", 200);
+
+        // System.out.println("Starting The to Thei, B=200");
+        // runPerformanceTest("The", "Thei", 200);
 
     }
 }
