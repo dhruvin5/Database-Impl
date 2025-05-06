@@ -35,7 +35,7 @@ public class AnalyticalIO {
 
     // return matching number of rows in range after scanning through all the data
     public static int getRangeSelectionSelectivity(String start, String end) {
-        String fileName = "1000_" + start + "_" + end + "_analytical_match.csv";
+        String fileName = start + "_" + end + "_analytical_match.csv";
         String path = "C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\shreya_perf_op\\" + fileName;
         return readMatchCountFromCSV(path);
     }
