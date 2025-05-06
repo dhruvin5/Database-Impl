@@ -22,29 +22,29 @@ public class AnalyticalIO {
         return Utilities.getNumberOfPages("people.bin");
     }
 
-    // Returns base I/O cost for the work (title.principals) table
+    // Returns base I/O cost for the work table
     public static int getBaseWorkedOnIO() {
         return Utilities.getNumberOfPages("work.bin");
     }
 
-    // return matching number of rows where category = director after scanning through all the data
+    // return matching number of rows where category = director after scanning through all the data i.e. worked on selectivity
     public static int getMaterializedSelectivity() {
         String path = "C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\shreya_perf_op\\work_director_analytical_match.csv";
         return readMatchCountFromCSV(path);
     }
 
-    // return number of rows in the result data CSV (excluding header)
+    // return movies selectivity that fall in range of start and end queries
     public static int getRangeSelectionSelectivity(String start, String end) {
         String fileName = start + "_" + end + "_data.csv";
         String path = "C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\shreya_perf_op\\" + fileName;
         return countDataRowsInCSV(path);
     }
 
-    // helper to count non-header rows
+    // helper to count non-header rows in csv files
     private static int countDataRowsInCSV(String filePath) {
         int count = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            br.readLine(); // skip header
+            br.readLine();
             while (br.readLine() != null) {
                 count++;
             }
@@ -55,9 +55,10 @@ public class AnalyticalIO {
         return count;
     }
 
+    // helper to count matching rows in csv files
     private static int readMatchCountFromCSV(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            br.readLine(); // skip header
+            br.readLine();
             String line = br.readLine();
             if (line != null) {
                 String[] parts = line.split(",");
@@ -67,9 +68,10 @@ public class AnalyticalIO {
             System.err.println("Error reading match count from: " + filePath);
             e.printStackTrace();
         }
-        return -1; // indicate error
+        return -1;
     }
 
+    // Computes materialized I/O cost based on number of rows
     public static int getMaterializedIO(int materializedRows) {
         int rowSize = MOVIE_ID_SIZE + PERSON_ID_SIZE;
         if (materializedRows <= 0) {
@@ -79,7 +81,8 @@ public class AnalyticalIO {
         int materializedPages = (int) Math.ceil((double) materializedRows / rowsPerPage);
         return materializedPages;
     }
-    
+
+    // Calculates cost of first block nested loop join
     public static int getBNL1Cost(int m, int n, int o, int ms, int B) {
         int N = (B-4)/2;
         int bs = (Config.PAGE_SIZE - 4) / 39;
@@ -87,11 +90,12 @@ public class AnalyticalIO {
         return m + n + (int) passes * o;
     }
     
-
+    // Estimates BNL1 join selectivity
     public static int getBNL1Selectivity(int ms, int ws) {
         return (int) (((double) ms * ws) / Math.max(ms, ws));
     }
 
+    // Calculates cost of second block nested loop join
     public static int getBNL2Cost(int t, int p, int B) {
         int N = (B - 4) / 2;
         int r = (Config.PAGE_SIZE - 4)/49;
@@ -99,10 +103,12 @@ public class AnalyticalIO {
         return (int) (passes * p);
     }
 
+    // Sums up BNL1 and BNL2 costs to get total plan cost
     public static int getTotalPlanCost(int bnl1Cost, int bnl2Cost){
         return (int)(bnl1Cost + bnl2Cost);
     }
 
+    // Prints out various I/O and cost metrics for the analytical plan
     public static void printCosts() {
         int moviePages = getBaseMovieIO();
         int peoplePages = getBasePeopleIO();

@@ -14,7 +14,9 @@ import java.util.List;
 
 public class performanceTesting {
 
+    // function to run perf tests based on start and end ranges and bugger size
     public static void runPerformanceTest(String start, String end, int bufferSize) {
+        //change this to directory of choice
         String outputDir = "C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\shreya_perf_op";
 
         BufferManagerImplem bufferManager = new BufferManagerImplem(bufferSize);

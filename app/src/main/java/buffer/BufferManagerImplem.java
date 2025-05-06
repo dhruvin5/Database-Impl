@@ -66,16 +66,19 @@ public class BufferManagerImplem extends BufferManager {
             freeFrameList.add(i);
     }
 
+    // increments IO count
     public void incrementIO(String fileName) {
         // if (ioTrackedFiles.contains(fileName)) ioCount++;
         ioCount++;
     }
     
+    // decrements IO Count
     public void decrementIO(String fileName) {
         // if (ioTrackedFiles.contains(fileName)) ioCount--;
         ioCount--;
     }
     
+    // return IO Count
     public int getIOCount() {
         return ioCount;
     }    
@@ -103,7 +106,7 @@ public class BufferManagerImplem extends BufferManager {
     // Create new Page
     Page createAndAllocatePage(int frameIndex, Page page, boolean isPageCreated, String FILE_NAME, boolean isLeaf) {
 
-        // Increment I/O only if it's an IO-tracked file
+        // Increment I/O
         incrementIO(FILE_NAME);
 
         if (!isPageCreated) { // Create a new page if doesnt exist
@@ -239,7 +242,7 @@ public class BufferManagerImplem extends BufferManager {
             int frameIndex = pageTable.get(FILE_NAME).get(pageId);
             Page page = bufferPool[frameIndex];
 
-            // Increment I/O only if it's an IO-tracked file
+            // Increment I/O for the respective file
             incrementIO(FILE_NAME);
 
             // increment the pin count

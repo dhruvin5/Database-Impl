@@ -17,7 +17,7 @@ public class MovieSelectionOperator implements Operator {
     private String endRange;
 
     private Collator collator; //using collator for comparing strings
-    private int matchCount = 0; // Field to track matched rows
+    private int matchCount = 0; // Counter to track matched rows
     //Initialising collator constructor for comparing strings
     public MovieSelectionOperator() {
 
@@ -67,13 +67,14 @@ public class MovieSelectionOperator implements Operator {
 
             if (nm.compareTo(lo) >= 0 && nm.compareTo(hi) <= 0) {
                 // System.out.println("moviename:"+movieName);
-                matchCount++;
+                matchCount++; // Increment counter if row is in valid range of queries
                 return row;
             }
         }
         return null;
     }
 
+    // dumps matching count of rows in csv file
     public void dumpMatchStats(String outputDir) {
         String filename = outputDir + "\\" + startRange + "_" + endRange + "_analytical_match.csv";
         try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) {
@@ -87,12 +88,14 @@ public class MovieSelectionOperator implements Operator {
     // Closes the operator and releases any resources it holds
     public void close() {
         if (movieOperator != null) {
+            // dumps result for the matching count. For correctness testing, the next line can be commented out and is optional. But we need it for perf testing
             dumpMatchStats("C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\shreya_perf_op");
             movieOperator.close();
             movieOperator = null;
         }
     }
 
+    // return the count of matching rows
     public int getMatchCount() {
         return matchCount;
     }

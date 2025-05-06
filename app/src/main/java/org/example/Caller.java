@@ -13,12 +13,6 @@ import SystemCatalog.systemCatalog;
 import org.example.AnalyticalIO;
 
 public class Caller {
-
-    public static void main(String[] args) {
-        System.out.println("hi");
-        // AnalyticalIO.printCosts();
-        performanceTesting.main(args);
-    }
     
     // public static void main(String[] args) {
     //     BufferManager bufferManager = new BufferManagerImplem(100);
@@ -103,5 +97,17 @@ public class Caller {
     //     // // Print the actual I/O count incurred during execution
     //     // // System.out.println("Total I/O operations (System calculated): " + bufferManager.getIOCount());
 
+    // }
+
+    // Uncomment to run perf tests and find system IOs
+    public static void main(String[] args) {
+        System.out.println("hi");
+        performanceTesting.main(args);
+    }
+
+    // // Uncomment to find Analytical IOs
+    // public static void main(String[] args) {
+    //     System.out.println("hi");
+    //     AnalyticalIO.printCosts();
     // }
 }

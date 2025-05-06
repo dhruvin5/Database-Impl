@@ -42,6 +42,7 @@ public class WorkSelectionOperator implements Operator {
 
     public void close() {
         if (workOperator != null) {
+            // dumps result for the matching count. For correctness testing, the next line can be commented out and is optional. But we need it for perf testing
             dumpMatchStats("C:\\Users\\HP\\Desktop\\ms\\645\\lab1\\645-Lab-32966720340112693401883534060222\\app\\shreya_perf_op");
             workOperator.close();
             workOperator = null;
@@ -59,6 +60,7 @@ public class WorkSelectionOperator implements Operator {
         }
     }
 
+    // return the count of matching rows
     public int getMatchCount() {
         return matchCount;
     }
