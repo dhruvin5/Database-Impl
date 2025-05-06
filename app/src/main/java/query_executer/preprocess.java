@@ -1,4 +1,5 @@
 package query_executer;
+
 import java.io.File;
 
 import Utilities.Utilities;
@@ -12,6 +13,7 @@ public class preprocess {
         File movieFile = new File("movies.bin");
         File workFile = new File("work.bin");
         File peopleFile = new File("people.bin");
+        File title_index = new File("title_index.bin");
 
         if (!movieFile.exists())
             Utilities.loadDataset(bufferManager,
@@ -24,8 +26,11 @@ public class preprocess {
             Utilities.loadPeopleDataset(bufferManager,
                     "/Users/simranmalik/Desktop/name.basics.tsv"); // Load people dataset
 
+        if (!title_index.exists())
+            Utilities.createTitleIndex(bufferManager); // Creating Bplus index on title
+
         bufferManager.force();
-        System.out.println("Data loaded into Tables");
+        System.out.println("Data loaded into Tables, Title Index built.");
         System.out.println("Preprocessing Completed Successfully!");
     }
 }
