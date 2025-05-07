@@ -12,7 +12,7 @@
 - Currently all the rows are being inserted in the indexes one by one which takes a significant amount of time
 
 ## Query Executor interface
-- All the instructions to run the run_query command and the preprocess command is in app/src/main/java/query_executer/running_instructions file
+- All the instructions to use the "run_query" command and the "preprocess" command is in app/src/main/java/query_executer/running_instructions file
 
 ## Correctness testing
 - Load data in postgres:
