@@ -21,7 +21,7 @@
   - load data in postgres by running this command in terminal- NOTE: update cleaned file paths and output result file path(USE RELATIVE PATH HERE) as needed and USE SAME RANGE:
     - ./Load_psql 'Alaa' 'Alab'
   - This will connect to psql, populate the schemas and write query result from psql to csv file
-  - Paste the following command in terminal to perform correctness test. NOTE: update paths of files in CT.java (USE RELATIVE PATHS FOR BOTH FILES):
+- Paste the following command in terminal to perform correctness test. NOTE: update paths of files in CT.java (USE RELATIVE PATHS FOR BOTH FILES):
     - ./run_correctness_test   
   
 ## Unit tests
