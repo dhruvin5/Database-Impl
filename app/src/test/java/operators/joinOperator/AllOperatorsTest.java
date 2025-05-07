@@ -20,6 +20,9 @@ import operators.selectionOperator.WorkSelectionOperator;
 
 public class AllOperatorsTest {
 
+    // FakePage implementation for testing
+    // Simulates a disk page in memory. Supports inserting rows, reading rows by slot,
+    // and tracking row count. Used to avoid real I/O while testing operators.
     static class FakePage implements Page {
         private final int pid;
         private final List<Row> rows = new ArrayList<>();
@@ -37,6 +40,10 @@ public class AllOperatorsTest {
         @Override public boolean getBoolValue() { return false; }
     }
 
+    // FakeBufferManager implementation for testing
+    // Provides an in-memory buffer pool with a fixed capacity.
+    // Pages created are FakePage instances stored in a map by pid.
+    // All I/O, pin/unpin, dirty tracking calls are no-ops to focus tests on operator logic.
     static class FakeBufferManager extends BufferManager {
         private final int capacity;
         private int nextPid = 0;
@@ -44,7 +51,11 @@ public class AllOperatorsTest {
 
         FakeBufferManager(int bufSize) { super(bufSize); this.capacity = bufSize; }
         @Override public int getBufferCapacity() { return capacity; }
-        @Override public Page createPage(String fileName) { FakePage p = new FakePage(nextPid++); pages.put(p.getPid(), p); return p; }
+        @Override public Page createPage(String fileName) {
+            FakePage p = new FakePage(nextPid++);
+            pages.put(p.getPid(), p);
+            return p;
+        }
         @Override public Page createIndexPage(String fileName, boolean isLeaf) { return createPage(fileName); }
         @Override public void markDirty(int pid, String fn) {}
         @Override public void markUndirty(int pid, String fn) {}
@@ -53,9 +64,12 @@ public class AllOperatorsTest {
         @Override public void force() {}
         @Override public void clearCache() {}
         @Override public void deleteFile(String fn) {}
-        @Override public int getIOCount() {return 0;}
+        @Override public int getIOCount() { return 0; }
     }
 
+    // --- FakeOperator ---
+    // Mocks any Operator by returning a pre-defined list of Row objects in sequence.
+    // Allows precise control over what rows the join or selection operators will see.
     static class FakeOperator implements Operator {
         private final List<Row> rows;
         private int idx = 0;
@@ -66,6 +80,8 @@ public class AllOperatorsTest {
         @Override public void close() {}
     }
 
+    // Create minimal Row instances carrying only the needed fields:
+    // movieId & title for movies; movieId, personId, category for work; personId & name for persons.
     static class FakeMovieRow extends Row {
         FakeMovieRow(String id, String title) {
             this.movieId = id.getBytes();
@@ -85,6 +101,8 @@ public class AllOperatorsTest {
             this.name     = name.getBytes();
         }
     }
+
+    // Expose BNLOperator initialize methods for testing without changing visibility in main code
     static class TestableBNLOperator1 extends BNLOperator1 {
         public void init(BufferManager bm, String fn, Operator out, Operator in) {
             super.initialize(bm, fn, out, in);
@@ -97,6 +115,8 @@ public class AllOperatorsTest {
     }
 
     @Test
+    // singleMatch: one movie row and one work row share the same movieId.
+    // Expect exactly one joined output combining movie fields with work fields.
     public void testBNLOperator1_singleMatch() {
         FakeBufferManager fbm = new FakeBufferManager(10);
         FakeMovieRow m = new FakeMovieRow("000000001", "Movie Name A");
@@ -105,14 +125,16 @@ public class AllOperatorsTest {
         op.init(fbm, "random", new FakeOperator(List.of(m)), new FakeOperator(List.of(w)));
 
         Row result = op.next();
-        assertNotNull(result);
-        assertEquals("000000001", new String(result.movieId));
+        assertNotNull(result);                       // verify a row is produced
+        assertEquals("000000001", new String(result.movieId));  // movieId carried through
         assertEquals("Movie Name A", new String(result.title));
         assertEquals("Person A", new String(result.personId));
-        assertNull(op.next());
+        assertNull(op.next());                      // no further matches
     }
 
     @Test
+    // multipleMatches: one movie row but two work rows share the same movieId.
+    // Expect two output rows, one per matching work entry, preserving order.
     public void testBNLOperator1_multipleMatches() {
         FakeBufferManager fbm = new FakeBufferManager(12);
         FakeMovieRow m = new FakeMovieRow("000000002", "Movie Name B");
@@ -121,15 +143,16 @@ public class AllOperatorsTest {
         TestableBNLOperator1 op = new TestableBNLOperator1();
         op.init(fbm, "random", new FakeOperator(List.of(m)), new FakeOperator(List.of(w1, w2)));
 
-        Row r1 = op.next();
-        Row r2 = op.next();
+        Row r1 = op.next(); Row r2 = op.next();
         assertNotNull(r1); assertNotNull(r2);
         assertEquals("Person B", new String(r1.personId));
         assertEquals("Person C", new String(r2.personId));
-        assertNull(op.next());
+        assertNull(op.next());  // exactly two results
     }
 
     @Test
+    // multipleRowMatches: two movie rows and three work rows (two match first movie, one matches second).
+    // Verifies operator correctly advances outer and inner streams across multiple join groups.
     public void testBNLOperator1_multipleRowMatches() {
         FakeBufferManager fbm = new FakeBufferManager(12);
         FakeMovieRow m = new FakeMovieRow("000000002", "Movie Name B");
@@ -138,14 +161,10 @@ public class AllOperatorsTest {
         FakeMovieRow m1 = new FakeMovieRow("000000009", "Movie Name H");
         FakeWorkRow w3 = new FakeWorkRow("000000009", "Person H", "director");
         TestableBNLOperator1 op = new TestableBNLOperator1();
-        op.init(fbm, "random", new FakeOperator(List.of(m,m1)), new FakeOperator(List.of(w1, w2,w3)));
+        op.init(fbm, "random", new FakeOperator(List.of(m, m1)), new FakeOperator(List.of(w1, w2, w3)));
 
-        Row r1 = op.next();
-        Row r2 = op.next();
-        Row r3 = op.next();
-
-        assertNotNull(r1); assertNotNull(r2);
-        assertNotNull(r3);
+        Row r1 = op.next(), r2 = op.next(), r3 = op.next();
+        assertNotNull(r1); assertNotNull(r2); assertNotNull(r3);
         assertEquals("Person B", new String(r1.personId));
         assertEquals("Person C", new String(r2.personId));
         assertEquals("Person H", new String(r3.personId));
@@ -153,16 +172,19 @@ public class AllOperatorsTest {
     }
 
     @Test
+    // noMatch: movieId values differ, so join should produce no rows.
     public void testBNLOperator1_noMatch() {
         FakeBufferManager fbm = new FakeBufferManager(8);
         FakeMovieRow m = new FakeMovieRow("000000003", "Movie Name D");
         FakeWorkRow w  = new FakeWorkRow("000000004", "Person D", "director");
         TestableBNLOperator1 op = new TestableBNLOperator1();
         op.init(fbm, "random", new FakeOperator(List.of(m)), new FakeOperator(List.of(w)));
-        assertNull(op.next());
+        assertNull(op.next());  // correctly returns null on no matches
     }
 
     @Test
+    // BNLOperator2: takes output of first join and enriches with person name from second input.
+    // Verifies creation of joinRow2 with all four fields populated.
     public void testBNLOperator2_joinTwoLevels() {
         FakeBufferManager fbm = new FakeBufferManager(10);
         joinRow1 jw = new joinRow1("000000005".getBytes(), "Movie Name E".getBytes(), "Person E".getBytes());
@@ -175,6 +197,7 @@ public class AllOperatorsTest {
         assertNotNull(r);
         assertTrue(r instanceof joinRow2);
         joinRow2 jr2 = (joinRow2) r;
+        // Check propagation of all fields through second-level join
         assertEquals("000000005", new String(jr2.movieId));
         assertEquals("Movie Name E", new String(jr2.title));
         assertEquals("Person E", new String(jr2.personId));
@@ -183,6 +206,8 @@ public class AllOperatorsTest {
     }
 
     @Test
+    // MovieSelectionOperator: given a title range [\"Beta\",\"Gamma\"], returns rows
+    // whose titles sort within that range (inclusive). Checks correct ordering and bounds.
     public void testMovieSelectionOperator_range() {
         FakeBufferManager fbm = new FakeBufferManager(5);
         FakePage page = (FakePage)fbm.createPage("test-movies.bin");
@@ -205,6 +230,8 @@ public class AllOperatorsTest {
     }
 
     @Test
+    // WorkSelectionOperator: filters work rows to include only those with category \"director\".
+    // Inserts two rows (director and actor) and expects only the director row in output.
     public void testWorkSelectionOperator_filtersDirector() {
         FakeBufferManager fbm = new FakeBufferManager(5);
         FakePage page = (FakePage)fbm.createPage("test-work.bin");
