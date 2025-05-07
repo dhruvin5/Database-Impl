@@ -7,10 +7,23 @@
 - Gradle 8.13
 - Git Bash
 
+
 ## Inserting in B+ Tree
 - Currently all the rows are being inserted in the indexes one by one which takes a significant amount of time
-- Correctness Tests (C1, C2, C3, C4) can be performed on a smaller subset of data
 
+## Query Executor interface
+- All the instructions to run the run_query command and the preprocess command is in app/src/main/java/query_executer/running_instructions file
+
+## Correctness testing
+- Load data in postgres:
+  - Perform base file cleanup using this command in terminal- NOTE: update paths for imdb files and cleaned files in base_file_cleaner.java:
+    - ./run_base_file_cleanup
+  - load data in postgres by running this command in terminal- NOTE: update cleaned file paths and output result file path(USE RELATIVE PATH HERE) as needed and USE SAME RANGE:
+    - ./Load_psql 'Alaa' 'Alab'
+  - This will connect to psql, populate the schemas and write query result from psql to csv file
+  - Paste the following command in terminal to perform correctness test. NOTE: update paths of files in CT.java (USE RELATIVE PATHS FOR BOTH FILES):
+    - ./run_correctness_test   
+  
 ## Unit tests
 - For all the labs the unit tests are in the tests folder in app/src.
 - The tests for the LAB3 include checking for one row match, multiple row matches and selctivity operators testing.
