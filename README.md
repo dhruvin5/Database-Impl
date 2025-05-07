@@ -8,26 +8,15 @@
 - Git Bash
 
 
-## Inserting in B+ Tree
-- Currently all the rows are being inserted in the indexes one by one which takes a significant amount of time
-
 ## Query Executor interface
+- This is the main interface to interact with the project/query plan.
 - All the instructions to use the "run_query" command and the "preprocess" command is in app/src/main/java/query_executer/running_instructions file
-
-## Correctness testing
-- Load data in postgres:
-  - Perform base file cleanup using this command in terminal- NOTE: update paths for imdb files and cleaned files in base_file_cleaner.java:
-    - ./run_base_file_cleanup
-  - load data in postgres by running this command in terminal- NOTE: update cleaned file paths and output result file path(USE RELATIVE PATH HERE) as needed and USE SAME RANGE:
-    - ./Load_psql 'Alaa' 'Alab'
-  - This will connect to psql, populate the schemas and write query result from psql to csv file
-- Paste the following command in terminal to perform correctness test. NOTE: update paths of files in CT.java (USE RELATIVE PATHS FOR BOTH FILES):
-    - ./run_correctness_test   
   
 ## Unit tests
 - For all the labs the unit tests are in the tests folder in app/src.
 - The tests for the LAB3 include checking for one row match, multiple row matches and selctivity operators testing.
 - To run the unit tests - gradle clean test
+- Please run the test before using application, and delete the associate bin files created from the test.
 
 ## Performance tests
 - To Run the performance tests, please to the following changes first:
@@ -44,20 +33,9 @@
   - Then in app\src\main\java\org\example\AnalyticalIO.java change line 96 to modify the values of the start query and end query as per requirement.
   - You can also change the buffer size if needed too by changing lines 98, 100 in app\src\main\java\org\example\AnalyticalIO.java
   - Then after doing the above three changes simply run the Caller. It'll print all the relevant stats on the terminal.
+- **To use the performance test, follow the instructions in the section `How To Run Performance test` to build the project and run it. Please note, you can technically use the `Query Executor interface` without building the application.**
 
-
-## BONUS PART
-- We have also implemented the index access method using the B+ tree.
-- To run using the index operator, in caller make the
-  - topProjectionOperator.open(bufferManager, "Alaa", "Alab", true) or if you are using the run query command
-- To run using the index operator, using the run_query command
-  - topProjectionOperator.open(bufferManager, "Alaa", "Alab", true) in app/src/main/java/query_executer/runquery.java
-
-## Changes that Need to be Made
-- Download the IMDB dataset (unzipped)
-- In `app\src\org\java\example\Caller.java` please update the location of the dataset when calling `Utilities.loadDataset`
-
-## How To Run:
+## How To Run Performance test:
 - To Build and Run Unit Tests in the Project:
   - Go to the root directory
   - Enter the Command `gradle clean build` in git bash
@@ -70,7 +48,26 @@
     - It will show the results of the unit test
     - A report will be also generated and visible in `index.html` in `app\build\report\tests\test`
 - Note: When running the unit test in the CLI, results that have `standard_out` are not unit test results. They are print statements in the buffermanager or page class that are invoked in the unit test. 
-      
+
+## Correctness testing
+- Load data in postgres:
+  - Perform base file cleanup using this command in terminal- NOTE: update paths for imdb files and cleaned files in base_file_cleaner.java:
+    - ./run_base_file_cleanup
+  - load data in postgres by running this command in terminal- NOTE: update cleaned file paths and output result file path(USE RELATIVE PATH HERE) as needed and USE SAME RANGE:
+    - ./Load_psql 'Alaa' 'Alab'
+  - This will connect to psql, populate the schemas and write query result from psql to csv file
+- Paste the following command in terminal to perform correctness test. NOTE: update paths of files in CT.java (USE RELATIVE PATHS FOR BOTH FILES):
+    - ./run_correctness_test   
+
+## BONUS PART
+- We have also implemented the index access method using the B+ tree.
+- To run using the index operator, in caller make the
+  - topProjectionOperator.open(bufferManager, "Alaa", "Alab", true) or if you are using the run query command
+- To run using the index operator, using the run_query command
+  - topProjectionOperator.open(bufferManager, "Alaa", "Alab", true) in app/src/main/java/query_executer/runquery.java
+- Setting the boolean to false will default the plan to use a file scan on the movies table
+
+
 
 ## Exact steps to run the project:
 
