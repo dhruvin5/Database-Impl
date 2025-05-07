@@ -33,7 +33,7 @@ public class runquery {
         Operator topProjectionOperator = new TopProjectionOperator();
         // pass the user's range values
         // FOR TESTING FOR BONUS PART, PLEASE SET useIndex boolean to true
-        topProjectionOperator.open(bufferManager, startRange, endRange, true);
+        topProjectionOperator.open(bufferManager, startRange, endRange, false);
 
         ArrayList<Row> rows = new ArrayList<>();
         Row row = null;

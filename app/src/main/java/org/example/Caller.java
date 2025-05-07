@@ -48,7 +48,7 @@ public class Caller {
 
          // Create a top projection operator
          Operator topProjectionOperator = new TopProjectionOperator();
-         topProjectionOperator.open(bufferManager, "Alaa", "Alab", true); // Open the operator
+         topProjectionOperator.open(bufferManager, "Alaa", "Alab", false); // Open the operator
 
          ArrayList<Row> rows = new ArrayList<>();
          Row row = null;
