@@ -46,6 +46,13 @@
   - Then after doing the above three changes simply run the Caller. It'll print all the relevant stats on the terminal.
 
 
+## BONUS PART
+- We have also implemented the index access method using the B+ tree.
+- To run using the index operator, in caller make the
+  - topProjectionOperator.open(bufferManager, "Alaa", "Alab", true) or if you are using the run query command
+- To run using the index operator, using the run_query command
+  - topProjectionOperator.open(bufferManager, "Alaa", "Alab", true) in app/src/main/java/query_executer/runquery.java
+
 ## Changes that Need to be Made
 - Download the IMDB dataset (unzipped)
 - In `app\src\org\java\example\Caller.java` please update the location of the dataset when calling `Utilities.loadDataset`
